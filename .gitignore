@@ -1,0 +1,31 @@
+# Virtual Environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# Flask
+instance/
+.env
+.flaskenv
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+
+#ai doc, helper coms
+ai_usage.txt
+helper_commands.txt
