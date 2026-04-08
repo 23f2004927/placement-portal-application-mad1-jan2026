@@ -24,6 +24,9 @@ class Student(db.Model):
         default="Prefer Not To Say",
     )
     socials = db.Column(db.JSON, nullable=True)
+    account_status = db.Column(
+        db.Enum("review", "active", "deactivated", "blacklisted"), default="active"
+    )
     resume_filename = db.Column(db.String(200))
     is_blacklisted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
