@@ -1,0 +1,41 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  10 April 2026
+  templates/components/_tableMacro.html
+-->
+
+{% macro brutalTable(headers, items, emptyHeadline="NO DATA DETECTED") %}
+<div class="brutal-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-borderless mb-0 align-middle">
+
+            <thead class="border-bottom border-dark border-2 font-mono bg-light">
+                <tr>
+                    {% for header in headers %}
+                    <th scope="col" class="{{ header.class | default('p-4') }}">{{ header.label }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody class="font-mono">
+                {% for item in items %}
+
+                {{ caller(item) }}
+
+                {% else %}
+
+                <tr>
+                    <td colspan="{{ headers|length }}" class="p-0">
+                        {% set emptySubtext = "System query returned zero results." %}
+                        {% include 'components/_emptyState.html' %}
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+{% endmacro %}

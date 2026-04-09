@@ -20,11 +20,10 @@ class Drive(db.Model):
         nullable=False,
     )
     job_description = db.Column(db.Text, nullable=False)
-    job_type = db.Column(db.Text, nullable=False, default="Intership")
+    job_type = db.Column(db.Text, nullable=False, default="Internship")
     eligibility_criteria = db.Column(db.Text)
-    description = db.Column(db.Text, nullable=False)
     status = db.Column(
-        db.Enum("pending", "approved", "rejected", "blacklisted"), default="pending"
+        db.Enum("pending", "approved", "rejected", "closed",  ), default="pending"
     )
     ctc = db.Column(db.Text, nullable=False, default="Performance Based")
     location = db.Column(db.Text, nullable=False, default="Remote")

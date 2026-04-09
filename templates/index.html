@@ -1,18 +1,45 @@
-{% extends "base.html" %} {% block title %}Home — Placement Portal{% endblock %}
-{% block content %}
-<div
-    class="row justify-content-center align-items-center"
-    style="min-height: 60vh"
->
-    <div class="col-12 text-center">
-        {% if role %}
-        <h2>Logged in as <span class="badge bg-primary">{{ role }}</span></h2>
-        <p class="text-muted mt-2">Dashboard coming soon.</p>
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/index.html
+-->
+
+{% extends "base.html" %}
+
+{% block pageTitle %}Home - Placement Portal{% endblock %}
+{% block breadcrumb %}HOME{% endblock %}
+
+{% block mainContent %}
+<div class="row align-items-center py-5">
+    <div class="col-lg-8 mb-5 mb-lg-0">
+        <div class="brutal-card" style="background-color: var(--color-secondary)">
+            <h1 class="display-3 fw-bold text-uppercase border-bottom border-dark border-3 pb-3 mb-4">
+                Launch Your Career.
+            </h1>
+            <p class="fs-4 fw-bold font-mono">
+                The centralized portal for university placements. Streamlined.
+                Efficient. Unapologetic.
+            </p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        {% if not session.get('user_id') %}
+        <div class="d-flex flex-column gap-3">
+            <a href="{{ url_for('auth.login') }}" class="brutal-btn w-100 text-center text-decoration-none">Existing
+                User Login</a>
+            <a href="{{ url_for('student_reg.registerStudent') }}"
+                class="brutal-btn secondary w-100 text-center text-decoration-none">Register as Student</a>
+            <a href="{{ url_for('company_reg.registerCompany') }}"
+                class="brutal-btn secondary w-100 text-center text-decoration-none">Register as Company</a>
+        </div>
         {% else %}
-        <h2>Welcome to the Placement Portal</h2>
-        <p class="text-muted mt-2">
-            Please <a href="{{ url_for('auth.login') }}">login</a> to continue.
-        </p>
+        <div class="brutal-card text-center">
+            <h3 class="fw-bold text-uppercase font-display">
+                Welcome back, {{ session.get('username') }}
+            </h3>
+            <p class="font-mono mb-0">Access your dashboard via the navigation menu.</p>
+        </div>
         {% endif %}
     </div>
 </div>

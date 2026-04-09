@@ -18,12 +18,12 @@ def registerStudent():
     if request.method == "GET":
         return render_template("auth/registerStudent.html")
 
-    username = request.form.get("username", "").strip()
+    username = request.form.get("userName", "").strip()
     email = request.form.get("email", "").strip()
     password = request.form.get("password", "").strip()
-    full_name = request.form.get("full_name", "").strip()
+    full_name = request.form.get("fullName", "").strip()
     department = request.form.get("department", "").strip()
-    graduation_year = request.form.get("graduation_year", "").strip()
+    graduation_year = request.form.get("graduationYear", "").strip()
     cgpa = request.form.get("cgpa", "").strip()
 
     if not all([username, email, password, full_name, department, graduation_year]):
@@ -66,6 +66,4 @@ def registerStudent():
     session["username"] = new_user.username
 
     flash("Welcome! Your account has been created.", "success")
-    return render_template(
-        "/index.html", role="student"
-    )  # redirect(url_for("student.dashboard"))
+    return redirect(url_for("student.dashboard"))

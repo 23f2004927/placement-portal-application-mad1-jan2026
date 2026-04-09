@@ -1,7 +1,7 @@
 # Christiano Blairoy Fernandes
 # 23f2004927
 # 6 April 2026
-# models/applications.py
+# models/application.py
 from datetime import datetime, timezone
 
 from . import db
@@ -10,7 +10,7 @@ from . import db
 class Application(db.Model):
     __table_args__ = (
         db.UniqueConstraint("student_id", "drive_id"),
-        db.CheckConstraint("rating >= 1 AND rating <= 5"),
+        db.CheckConstraint("rating >= 0 AND rating <= 5"),
     )
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(
@@ -25,10 +25,10 @@ class Application(db.Model):
     )
 
     approval_status = db.Column(
-        db.Enum("applied", "shortlisted", "selected", "rejected"), default="applied"
+        db.Enum("applied", "shortlisted", "selected", "rejected", "interviewScheduled"), default="applied"
     )
     applied_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     feedBack = db.Column(db.Text, nullable=True, default="Not Provided")
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer, nullable=False,default=0)
     student = db.relationship("Student", back_populates="applications")
     drive = db.relationship("Drive", back_populates="applications")

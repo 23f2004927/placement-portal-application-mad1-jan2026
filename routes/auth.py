@@ -3,7 +3,16 @@
 # 7 April 2026
 # routes/auth.py
 
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    flash,
+    g,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from werkzeug.security import check_password_hash
 
 from models import User
@@ -26,20 +35,14 @@ def login():
             session["user_id"] = user.id
             session["role"] = user.role
             session["username"] = user.username
+
             match session["role"]:
-                # case "admin":
-                #    return redirect(url_for("admin.dashboard"))
-                # case "student":
-                #    return redirect(url_for("student.dashboard"))
-                # case "company":
-                #    return redirect(url_for("company.dashboard"))
-                #
                 case "admin":
-                    return render_template("index.html", role=session["role"])
+                    return redirect(url_for("admin.dashboard"))
                 case "student":
-                    return render_template("index.html", role=session["role"])
+                    return redirect(url_for("student.dashboard"))
                 case "company":
-                    return render_template("index.html", role=session["role"])
+                    return redirect(url_for("company.dashboard"))
         else:
             return render_template(
                 "auth/login.html", error="Invalid username or password"
@@ -51,3 +54,10 @@ def logout():
     session.clear()
     flash("You have been logged out.", "info")
     return redirect(url_for("auth.login"))
+
+
+@auth.route("/access-denied")
+def noAccess():
+    return render_template(
+        "accessDenied.html", username=session.get("username"), role=session.get("role")
+    )

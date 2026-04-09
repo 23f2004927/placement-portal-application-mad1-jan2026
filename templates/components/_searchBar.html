@@ -1,0 +1,28 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/components/_searchBar.html
+-->
+
+<div class="brutal-card p-3 mb-4" id="globalSearchBar">
+    <form action="{{ url_for(request.endpoint) }}" method="GET" class="d-flex align-items-center gap-3 m-0">
+        {{ form.hidden_tag() if form else '' }}
+        <div class="input-group">
+            <span class="input-group-text bg-white border-dark border-2 rounded-0 font-mono fw-bold"><i
+                    class="bi bi-search"></i></span>
+            <input type="text" name="searchQuery" class="form-control" placeholder="SEARCH DIRECTORY..."
+                value="{{ request.args.get('searchQuery', '') }}" />
+        </div>
+        <button type="submit" class="brutal-btn py-2 px-4" id="searchSubmitBtn">FILTER</button>
+    </form>
+
+    {% if filterChips %}
+    <div class="mt-3 d-flex flex-wrap gap-2 align-items-center" id="filterChipsContainer">
+        <span class="font-mono text-muted fw-bold me-2" style="font-size: 0.85rem">ACTIVE FILTERS:</span>
+        {% for chip in filterChips %}
+        <span class="data-tag border-dark bg-white rounded-pill px-3">{{ chip }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

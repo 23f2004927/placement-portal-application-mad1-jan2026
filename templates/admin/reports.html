@@ -1,0 +1,75 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/admin/reports.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Analytics - Admin{% endblock %}
+{% block breadcrumb %}ADMIN / REPORTS{% endblock %} {% block mainContent %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="font-display display-6 mb-0">PORTAL ANALYTICS</h1>
+    <a href="#" class="btn btn-neo border-2 py-2 px-4 bg-white text-dark"
+        ><span class="fs-5 me-2">📥</span> EXPORT CSV</a
+    >
+</div>
+
+<div class="row g-4 mb-5" id="analyticsGrid">
+    <div class="col-md-3">
+        <div
+            class="neo-card p-4"
+            style="background-color: var(--color-primary); color: white"
+        >
+            <p class="font-mono mb-1" style="color: rgba(255, 255, 255, 0.7)">
+                PLACEMENT RATE
+            </p>
+            <h2 class="font-display display-4 mb-0">
+                {{ stats.placementRate | default('0') }}%
+            </h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="neo-card p-4 bg-white">
+            <p class="font-mono text-muted mb-1">AVERAGE CTC</p>
+            <h2 class="font-display display-4 mb-0">
+                {{ stats.avgCtc | default('0') }}L
+            </h2>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div
+            class="neo-card p-4 d-flex flex-column justify-content-center h-100"
+            style="background-color: var(--color-secondary)"
+        >
+            <p class="font-mono text-dark mb-1 fw-bold">TOP HIRING PARTNER</p>
+            <h2 class="font-display display-5 mb-0 text-dark">
+                {{ stats.topCompany | default('N/A') }}
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="neo-card p-0" id="activityLogCard">
+    <h4
+        class="font-display p-4 border-bottom border-dark border-2 bg-light mb-0"
+    >
+        SYSTEM ACTIVITY LOG
+    </h4>
+    <div class="table-responsive" style="max-height: 400px; overflow-y: auto">
+        <table class="table table-borderless mb-0 font-mono align-middle">
+            <tbody>
+                {% for log in activityLogs | default([{'time': '10:42 AM',
+                'action': 'Admin approved drive for Beta Inc'}, {'time': '09:15
+                AM', 'action': 'Student X registered'}]) %}
+                <tr class="border-bottom border-dark">
+                    <td class="p-3 text-muted" style="width: 120px">
+                        {{ log.time }}
+                    </td>
+                    <td class="p-3 fw-bold">{{ log.action }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/components/_sidebar.html
+-->
+
+<aside class="sidebar d-flex flex-column" id="appSidebar">
+    <div class="p-3 border-bottom border-dark border-2 d-flex align-items-center" style="height: 73px">
+        <a href="{{ url_for('index') }}"
+            class="text-white text-decoration-none font-display fs-4 d-flex align-items-center">
+            <span class="sidebar-icon fw-bolder">P</span>
+            <span class="sidebar-brand-text ms-2">[ PLACEMENTS ]</span>
+        </a>
+    </div>
+
+    <nav class="mt-4 flex-grow-1" id="sidebarNavLinks">
+        {% if session.get('user_id') %}
+        <div class="px-3 mb-3 font-mono text-muted d-flex align-items-center"
+            style="font-size: 0.8rem; overflow: hidden; white-space: nowrap">
+            <span class="sidebar-icon fs-5"><i class="bi bi-person-circle"></i></span>
+            <span class="sidebar-logged-in-text ms-2">
+                LOGGED IN AS: <br />
+                <span class="text-white fw-bold">{{ session.get('role') | upper }}</span>
+            </span>
+        </div>
+
+        {% if session.get('role') == 'student' %}
+        <a href="{{ url_for('student.dashboard') }}" class="sidebar-link active">
+            <span class="sidebar-icon"><i class="bi bi-grid-fill"></i></span><span class="sidebar-text">Dashboard</span>
+        </a>
+        <a href="{{ url_for('student.browseJobs') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-briefcase-fill"></i></span><span class="sidebar-text">Job
+                Board</span>
+        </a>
+        <a href="{{ url_for('student.myApplications') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-file-earmark-text-fill"></i></span><span class="sidebar-text">My
+                Applications</span>
+        </a>
+
+        {% elif session.get('role') == 'company' %}
+        <a href="{{ url_for('company.dashboard') }}" class="sidebar-link active">
+            <span class="sidebar-icon"><i class="bi bi-kanban-fill"></i></span><span
+                class="sidebar-text">Pipeline</span>
+        </a>
+        <a href="{{ url_for('company.createDrive') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-plus-square-fill"></i></span><span class="sidebar-text">Post a
+                Job</span>
+        </a>
+
+        {% elif session.get('role') == 'admin' %}
+        <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link active">
+            <span class="sidebar-icon"><i class="bi bi-speedometer2"></i></span><span class="sidebar-text">System
+                Metrics</span>
+        </a>
+        <a href="{{ url_for('admin.drives') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-check-circle-fill"></i></span><span class="sidebar-text">Drive
+                Approvals</span>
+        </a>
+        <a href="{{ url_for('admin.companies') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-buildings-fill"></i></span><span class="sidebar-text">Company
+                Manager</span>
+        </a>
+        <a href="{{ url_for('admin.students') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-mortarboard-fill"></i></span><span class="sidebar-text">Student
+                Manager</span>
+        </a>
+        {% endif %}
+
+        {% else %}
+        <a href="{{ url_for('index') }}" class="sidebar-link active">
+            <span class="sidebar-icon"><i class="bi bi-house-door-fill"></i></span><span
+                class="sidebar-text">Home</span>
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="sidebar-link">
+            <span class="sidebar-icon"><i class="bi bi-box-arrow-in-right"></i></span><span
+                class="sidebar-text">Login</span>
+        </a>
+        {% endif %}
+    </nav>
+
+    {% if session.get('user_id') %}
+    <div class="p-3 border-top border-dark border-2 d-flex flex-column gap-3" id="sidebarFooter">
+        <a href="#" class="text-white font-mono text-decoration-none fs-6 hover-shadow d-flex align-items-center">
+            <span class="sidebar-icon"><i class="bi bi-gear-fill"></i></span><span class="sidebar-text">SETTINGS</span>
+        </a>
+        <a href="{{ url_for('auth.logout') }}"
+            class="brutal-btn wireframe d-flex align-items-center p-2 text-decoration-none border-2">
+            <span class="sidebar-icon ms-1" style="min-width: auto"><i class="bi bi-box-arrow-left"></i></span>
+            <span class="sidebar-text fw-bold ms-2">LOGOUT</span>
+        </a>
+    </div>
+    {% endif %}
+</aside>

@@ -1,0 +1,189 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@700&display=swap");
+
+:root {
+    /* Soft Brutalism Palette - Flatter & Industrial */
+    --color-primary: #a855f7;
+    /* Accent Purple */
+    --color-secondary: #bef264;
+    /* Accent Lime */
+    --color-bg: #f4f5f0;
+    /* Cement / Off-White Solid */
+    --color-card: #ffffff;
+    /* Stark White */
+    --color-sidebar: #000000;
+    /* Absolute Black */
+    --color-border: #000000;
+    --color-text: #000000;
+    --color-text-muted: #666666;
+    --color-text-light: #f5f5f5;
+
+    /* Typography Hierarchy */
+    --font-display: "Space Grotesk", sans-serif;
+    --font-body: "Epilogue", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+
+    /* Structural Geometry */
+    --border-main: 2px solid #000000;
+    --border-thin: 1px solid #000000;
+    --radius: 0px;
+}
+
+body {
+    background-color: var(--color-bg);
+    /* Solid Cement Background */
+    color: var(--color-text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Typography Classes */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+}
+
+/* Layout App Shell */
+.sidebar {
+    width: 80px;
+    background-color: var(--color-sidebar);
+    color: var(--color-text-light);
+    border-right: var(--border-main);
+    position: fixed;
+    height: 100vh;
+    transition: width 0.2s steps(40);
+    /* Brisk, mechanical transition */
+    z-index: 1050;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    /* Prevents text from breaking into new lines */
+    overflow: hidden;
+    /* Clips text when sidebar is narrow */
+}
+
+.sidebar-icon {
+    min-width: 45px;
+    display: inline-flex;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.sidebar-text,
+.sidebar-brand-text,
+.sidebar-logged-in-text {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar:hover {
+    width: 280px;
+}
+
+.sidebar:hover .sidebar-text,
+.sidebar:hover .sidebar-brand-text,
+.sidebar:hover .sidebar-logged-in-text {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.2s;
+}
+
+.main-content {
+    margin-left: 80px;
+
+    flex-grow: 1;
+    min-height: 100vh;
+    background-color: var(--color-bg);
+}
+
+/* Centering Container for Structural Balance */
+.content-container {
+    max-width: 1100px;
+    /* Adjust this to your preference for "centered" look */
+    margin: 0 auto;
+    /* Centers the block */
+    padding: 3rem 2rem;
+}
+
+/* Renamed: brutal-card (Structural, No Shadow) */
+.brutal-card {
+    background: var(--color-card);
+    border: var(--border-main);
+    padding: 2rem;
+    position: relative;
+}
+
+/* Renamed: brutal-btn (Flat, High Contrast) */
+.brutal-btn {
+    font-family: var(--font-display);
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: var(--border-main);
+    padding: 0.75rem 1.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: background 0.2s;
+}
+
+.brutal-btn.secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-border);
+}
+
+.brutal-btn.wireframe {
+    background-color: transparent;
+    color: var(--color-border);
+}
+
+.brutal-btn:hover {
+    background-color: var(--color-text);
+    color: #ffffff;
+}
+
+/* Data Metadata Tags */
+.data-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: var(--color-sidebar);
+    color: var(--color-text-light);
+    padding: 0.2rem 0.6rem;
+    text-transform: uppercase;
+}
+
+/* Form Controls - Stark Inputs */
+.form-control,
+.form-select {
+    border: var(--border-main);
+    border-radius: 0;
+    background: #ffffff;
+    font-family: var(--font-mono);
+}
+
+.form-control:focus {
+    box-shadow: none;
+    background: #fdfdfd;
+    outline: 2px solid var(--color-primary);
+}

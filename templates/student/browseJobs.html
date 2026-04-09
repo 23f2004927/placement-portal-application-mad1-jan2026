@@ -1,0 +1,82 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/student/browseJobs.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Job Board - Student Desk{%
+endblock %} {% block breadcrumb %}STUDENT / JOB BOARD{% endblock %} {% block
+mainContent %}
+<h1 class="font-display display-6 mb-4">ACTIVE POSTINGS</h1>
+
+{% include 'components/_searchBar.html' %}
+
+<div class="row g-4" id="jobsGridContainer">
+    {% for drive in activeDrives %}
+    <div class="col-md-6 col-xl-4">
+        <div class="neo-card p-4 h-100 d-flex flex-column hover-shadow">
+            <div
+                class="d-flex justify-content-between align-items-start mb-3 border-bottom border-dark border-2 pb-3"
+            >
+                <div>
+                    <h4 class="font-display mb-1 text-uppercase">
+                        {{ drive.roleTitle }}
+                    </h4>
+                    <p class="font-mono fw-bold text-muted mb-0">
+                        {{ drive.companyName }}
+                    </p>
+                </div>
+                <div
+                    class="border border-dark border-2 d-flex justify-content-center align-items-center shadow-sm"
+                    style="width: 40px; height: 40px; background-color: white"
+                >
+                    {{ drive.companyName[0] | upper }}
+                </div>
+            </div>
+
+            <div class="font-mono mb-4 flex-grow-1">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">COMPENSATION</span>
+                    <span class="fw-bold">{{ drive.ctc }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">MIN CGPA</span>
+                    <span class="fw-bold">{{ drive.minCgpa }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">DEADLINE</span>
+                    <span class="fw-bold" style="color: #ef4444"
+                        >{{ drive.deadline }}</span
+                    >
+                </div>
+            </div>
+
+            {% if drive.isEligible and not drive.hasApplied %}
+            <a
+                href="{{ url_for('student.driveDetail', driveId=drive.id) }}"
+                class="btn btn-neo secondary w-100 py-2 border-2 text-dark"
+                >VIEW & APPLY</a
+            >
+            {% elif drive.hasApplied %}
+            <button
+                class="btn btn-neo wireframe w-100 py-2 border-2 disabled text-success border-success"
+            >
+                APPLIED ✓
+            </button>
+            {% else %}
+            <button class="btn btn-neo wireframe w-100 py-2 border-2 disabled">
+                INELIGIBLE
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        {% set emptyHeadline = "NO MATCHING POSTINGS" %} {% include
+        'components/_emptyState.html' %}
+    </div>
+    {% endfor %}
+</div>
+
+{% include 'components/_pagination.html' %} {% endblock %}

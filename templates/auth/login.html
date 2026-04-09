@@ -1,48 +1,49 @@
-{% extends "base.html" %} {% block title %}Login — Placement Portal{% endblock
-%} {% block content %}
-<div class="row justify-content-center">
-    <div class="col-12 col-md-5">
-        <h3 class="mb-4">Login</h3>
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/auth/login.html
+-->
 
-        {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
+{% extends "base.html" %}
 
-        <form method="POST" action="{{ url_for('auth.login') }}">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    required
-                />
+{% block pageTitle %}Login - Placement Portal{% endblock %}
+{% block breadcrumb %}AUTH / LOGIN{% endblock %}
+
+{% block mainContent %}
+<div class="d-flex justify-content-center align-items-center py-5">
+    <div class="brutal-card w-100" style="max-width: 450px" id="loginCard">
+        <h2 class="font-display fs-2 border-bottom border-dark border-2 pb-3 mb-4">
+            SYSTEM LOGIN
+        </h2>
+
+        <form method="POST" action="{{ url_for('auth.login') }}" id="loginForm">
+            {{ form.hidden_tag() if form else '' }}
+            <div class="mb-4">
+                <label for="username" class="form-label font-mono fw-bold">USERNAME</label>
+                <input type="text" class="form-control" id="username" name="username" required
+                    placeholder="user_id_001" />
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    required
-                />
+            <div class="mb-5">
+                <label for="password" class="form-label font-mono fw-bold">PASSWORD</label>
+                <input type="password" class="form-control" id="password" name="password" required
+                    placeholder="••••••••" />
             </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <button type="submit" class="brutal-btn w-100 py-3" id="submitLoginBtn">
+                AUTHENTICATE &rarr;
+            </button>
         </form>
 
-        <hr />
-        <p class="text-center mb-0">
-            Student?
-            <a href="{{ url_for('student_reg.registerStudent') }}"
-                >Register here</a
-            >
-            · Company?
-            <a href="{{ url_for('company_reg.registerCompany') }}"
-                >Register here</a
-            >
-        </p>
+        <div class="mt-4 pt-4 border-top border-dark border-2 text-center font-mono" style="font-size: 0.9rem">
+            <p class="fw-bold mb-2">NEW TO THE NETWORK?</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('student_reg.registerStudent') }}"
+                    class="text-dark fw-bold text-decoration-underline">STUDENT</a>
+                <span class="text-muted">|</span>
+                <a href="{{ url_for('company_reg.registerCompany') }}"
+                    class="text-dark fw-bold text-decoration-underline">COMPANY</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

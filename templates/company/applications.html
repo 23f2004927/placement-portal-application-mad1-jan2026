@@ -1,0 +1,145 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/company/applications.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Applicant Pipeline - Company{%
+endblock %} {% block breadcrumb %}COMPANY / PIPELINE{% endblock %} {% block
+mainContent %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="font-display display-6 mb-0">APPLICANT PIPELINE</h1>
+
+    <div
+        class="d-flex border border-dark border-2 bg-white"
+        style="box-shadow: 4px 4px 0px #000"
+        id="viewToggleGroup"
+    >
+        <button
+            class="btn rounded-0 px-4 py-2 font-mono fw-bold text-dark bg-light border-end border-dark border-2"
+            id="btnKanbanView"
+        >
+            KANBAN
+        </button>
+        <button
+            class="btn rounded-0 px-4 py-2 font-mono fw-bold text-dark bg-white"
+            id="btnTableView"
+        >
+            TABLE
+        </button>
+    </div>
+</div>
+
+{% include 'components/_searchBar.html' %}
+
+<div class="row flex-nowrap overflow-auto pb-4" id="kanbanBoardContainer">
+    <div class="col-12 col-md-6 col-xl-3">
+        <h4
+            class="font-display bg-white border border-dark border-2 p-3 mb-3 d-flex justify-content-between"
+        >
+            APPLIED
+            <span class="data-tag bg-dark text-white border-0"
+                >{{ applicantsApplied|length }}</span
+            >
+        </h4>
+        <div class="d-flex flex-column gap-3" id="kanbanColApplied">
+            {% for app in applicantsApplied %}
+            <div class="neo-card p-3" style="cursor: grab">
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="fw-bold">{{ app.studentName }}</div>
+                    <span class="data-tag border-0 bg-light"
+                        >CGPA: {{ app.cgpa }}</span
+                    >
+                </div>
+                <p class="font-mono text-muted mb-3" style="font-size: 0.8rem">
+                    Applied: {{ app.appliedDate }}
+                </p>
+                <div class="d-flex gap-2">
+                    <a
+                        href="{{ url_for('company.applicantDetail', applicantId=app.id) }}"
+                        class="btn btn-sm btn-neo wireframe flex-grow-1 text-center py-1"
+                        >REVIEW</a
+                    >
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+        <h4
+            class="font-display bg-white border border-dark border-2 p-3 mb-3 d-flex justify-content-between"
+            style="
+                border-top-color: var(--color-primary);
+                border-top-width: 4px;
+            "
+        >
+            SHORTLISTED
+            <span class="data-tag bg-dark text-white border-0"
+                >{{ applicantsShortlisted|length }}</span
+            >
+        </h4>
+        <div class="d-flex flex-column gap-3" id="kanbanColShortlisted"></div>
+    </div>
+
+    <div class="col-12 col-md-6 col-xl-3">
+        <h4
+            class="font-display bg-white border border-dark border-2 p-3 mb-3 d-flex justify-content-between"
+            style="
+                border-top-color: var(--color-secondary);
+                border-top-width: 4px;
+            "
+        >
+            SELECTED
+            <span class="data-tag bg-dark text-white border-0"
+                >{{ applicantsSelected|length }}</span
+            >
+        </h4>
+        <div class="d-flex flex-column gap-3" id="kanbanColSelected"></div>
+    </div>
+</div>
+
+<div class="neo-card p-0 d-none" id="dataTableContainer">
+    <div class="table-responsive">
+        <table class="table table-borderless mb-0 font-mono align-middle">
+            <thead class="border-bottom border-dark border-2 bg-light">
+                <tr>
+                    <th class="p-3">APPLICANT</th>
+                    <th class="p-3">DRIVE / ROLE</th>
+                    <th class="p-3">CGPA</th>
+                    <th class="p-3">STATUS</th>
+                    <th class="p-3 text-end">RESUME</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in allApplicants %}
+                <tr class="border-bottom border-dark">
+                    <td class="p-3 fw-bold font-body">
+                        <a
+                            href="{{ url_for('company.applicantDetail', applicantId=app.id) }}"
+                            class="text-dark text-decoration-none hover-shadow"
+                            >{{ app.studentName }}</a
+                        >
+                    </td>
+                    <td class="p-3">{{ app.roleTitle }}</td>
+                    <td class="p-3">{{ app.cgpa }}</td>
+                    <td class="p-3">
+                        {% set badgeStatus = app.status %} {% include
+                        'components/_statusBadge.html' %}
+                    </td>
+                    <td class="p-3 text-end">
+                        <a
+                            href="{{ app.resumeUrl }}"
+                            target="_blank"
+                            class="btn btn-sm btn-neo wireframe px-2 py-1"
+                            >PDF &nearr;</a
+                        >
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

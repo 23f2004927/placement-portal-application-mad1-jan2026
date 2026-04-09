@@ -1,113 +1,60 @@
-{% extends "base.html" %} {% block title %}Company Registration — Placement
-Portal{% endblock %} {% block content %}
-<div class="row justify-content-center">
-    <div class="col-12 col-md-6">
-        <h3 class="mb-4">Company Registration</h3>
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/auth/registerCompany.html
+-->
 
-        {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
+{% extends "base.html" %}
 
-        <form
-            method="POST"
-            action="{{ url_for('company_reg.registerCompany') }}"
-        >
-            <h6 class="text-muted mb-3">Account Details</h6>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                    required
-                />
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    required
-                />
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    required
-                />
-            </div>
+{% block pageTitle %}Company Registration{% endblock %}
+{% block breadcrumb %}AUTH / REGISTER COMPANY{% endblock %}
 
-            <hr />
-            <h6 class="text-muted mb-3">Company Details</h6>
-            <div class="mb-3">
-                <label for="company_name" class="form-label"
-                    >Company Name</label
-                >
-                <input
-                    type="text"
-                    class="form-control"
-                    id="company_name"
-                    name="company_name"
-                    required
-                />
-            </div>
-            <div class="mb-3">
-                <label for="hr_contact" class="form-label"
-                    >HR Contact
-                    <span class="text-muted">(optional)</span></label
-                >
-                <input
-                    type="text"
-                    class="form-control"
-                    id="hr_contact"
-                    name="hr_contact"
-                />
-            </div>
-            <div class="mb-3">
-                <label for="website" class="form-label"
-                    >Website <span class="text-muted">(optional)</span></label
-                >
-                <input
-                    type="url"
-                    class="form-control"
-                    id="website"
-                    name="website"
-                />
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label"
-                    >Description
-                    <span class="text-muted">(optional)</span></label
-                >
-                <textarea
-                    class="form-control"
-                    id="description"
-                    name="description"
-                    rows="3"
-                ></textarea>
-            </div>
+{% block mainContent %}
+<div class="d-flex justify-content-center align-items-center py-5">
+    <div class="brutal-card w-100" style="max-width: 800px">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
+            <h2 class="font-display fs-2 mb-0">COMPANY PARTNER</h2>
+            <span class="data-tag"
+                style="background-color: var(--color-secondary); color: var(--color-border);">PENDING_VERIFICATION</span>
+        </div>
 
-            <div class="alert alert-info">
-                Your account will be reviewed by an admin before you can log in.
+        <form method="POST" action="{{ url_for('company_reg.registerCompany') }}">
+            {{ form.hidden_tag() if form else '' }}
+            <div class="row g-4 font-mono">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">USERNAME *</label>
+                    <input type="text" class="form-control" name="username" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">EMAIL ADDRESS *</label>
+                    <input type="email" class="form-control" name="email" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">PASSWORD *</label>
+                    <input type="password" class="form-control" name="password" required minlength="8" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">COMPANY NAME *</label>
+                    <input type="text" class="form-control" name="company_name" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">HR CONTACT</label>
+                    <input type="text" class="form-control" name="hr_contact" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">WEBSITE URL</label>
+                    <input type="url" class="form-control" name="website" placeholder="https://" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-bold">COMPANY DESCRIPTION</label>
+                    <textarea class="form-control" name="description" rows="3"></textarea>
+                </div>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">
-                Submit Registration
+            <button type="submit" class="brutal-btn secondary w-100 py-3 mt-5">
+                SUBMIT FOR APPROVAL
             </button>
         </form>
-
-        <hr />
-        <p class="text-center mb-0">
-            Already have an account?
-            <a href="{{ url_for('auth.login') }}">Login</a>
-        </p>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,88 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  10 April 2026
+  templates/admin/companies.html
+-->
+
+{% extends "base.html" %}
+{% from 'components/_tableMacro.html' import brutalTable %}
+
+{% block pageTitle %}Company Manager - Admin Console{% endblock %}
+{% block mainContent %}
+<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
+    <h1 class="font-display display-5 mb-0">COMPANY DIRECTORY</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO DASHBOARD</a>
+</div>
+
+{% set headers = [
+{'label': 'COMPANY NAME', 'class': 'p-4'},
+{'label': 'CONTACT / HR', 'class': 'p-4'},
+{'label': 'STATUS', 'class': 'p-4'},
+{'label': 'MODERATION ACTIONS', 'class': 'p-4 text-end'}
+] %}
+{% include 'components/_searchBar.html' %}
+{% call(comp) brutalTable(headers, companies, "NO PARTNERS FOUND") %}
+<tr class="border-bottom border-dark align-middle">
+    <td class="p-4 fw-bold font-body text-uppercase">{{ comp.company_name }}</td>
+    <td class="p-4">{{ comp.hr_contact }}</td>
+    <td class="p-4">
+        {% set badgeStatus = comp.approval_status %}
+        {% include 'components/_statusBadge.html' %}
+    </td>
+    <td class="p-4 text-end">
+        <div class="d-flex justify-content-end gap-2">
+
+            {% if comp.approval_status == 'pending' %}
+            <form action="{{ url_for('admin.company_action', company_id=comp.id) }}" method="POST" class="m-0">
+                {{ form.hidden_tag() if form else '' }}
+                <input type="hidden" name="action" value="approve" />
+                <button type="submit" class="brutal-btn secondary py-1 px-3">APPROVE</button>
+            </form>
+            <button type="button" class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white;"
+                data-bs-toggle="modal" data-bs-target="#globalConfirmModal"
+                data-action-url="{{ url_for('admin.company_action', company_id=comp.id) }}"
+                data-action-value="reject">REJECT</button>
+
+            {% elif comp.approval_status == 'approved' %}
+            <button type="button" class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white;"
+                data-bs-toggle="modal" data-bs-target="#globalConfirmModal"
+                data-action-url="{{ url_for('admin.company_action', company_id=comp.id) }}"
+                data-action-value="blacklist">BLACKLIST</button>
+
+            {% elif comp.approval_status in ['rejected', 'blacklisted'] %}
+            <form action="{{ url_for('admin.company_action', company_id=comp.id) }}" method="POST" class="m-0">
+                {{ form.hidden_tag() if form else '' }}
+                <input type="hidden" name="action" value="approve" />
+                <button type="submit" class="brutal-btn wireframe border-2 py-1 px-3">RESTORE</button>
+            </form>
+            {% endif %}
+
+        </div>
+    </td>
+</tr>
+{% endcall %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const confirmModal = document.getElementById('globalConfirmModal');
+        if (confirmModal) {
+            confirmModal.addEventListener('show.bs.modal', (event) => {
+                const button = event.relatedTarget;
+                const form = confirmModal.querySelector('#confirmModalForm');
+
+                form.action = button.getAttribute('data-action-url');
+
+                let actionInput = form.querySelector('input[name="action"]');
+                if (!actionInput) {
+                    actionInput = document.createElement('input');
+                    actionInput.type = 'hidden';
+                    actionInput.name = 'action';
+                    form.appendChild(actionInput);
+                }
+                actionInput.value = button.getAttribute('data-action-value');
+            });
+        }
+    });
+</script>
+{% endblock %}

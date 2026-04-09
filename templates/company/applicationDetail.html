@@ -1,0 +1,228 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/company/applicationDetail.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Applicant Review - Company{%
+endblock %} {% block breadcrumb %}COMPANY / PIPELINE / {{ applicant.studentName
+| default('APPLICANT') | upper }}{% endblock %} {% block mainContent %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a
+        href="{{ url_for('company.applications') }}"
+        class="btn btn-neo wireframe py-2 px-4"
+        >&larr; BACK TO PIPELINE</a
+    >
+    <button
+        class="btn btn-neo wireframe py-2 px-4 bg-white"
+        onclick="window.print()"
+    >
+        🖨️ PRINT RECORD
+    </button>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="neo-card p-4 mb-4" id="applicantProfileCard">
+            <div
+                class="d-flex align-items-center gap-3 mb-4 border-bottom border-dark border-2 pb-3"
+            >
+                <div
+                    class="rounded-0 border border-dark border-2 d-flex justify-content-center align-items-center font-display fw-bold fs-3"
+                    style="
+                        width: 60px;
+                        height: 60px;
+                        background-color: var(--color-bg-light);
+                    "
+                >
+                    {{ applicant.studentName[0] | default('S') | upper }}
+                </div>
+                <div>
+                    <h3 class="font-display mb-0">
+                        {{ applicant.studentName }}
+                    </h3>
+                    <p
+                        class="font-mono text-muted mb-0"
+                        style="font-size: 0.85rem"
+                    >
+                        {{ applicant.email }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="font-mono mb-3">
+                <p class="mb-1 text-muted">ACADEMIC RECORD</p>
+                <div class="d-flex gap-2 mb-2">
+                    <span class="data-tag border-0 bg-light"
+                        >BATCH: {{ applicant.gradYear }}</span
+                    >
+                    <span class="data-tag border-0 bg-light"
+                        >DEPT: {{ applicant.department }}</span
+                    >
+                </div>
+                <div
+                    class="fs-5 fw-bold px-3 py-2 border border-dark border-2 bg-white text-center shadow-sm"
+                >
+                    CGPA: {{ applicant.cgpa }}
+                </div>
+            </div>
+
+            <div class="font-mono mb-4">
+                <p class="mb-1 text-muted">EXTERNAL LINKS</p>
+                <a
+                    href="{{ applicant.githubUrl | default('#') }}"
+                    target="_blank"
+                    class="d-block text-dark fw-bold mb-1 border-bottom border-dark d-inline-block"
+                    >GITHUB &nearr;</a
+                ><br />
+                <a
+                    href="{{ applicant.linkedinUrl | default('#') }}"
+                    target="_blank"
+                    class="d-block text-dark fw-bold border-bottom border-dark d-inline-block"
+                    >LINKEDIN &nearr;</a
+                >
+            </div>
+        </div>
+
+        <div
+            class="neo-card p-4"
+            style="background-color: var(--color-bg-light)"
+            id="statusUpdateCard"
+        >
+            <h4 class="font-display mb-3">APPLICATION DECISION</h4>
+            <form action="" method="POST" id="updateStatusForm">
+                {{ form.hidden_tag() if form else '' }}
+                <div class="mb-3">
+                    <label class="form-label font-mono fw-bold"
+                        >CURRENT STATUS</label
+                    >
+                    <select
+                        class="form-select border-dark border-2 font-display fw-bold p-3"
+                        name="newStatus"
+                    >
+                        <option
+                            value="applied"
+                            {%
+                            if
+                            applicant.status=""
+                            ="applied"
+                            %}selected{%
+                            endif
+                            %}
+                        >
+                            APPLIED (PENDING REVIEW)
+                        </option>
+                        <option
+                            value="shortlisted"
+                            {%
+                            if
+                            applicant.status=""
+                            ="shortlisted"
+                            %}selected{%
+                            endif
+                            %}
+                        >
+                            SHORTLISTED FOR INTERVIEW
+                        </option>
+                        <option
+                            value="selected"
+                            {%
+                            if
+                            applicant.status=""
+                            ="selected"
+                            %}selected{%
+                            endif
+                            %}
+                        >
+                            OFFER EXTENDED (SELECTED)
+                        </option>
+                        <option
+                            value="rejected"
+                            {%
+                            if
+                            applicant.status=""
+                            ="rejected"
+                            %}selected{%
+                            endif
+                            %}
+                        >
+                            REJECTED
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label font-mono fw-bold"
+                        >INTERNAL HR NOTES</label
+                    >
+                    <textarea
+                        class="form-control font-mono"
+                        name="hrNotes"
+                        rows="3"
+                        placeholder="Notes are not visible to the student..."
+                    >
+{{ applicant.notes }}</textarea
+                    >
+                </div>
+                <button
+                    type="submit"
+                    class="btn btn-neo w-100"
+                    id="saveDecisionBtn"
+                >
+                    SAVE DECISION
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div
+            class="neo-card p-0 h-100 d-flex flex-column"
+            id="resumeViewerCard"
+        >
+            <div
+                class="p-3 border-bottom border-dark border-2 bg-light d-flex justify-content-between align-items-center"
+            >
+                <h4 class="font-display mb-0">RESUME DOCUMENT</h4>
+                <a
+                    href="{{ applicant.resumeUrl }}"
+                    download
+                    class="btn btn-sm btn-neo wireframe"
+                    >⬇ DOWNLOAD PDF</a
+                >
+            </div>
+
+            <div
+                class="flex-grow-1 p-0"
+                style="min-height: 600px; background-color: #525659"
+            >
+                {% if applicant.resumeUrl %}
+                <object
+                    data="{{ applicant.resumeUrl }}"
+                    type="application/pdf"
+                    width="100%"
+                    height="100%"
+                >
+                    <div class="p-5 text-center text-white font-mono">
+                        <p>Your browser does not support inline PDF viewing.</p>
+                        <a
+                            href="{{ applicant.resumeUrl }}"
+                            class="text-white text-decoration-underline"
+                            >Click here to download the PDF</a
+                        >
+                    </div>
+                </object>
+                {% else %}
+                <div
+                    class="h-100 d-flex justify-content-center align-items-center text-white"
+                >
+                    {% set emptyHeadline = "NO RESUME UPLOADED" %} {% set
+                    emptySubtext = "The applicant has not provided a document."
+                    %} {% include 'components/_emptyState.html' %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

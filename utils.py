@@ -15,7 +15,6 @@ def login_required(func):
             return redirect(url_for("auth.login"))
         else:
             return func(*args, **kwargs)
-
     return wrapper
 
 
@@ -23,6 +22,8 @@ def role_required(role):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            if "user_id" not in session:
+                return redirect(url_for("auth.login"))
             sessionRole = session.get("role")
             if sessionRole != role:
                 return redirect(url_for("auth.login"))

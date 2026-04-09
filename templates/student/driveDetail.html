@@ -1,0 +1,151 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/student/driveDetail.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Role Specs - {{ drive.companyName
+}}{% endblock %} {% block breadcrumb %}STUDENT / JOB BOARD / {{ drive.roleTitle
+| upper }}{% endblock %} {% block mainContent %}
+<div class="mb-4">
+    <a
+        href="{{ url_for('student.browseJobs') }}"
+        class="btn btn-neo wireframe py-2 px-4"
+        >&larr; BACK TO BOARD</a
+    >
+</div>
+
+{% if not isEligible %}
+<div
+    class="neo-card p-3 mb-4 d-flex align-items-center gap-3"
+    style="background-color: #fee2e2; border: 2px solid #b91c1c"
+>
+    <span class="fs-3">🛑</span>
+    <div>
+        <h5 class="font-display text-uppercase mb-0" style="color: #7f1d1d">
+            INELIGIBLE FOR ROLE
+        </h5>
+        <p class="font-mono mb-0" style="color: #991b1b; font-size: 0.9rem">
+            Your current profile metrics (CGPA/Backlogs/Dept) do not meet the
+            minimum requirements established by the company.
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="neo-card p-5" id="jobDescriptionCard">
+            <div
+                class="d-flex align-items-center gap-4 mb-4 border-bottom border-dark border-2 pb-4"
+            >
+                <div
+                    class="border border-dark border-2 d-flex justify-content-center align-items-center shadow-sm"
+                    style="
+                        width: 80px;
+                        height: 80px;
+                        background-color: white;
+                        font-size: 2rem;
+                    "
+                >
+                    {{ drive.companyName[0] | upper }}
+                </div>
+                <div>
+                    <h1 class="font-display display-5 mb-1">
+                        {{ drive.roleTitle }}
+                    </h1>
+                    <h4 class="font-mono text-muted mb-0">
+                        {{ drive.companyName }}
+                    </h4>
+                </div>
+            </div>
+
+            <div class="font-body fs-5" style="line-height: 1.8">
+                <h5
+                    class="font-display border-bottom border-dark border-2 pb-2 mb-3 mt-4"
+                >
+                    ROLE OVERVIEW
+                </h5>
+                <p>{{ drive.description }}</p>
+
+                <h5
+                    class="font-display border-bottom border-dark border-2 pb-2 mb-3 mt-5"
+                >
+                    ELIGIBILITY & REQUIREMENTS
+                </h5>
+                <p class="font-mono">{{ drive.eligibilityCriteria }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div
+            class="neo-card p-4 position-sticky"
+            style="top: 2rem; background-color: var(--color-bg-light)"
+            id="applySidebarCard"
+        >
+            <h4
+                class="font-display border-bottom border-dark border-2 pb-2 mb-3"
+            >
+                ACTION PANEL
+            </h4>
+
+            <div class="font-mono mb-4">
+                <p class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">CTC:</span>
+                    <span class="fw-bold">{{ drive.ctc }}</span>
+                </p>
+                <p class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">MIN CGPA:</span>
+                    <span class="fw-bold">{{ drive.minCgpa }}</span>
+                </p>
+                <p class="d-flex justify-content-between">
+                    <span class="text-muted">DEADLINE:</span>
+                    <span class="fw-bold" style="color: #ef4444"
+                        >{{ drive.deadline }}</span
+                    >
+                </p>
+            </div>
+
+            {% if hasApplied %}
+            <div
+                class="p-3 text-center border border-dark border-2 bg-light font-mono fw-bold mb-3 shadow-sm"
+            >
+                APPLICATION SUBMITTED ✓
+            </div>
+            <a
+                href="{{ url_for('student.myApplications') }}"
+                class="btn btn-neo wireframe w-100"
+                >TRACK STATUS</a
+            >
+            {% elif not isEligible %}
+            <button class="btn btn-neo wireframe w-100 py-3 disabled border-2">
+                NOT ELIGIBLE
+            </button>
+            {% else %}
+            <form
+                action="{{ url_for('student.apply', driveId=drive.id) }}"
+                method="POST"
+                id="submitApplicationForm"
+            >
+                {{ form.hidden_tag() if form else '' }}
+                <button
+                    type="submit"
+                    class="btn btn-neo w-100 py-3 fs-5"
+                    id="finalApplyBtn"
+                >
+                    SUBMIT APPLICATION &rarr;
+                </button>
+            </form>
+            <p
+                class="font-mono text-muted mt-3 text-center"
+                style="font-size: 0.8rem"
+            >
+                Submitting will securely attach your current portal resume.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

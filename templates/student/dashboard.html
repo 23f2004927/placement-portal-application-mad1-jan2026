@@ -1,0 +1,112 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/student/dashboard.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Student Dashboard{% endblock %} {%
+block mainContent %}
+<div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-4">
+    <div>
+        <h1 class="font-display display-5 mb-1">
+            {{ student.full_name | default('GUEST STUDENT') }}
+        </h1>
+        <span class="data-tag me-2">DEPT: {{ student.department | default('N/A') }}</span>
+        <span class="data-tag me-2">BATCH: {{ student.graduation_year | default('N/A') }}</span>
+        <span class="data-tag">CGPA: {{ student.cgpa | default('N/A') }}</span>
+    </div>
+    <a href="#" class="btn btn-neo wireframe font-mono py-2">EDIT PROFILE</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-7">
+        <h3 class="font-display mb-4 border-bottom border-dark pb-2 border-2">
+            ACTIVE POSTINGS
+        </h3>
+
+        <div class="d-flex flex-column gap-4">
+            {% for drive in available_drives | default([{'company': 'TechNova',
+            'title': 'Frontend Developer', 'deadline': 'May 1, 2026'},
+            {'company': 'DataCorp', 'title': 'Data Scientist', 'deadline': 'May
+            10, 2026'}]) %}
+            <div class="neo-card p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h4 class="font-display mb-1">{{ drive.title }}</h4>
+                        <p class="font-mono text-muted mb-0">
+                            {{ drive.company }}
+                        </p>
+                    </div>
+                    <span class="data-tag bg-white">DUE: {{ drive.deadline }}</span>
+                </div>
+                <p class="mb-4">
+                    Eligibility and description details will appear here based
+                    on the database record.
+                </p>
+                <form action="#" method="POST" class="m-0">
+                    <input type="hidden" name="drive_id" value="{{ drive.id }}" />
+                    <button type="submit" class="btn btn-neo w-100">
+                        SUBMIT APPLICATION
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="neo-card text-center p-5">
+                <p class="font-mono mb-0">NO ACTIVE POSTINGS. AWAITING DATA.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-xl-5">
+        <h3 class="font-display mb-4 border-bottom border-dark pb-2 border-2">
+            APPLICATION PIPELINE
+        </h3>
+
+        <div class="neo-card p-0 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-borderless mb-0 font-mono">
+                    <thead class="border-bottom border-dark border-2 bg-light">
+                        <tr>
+                            <th class="p-3">COMPANY</th>
+                            <th class="p-3">ROLE</th>
+                            <th class="p-3 text-end">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in my_applications | default([{'company':
+                        'Alpha Sys', 'role': 'Backend', 'status': 'applied'},
+                        {'company': 'Beta Inc', 'role': 'QA', 'status':
+                        'shortlisted'}]) %}
+                        <tr class="border-bottom border-dark align-middle">
+                            <td class="p-3">{{ app.company }}</td>
+                            <td class="p-3">{{ app.role }}</td>
+                            <td class="p-3 text-end">
+                                {% if app.status == 'applied' %}
+                                <span class="data-tag border-0 text-white" style="
+                                        background-color: var(--color-border);
+                                    ">APPLIED</span>
+                                {% elif app.status == 'shortlisted' %}
+                                <span class="data-tag border-0 text-dark" style="
+                                        background-color: var(
+                                            --color-secondary
+                                        );
+                                    ">SHORTLISTED</span>
+                                {% elif app.status == 'selected' %}
+                                <span class="data-tag border-0 text-white" style="
+                                        background-color: var(--color-primary);
+                                    ">SELECTED</span>
+                                {% else %}
+                                <span class="data-tag bg-danger text-white border-0">REJECTED</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

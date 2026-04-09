@@ -1,0 +1,59 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/errors/404.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}404 Not Found{% endblock %} {%
+block mainContent %}
+<style>
+    #appSidebar {
+        display: none !important;
+    }
+    #mainContentArea {
+        margin-left: 0 !important;
+    }
+    body {
+        background: #ffffff !important;
+        color: black !important;
+    }
+    #topNavbar {
+        display: none !important;
+    }
+</style>
+
+<div
+    class="d-flex flex-column justify-content-center align-items-center vh-100 text-center px-3"
+    id="error404Container"
+>
+    <h1
+        class="font-mono mb-0"
+        style="
+            font-size: 10rem;
+            line-height: 1;
+            letter-spacing: -5px;
+            text-shadow: 8px 8px 0px #000;
+            color: white;
+            -webkit-text-stroke: 4px black;
+        "
+    >
+        404
+    </h1>
+    <div
+        class="bg-dark text-white border border-dark border-3 px-4 py-2 font-display fs-2 mb-4"
+        style="box-shadow: 6px 6px 0px var(--color-primary)"
+    >
+        DATA NOT FOUND
+    </div>
+    <p class="font-mono text-muted mb-5 fs-5">
+        The requested resource or endpoint does not exist on this server.
+    </p>
+
+    <a
+        href="{{ url_for('index') }}"
+        class="btn btn-neo secondary px-5 py-3 fs-4 text-dark"
+        >&larr; RECALIBRATE ROUTE</a
+    >
+</div>
+{% endblock %}

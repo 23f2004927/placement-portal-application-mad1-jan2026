@@ -1,0 +1,273 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  10 April 2026
+  templates/admin/drives.html
+-->
+
+{% extends "base.html" %}
+{% from 'components/_tableMacro.html' import brutalTable %}
+
+{% block pageTitle %}Drive Approvals - Admin{% endblock %}
+{% block breadcrumb %}ADMIN / DRIVES{% endblock %}
+
+{% block mainContent %}
+<style>
+    .nav-pills .nav-link {
+        background-color: var(--color-card);
+        border: var(--border-main);
+        color: var(--color-text);
+        margin-right: 12px;
+        border-radius: 0;
+        transition: all 0.1s steps(4);
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: var(--color-primary) !important;
+        color: white !important;
+    }
+
+    .nav-pills .nav-link:hover:not(.active) {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
+    <h1 class="font-display display-5 mb-0">DRIVE MANAGEMENT</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO DASHBOARD</a>
+</div>
+
+<ul class="nav nav-pills mb-4 d-flex" id="driveTabs" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active font-mono fw-bold" id="pendingTab" data-bs-toggle="pill"
+            data-bs-target="#pendingPane" type="button" role="tab">PENDING ({{ pendingDrives|length }})</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link font-mono fw-bold" id="approvedTab" data-bs-toggle="pill" data-bs-target="#approvedPane"
+            type="button" role="tab">APPROVED ({{ approvedDrives|length }})</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link font-mono fw-bold" id="allTab" data-bs-toggle="pill" data-bs-target="#allPane"
+            type="button" role="tab">ALL ({{ allDrives|length }})</button>
+    </li>
+</ul>
+
+{% set standardHeaders = [
+{'label': 'COMPANY', 'class': 'p-3'},
+{'label': 'ROLE', 'class': 'p-3'},
+{'label': 'DEADLINE', 'class': 'p-3'},
+{'label': 'ACTIONS', 'class': 'p-3 text-end'}
+] %}
+
+{% set allHeaders = [
+{'label': 'COMPANY', 'class': 'p-3'},
+{'label': 'ROLE', 'class': 'p-3'},
+{'label': 'STATUS', 'class': 'p-3'},
+{'label': 'DETAILS', 'class': 'p-3 text-end'}
+] %}
+{% include 'components/_searchBar.html' %}
+
+
+<div class="tab-content" id="driveTabsContent">
+
+    <div class="tab-pane fade show active" id="pendingPane" role="tabpanel">
+        {% call(drive) brutalTable(standardHeaders, pendingDrives, "QUEUE CLEAR") %}
+        <tr class="border-bottom border-dark align-middle">
+            <td class="p-3 fw-bold">{{ drive.company.company_name | default('UNKNOWN') }}</td>
+            <td class="p-3 text-uppercase">{{ drive.job_title }}</td>
+            <td class="p-3">{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline else 'N/A'
+                }}</td>
+            <td class="p-3 text-end d-flex justify-content-end gap-2">
+                <button class="brutal-btn wireframe py-1 px-3" data-bs-toggle="modal"
+                    data-bs-target="#singleViewDriveModal" data-title="{{ drive.job_title }}"
+                    data-company="{{ drive.company.company_name }}" data-ctc="{{ drive.ctc }}"
+                    data-type="{{ drive.job_type }}" data-loc="{{ drive.location }}"
+                    data-eligibility="{{ drive.eligibility_criteria }}" data-desc="{{ drive.job_description }}"
+                    data-status="{{ drive.status }}"
+                    data-url="{{ url_for('admin.driveAction', driveId=drive.id) }}">VIEW</button>
+
+                <form action="{{ url_for('admin.driveAction', driveId=drive.id) }}" method="POST" class="m-0">
+                    {{ form.hidden_tag() if form else '' }}
+                    <input type="hidden" name="action" value="approve" />
+                    <button type="submit" class="brutal-btn secondary py-1 px-3">APPROVE</button>
+                </form>
+            </td>
+        </tr>
+        {% endcall %}
+    </div>
+
+    <div class="tab-pane fade" id="approvedPane" role="tabpanel">
+        {% call(drive) brutalTable(standardHeaders, approvedDrives, "NO APPROVED DRIVES") %}
+        <tr class="border-bottom border-dark align-middle">
+            <td class="p-3 fw-bold">{{ drive.company.company_name | default('UNKNOWN') }}</td>
+            <td class="p-3 text-uppercase">{{ drive.job_title }}</td>
+            <td class="p-3">{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline else 'N/A'
+                }}</td>
+            <td class="p-3 text-end d-flex justify-content-end gap-2">
+                <button class="brutal-btn wireframe py-1 px-3" data-bs-toggle="modal"
+                    data-bs-target="#singleViewDriveModal" data-title="{{ drive.job_title }}"
+                    data-company="{{ drive.company.company_name }}" data-ctc="{{ drive.ctc }}"
+                    data-type="{{ drive.job_type }}" data-loc="{{ drive.location }}"
+                    data-eligibility="{{ drive.eligibility_criteria }}" data-desc="{{ drive.job_description }}"
+                    data-status="{{ drive.status }}"
+                    data-url="{{ url_for('admin.driveAction', driveId=drive.id) }}">VIEW</button>
+
+                <button type="button" class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white;"
+                    data-bs-toggle="modal" data-bs-target="#globalConfirmModal"
+                    data-action-url="{{ url_for('admin.driveAction', driveId=drive.id) }}"
+                    data-action-value="closed">CLOSE</button>
+            </td>
+        </tr>
+        {% endcall %}
+    </div>
+
+    <div class="tab-pane fade" id="allPane" role="tabpanel">
+        {% call(drive) brutalTable(allHeaders, allDrives, "SYSTEM EMPTY") %}
+        <tr class="border-bottom border-dark align-middle">
+            <td class="p-3 fw-bold">{{ drive.company.company_name | default('UNKNOWN') }}</td>
+            <td class="p-3 text-uppercase">{{ drive.job_title }}</td>
+            <td class="p-3">{% set badgeStatus = drive.status %}{% include 'components/_statusBadge.html' %}</td>
+            <td class="p-3 text-end">
+                <button class="brutal-btn wireframe py-1 px-3" data-bs-toggle="modal"
+                    data-bs-target="#singleViewDriveModal" data-title="{{ drive.job_title }}"
+                    data-company="{{ drive.company.company_name }}" data-ctc="{{ drive.ctc }}"
+                    data-type="{{ drive.job_type }}" data-loc="{{ drive.location }}"
+                    data-eligibility="{{ drive.eligibility_criteria }}" data-desc="{{ drive.job_description }}"
+                    data-status="{{ drive.status }}"
+                    data-url="{{ url_for('admin.driveAction', driveId=drive.id) }}">INSPECT &rarr;</button>
+            </td>
+        </tr>
+        {% endcall %}
+    </div>
+</div>
+
+<div class="modal fade" id="singleViewDriveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content brutal-card p-0">
+            <div class="modal-header border-bottom border-dark border-2 p-4">
+                <div>
+                    <h3 class="modal-title font-display mb-1 text-uppercase" id="vd-title">-</h3>
+                    <p class="font-mono text-muted fw-bold mb-0" id="vd-company">-</p>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4 bg-light">
+                <div class="row g-4 font-mono mb-4">
+                    <div class="col-md-6">
+                        <label class="text-muted small fw-bold">COMPENSATION (CTC)</label>
+                        <div class="p-3 border border-dark border-2 bg-white fw-bold" id="vd-ctc">-</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small fw-bold">TYPE | LOCATION</label>
+                        <div class="p-3 border border-dark border-2 bg-white fw-bold text-uppercase" id="vd-type-loc">-
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h5 class="font-display border-bottom border-dark border-2 pb-2 mb-3">ELIGIBILITY CRITERIA</h5>
+                    <p class="font-mono mb-0" id="vd-eligibility">-</p>
+                </div>
+                <div>
+                    <h5 class="font-display border-bottom border-dark border-2 pb-2 mb-3">JOB DESCRIPTION</h5>
+                    <div class="p-3 bg-white border border-dark border-2 font-body" style="white-space: pre-wrap;"
+                        id="vd-desc">-</div>
+                </div>
+            </div>
+
+            <div class="modal-footer border-top border-dark border-2 p-4 d-flex justify-content-between">
+                <button type="button" class="brutal-btn wireframe" data-bs-dismiss="modal">DISMISS</button>
+                <div class="d-flex gap-2">
+                    <form id="vd-form-reject" method="POST" class="m-0 d-none">
+                        {{ form.hidden_tag() if form else '' }}
+                        <input type="hidden" name="action" value="reject">
+                        <button type="submit" class="brutal-btn"
+                            style="background-color: #ef4444; color: white;">REJECT</button>
+                    </form>
+                    <form id="vd-form-approve" method="POST" class="m-0 d-none">
+                        {{ form.hidden_tag() if form else '' }}
+                        <input type="hidden" name="action" value="approve">
+                        <button type="submit" class="brutal-btn secondary">APPROVE</button>
+                    </form>
+                    <form id="vd-form-close" method="POST" class="m-0 d-none">
+                        {{ form.hidden_tag() if form else '' }}
+                        <input type="hidden" name="action" value="closed">
+                        <button type="submit" class="brutal-btn" style="background-color: #ef4444; color: white;">CLOSE
+                            DRIVE</button>
+                    </form>
+                    <form id="vd-form-restore" method="POST" class="m-0 d-none">
+                        {{ form.hidden_tag() if form else '' }}
+                        <input type="hidden" name="action" value="restore">
+                        <button type="submit" class="brutal-btn wireframe border-dark border-2">RESTORE DRIVE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Global Confirm Modal Logic
+        const confirmModal = document.getElementById('globalConfirmModal');
+        if (confirmModal) {
+            confirmModal.addEventListener('show.bs.modal', (event) => {
+                const button = event.relatedTarget;
+                const form = confirmModal.querySelector('#confirmModalForm');
+                form.action = button.getAttribute('data-action-url');
+
+                let actionInput = form.querySelector('input[name="action"]');
+                if (!actionInput) {
+                    actionInput = document.createElement('input');
+                    actionInput.type = 'hidden';
+                    actionInput.name = 'action';
+                    form.appendChild(actionInput);
+                }
+                actionInput.value = button.getAttribute('data-action-value');
+            });
+        }
+
+        // Single View Modal Logic
+        const viewDriveModal = document.getElementById('singleViewDriveModal');
+        if (viewDriveModal) {
+            viewDriveModal.addEventListener('show.bs.modal', (event) => {
+                const btn = event.relatedTarget;
+
+                document.getElementById('vd-title').textContent = btn.getAttribute('data-title');
+                document.getElementById('vd-company').textContent = btn.getAttribute('data-company');
+                document.getElementById('vd-ctc').textContent = btn.getAttribute('data-ctc');
+                document.getElementById('vd-type-loc').textContent = btn.getAttribute('data-type') + ' | ' + btn.getAttribute('data-loc');
+                document.getElementById('vd-eligibility').textContent = btn.getAttribute('data-eligibility') || 'Standard criteria applies.';
+                document.getElementById('vd-desc').textContent = btn.getAttribute('data-desc');
+
+                const status = btn.getAttribute('data-status');
+                const actionUrl = btn.getAttribute('data-url');
+
+                const formReject = document.getElementById('vd-form-reject');
+                const formApprove = document.getElementById('vd-form-approve');
+                const formClose = document.getElementById('vd-form-close');
+                const formRestore = document.getElementById('vd-form-restore');
+
+                formReject.classList.add('d-none');
+                formApprove.classList.add('d-none');
+                formClose.classList.add('d-none');
+                formRestore.classList.add('d-none');
+
+                if (status === 'pending') {
+                    formReject.action = actionUrl;
+                    formApprove.action = actionUrl;
+                    formReject.classList.remove('d-none');
+                    formApprove.classList.remove('d-none');
+                } else if (status === 'approved') {
+                    formClose.action = actionUrl;
+                    formClose.classList.remove('d-none');
+                } else if (status === 'closed' || status === 'rejected' || status === 'blacklisted') {
+                    formRestore.action = actionUrl;
+                    formRestore.classList.remove('d-none');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

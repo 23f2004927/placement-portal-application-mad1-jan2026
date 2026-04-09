@@ -30,7 +30,7 @@ def registerCompany():
     # Basic presence checks
     if not all([username, email, password, company_name]):
         return render_template(
-            "auth/register_company.html",
+            "auth/registerCompany.html",
             error="Username, email, password and company name are required.",
         )
 

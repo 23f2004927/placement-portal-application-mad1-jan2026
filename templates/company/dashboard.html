@@ -1,0 +1,71 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/company/dashboard.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}Company Dashboard{% endblock %} {%
+block mainContent %}
+<div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-5">
+    <div>
+        <h1 class="font-display display-5 mb-1">
+            {{ company.company_name | default('COMPANY CONSOLE') }}
+        </h1>
+        <span class="data-tag me-2">HR: {{ company.hr_contact | default('N/A') }}</span>
+        <a href="{{ company.website | default('#') }}" class="data-tag text-dark text-decoration-none hover-shadow">SITE
+            LINK &nearr;</a>
+    </div>
+    <a href="#" class="btn btn-neo secondary font-display py-2">POST NEW DRIVE</a>
+</div>
+
+<div class="neo-card p-0 overflow-hidden">
+    <div class="p-4 border-bottom border-dark border-2 bg-white d-flex justify-content-between align-items-center">
+        <h3 class="font-display mb-0">ACTIVE LISTINGS</h3>
+        <span class="data-tag border-0" style="background-color: var(--color-secondary)">SYSTEM LIVE</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-borderless mb-0">
+            <thead class="border-bottom border-dark border-2 font-mono bg-light">
+                <tr>
+                    <th scope="col" class="p-4">ROLE ID</th>
+                    <th scope="col" class="p-4">DEADLINE</th>
+                    <th scope="col" class="p-4">STATUS</th>
+                    <th scope="col" class="p-4 text-center">APPS</th>
+                    <th scope="col" class="p-4 text-end">ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody class="font-mono">
+                {% for drive in drives | default([{'title': 'SDE I', 'deadline':
+                '2026-05-01', 'status': 'approved', 'applicants': 42}, {'title':
+                'Analyst', 'deadline': '2026-04-15', 'status': 'pending',
+                'applicants': 0}]) %}
+                <tr class="border-bottom border-dark align-middle">
+                    <td class="p-4 fw-bold font-body text-uppercase">
+                        {{ drive.title }}
+                    </td>
+                    <td class="p-4">{{ drive.deadline }}</td>
+                    <td class="p-4">
+                        {% if drive.status == 'approved' %}
+                        <span class="data-tag border-0 text-dark"
+                            style="background-color: var(--color-secondary)">APPROVED</span>
+                        {% elif drive.status == 'pending' %}
+                        <span class="data-tag bg-warning border-0">PENDING</span>
+                        {% else %}
+                        <span class="data-tag">{{ drive.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-center fs-5 fw-bold">
+                        {{ drive.applicants }}
+                    </td>
+                    <td class="p-4 text-end">
+                        <a href="#" class="btn btn-neo wireframe py-1 px-3 fs-6">REVIEW &rarr;</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

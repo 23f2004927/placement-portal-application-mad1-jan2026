@@ -1,0 +1,17 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/components/_emptyState.html
+-->
+
+<div class="brutal-card text-center p-5 my-4" id="emptyStateContainer">
+    <div class="font-mono text-muted mb-3" style="font-size: 2.5rem; letter-spacing: -2px">[ \_ / ]</div>
+    <h3 class="font-display text-uppercase mb-2">{{ emptyHeadline | default("NO DATA DETECTED") }}</h3>
+    <p class="font-mono text-muted mb-4">{{ emptySubtext | default("The system is currently awaiting data input for this
+        module.") }}</p>
+    {% if emptyActionLink and emptyActionText %}
+    <a href="{{ emptyActionLink }}" class="brutal-btn wireframe px-4 py-2" id="emptyStateActionBtn">{{ emptyActionText
+        }}</a>
+    {% endif %}
+</div>

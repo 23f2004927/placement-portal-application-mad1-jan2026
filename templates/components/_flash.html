@@ -1,0 +1,26 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/components/_flash.html
+-->
+
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %} {% set bs_class =
+    'bg-success text-white' if category == 'success' else 'bg-danger text-white'
+    if category in ['error', 'danger'] else 'bg-info text-dark' %}
+    <div class="alert {{ bs_class }} p-3 mb-3 border border-dark rounded-0 shadow-none text-uppercase fw-bold"
+        role="alert">
+        {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% endwith %} {% if error %}
+    <div class="alert bg-danger text-white p-3 mb-3 border border-dark rounded-0 shadow-none text-uppercase fw-bold"
+        role="alert" style="
+            border-width: 3px !important;
+            box-shadow: 4px 4px 0px #000 !important;
+        ">
+        {{ error }}
+    </div>
+    {% endif %}
+</div>

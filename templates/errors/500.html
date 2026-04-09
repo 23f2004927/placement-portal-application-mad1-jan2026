@@ -1,0 +1,55 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/errors/500.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}500 System Error{% endblock %} {%
+block mainContent %}
+<style>
+    #appSidebar {
+        display: none !important;
+    }
+    #mainContentArea {
+        margin-left: 0 !important;
+    }
+    body {
+        background: #fdf4ff !important;
+        color: black !important;
+    }
+    #topNavbar {
+        display: none !important;
+    }
+</style>
+
+<div
+    class="d-flex flex-column justify-content-center align-items-center vh-100 text-center px-3"
+    id="error500Container"
+>
+    <h1
+        class="font-mono text-dark mb-0"
+        style="
+            font-size: 10rem;
+            line-height: 1;
+            letter-spacing: -5px;
+            text-shadow: 8px 8px 0px var(--color-primary);
+        "
+    >
+        500
+    </h1>
+    <div
+        class="bg-white text-dark border border-dark border-3 px-4 py-2 font-display fs-2 mb-4"
+        style="box-shadow: 6px 6px 0px #000"
+    >
+        CRITICAL SYSTEM FAULT
+    </div>
+    <p class="font-mono fw-bold mb-5 fs-5">
+        The server encountered an unexpected condition and crashed.
+    </p>
+
+    <a href="{{ url_for('index') }}" class="btn btn-neo px-5 py-3 fs-4"
+        >&larr; REBOOT CONNECTION</a
+    >
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  9 April 2026
+  templates/errors/403.html
+-->
+
+{% extends "base.html" %} {% block pageTitle %}403 Forbidden{% endblock %} {%
+block mainContent %}
+<style>
+    /* Suppress App Shell Layout for Error Screens */
+    #appSidebar {
+        display: none !important;
+    }
+    #mainContentArea {
+        margin-left: 0 !important;
+    }
+    body {
+        background: #111111 !important;
+        color: white !important;
+    }
+    #topNavbar {
+        display: none !important;
+    }
+</style>
+
+<div
+    class="d-flex flex-column justify-content-center align-items-center vh-100 text-center px-3"
+    id="error403Container"
+>
+    <h1
+        class="font-mono text-danger mb-0"
+        style="
+            font-size: 10rem;
+            line-height: 1;
+            letter-spacing: -5px;
+            text-shadow: 8px 8px 0px #000;
+        "
+    >
+        403
+    </h1>
+    <div
+        class="bg-danger text-white border border-dark border-3 px-4 py-2 font-display fs-2 mb-4"
+        style="transform: rotate(-2deg); box-shadow: 6px 6px 0px #000"
+    >
+        UNAUTHORIZED ACCESS
+    </div>
+    <p class="font-mono text-light mb-5 fs-5">
+        Your security clearance does not permit entry to this sector.
+    </p>
+
+    <a
+        href="{{ url_for('index') }}"
+        class="btn btn-neo px-5 py-3 fs-4"
+        style="background-color: white; color: black"
+        >&larr; RETURN TO SAFETY</a
+    >
+</div>
+{% endblock %}
