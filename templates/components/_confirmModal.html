@@ -29,3 +29,21 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.getElementById('globalConfirmModal')
+        .addEventListener('show.bs.modal', (e) => {
+            const form = document.getElementById('confirmModalForm');
+            form.action = e.relatedTarget.dataset.actionUrl;
+
+            let input = form.querySelector('input[name="action"]');
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'action';
+                form.appendChild(input);
+            }
+            input.value = e.relatedTarget.dataset.actionValue;
+        });
+</script>

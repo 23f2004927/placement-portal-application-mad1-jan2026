@@ -139,23 +139,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const confirmModal = document.getElementById('globalConfirmModal');
-        if (confirmModal) {
-            confirmModal.addEventListener('show.bs.modal', (event) => {
-                const button = event.relatedTarget;
-                const form = confirmModal.querySelector('#confirmModalForm');
-                form.action = button.getAttribute('data-action-url');
-
-                let actionInput = form.querySelector('input[name="action"]');
-                if (!actionInput) {
-                    actionInput = document.createElement('input');
-                    actionInput.type = 'hidden';
-                    actionInput.name = 'action';
-                    form.appendChild(actionInput);
-                }
-                actionInput.value = button.getAttribute('data-action-value');
-            });
-        }
 
         const viewStudentModal = document.getElementById('singleViewStudentModal');
         if (viewStudentModal) {
