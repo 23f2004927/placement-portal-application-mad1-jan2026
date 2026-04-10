@@ -25,7 +25,7 @@ class Application(db.Model):
     )
 
     approval_status = db.Column(
-        db.Enum("applied", "shortlisted", "selected", "rejected", "interviewScheduled"), default="applied"
+        db.Enum("applied", "shortlisted", "selected", "rejected", "hired"), default="applied"
     )
     applied_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     feedBack = db.Column(db.Text, nullable=True, default="Not Provided")

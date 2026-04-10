@@ -1,22 +1,18 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/student/dashboard.html
--->
+{% extends "base.html" %}
+{% block pageTitle %}Student Dashboard{% endblock %}
+{% block breadcrumb %}STUDENT / DASHBOARD{% endblock %}
 
-{% extends "base.html" %} {% block pageTitle %}Student Dashboard{% endblock %} {%
-block mainContent %}
+{% block mainContent %}
 <div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-4">
     <div>
         <h1 class="font-display display-5 mb-1">
-            {{ student.full_name | default('GUEST STUDENT') }}
+            {{ student.full_name | default('GUEST STUDENT') | upper }}
         </h1>
         <span class="data-tag me-2">DEPT: {{ student.department | default('N/A') }}</span>
         <span class="data-tag me-2">BATCH: {{ student.graduation_year | default('N/A') }}</span>
         <span class="data-tag">CGPA: {{ student.cgpa | default('N/A') }}</span>
     </div>
-    <a href="#" class="btn btn-neo wireframe font-mono py-2">EDIT PROFILE</a>
+    <a href="#" class="brutal-btn wireframe font-mono py-2">EDIT PROFILE</a>
 </div>
 
 <div class="row g-4">
@@ -26,34 +22,41 @@ block mainContent %}
         </h3>
 
         <div class="d-flex flex-column gap-4">
-            {% for drive in available_drives | default([{'company': 'TechNova',
-            'title': 'Frontend Developer', 'deadline': 'May 1, 2026'},
-            {'company': 'DataCorp', 'title': 'Data Scientist', 'deadline': 'May
-            10, 2026'}]) %}
-            <div class="neo-card p-4">
+            {% for drive in available_drives %}
+            <div class="brutal-card p-4">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                        <h4 class="font-display mb-1">{{ drive.title }}</h4>
-                        <p class="font-mono text-muted mb-0">
-                            {{ drive.company }}
+                        <h4 class="font-display mb-1">{{ drive.job_title }}</h4>
+                        <p class="font-mono text-muted mb-0 fw-bold">
+                            {{ drive.company.company_name }}
                         </p>
                     </div>
-                    <span class="data-tag bg-white">DUE: {{ drive.deadline }}</span>
+                    <span class="data-tag bg-white border border-dark text-dark">
+                        DUE: {{ drive.application_deadline.strftime('%b %d, %Y') }}
+                    </span>
                 </div>
-                <p class="mb-4">
-                    Eligibility and description details will appear here based
-                    on the database record.
-                </p>
+
+                <div class="mb-4 font-body" style="font-size: 0.9rem;">
+                    <p class="mb-1"><strong>Eligibility:</strong> {{ drive.eligibility_criteria }}</p>
+                    <p class="mb-0 text-muted">{{ drive.job_description | truncate(100) }}</p>
+                </div>
+
                 <form action="#" method="POST" class="m-0">
                     <input type="hidden" name="drive_id" value="{{ drive.id }}" />
-                    <button type="submit" class="btn btn-neo w-100">
-                        SUBMIT APPLICATION
+                    {% if drive.id in applied_drive_ids %}
+                    <button type="button" class="brutal-btn wireframe w-100 disabled" disabled style="opacity: 0.6;">
+                        ALREADY APPLIED
                     </button>
+                    {% else %}
+                    <button type="submit" class="brutal-btn secondary w-100 text-dark">
+                        SUBMIT APPLICATION &rarr;
+                    </button>
+                    {% endif %}
                 </form>
             </div>
             {% else %}
-            <div class="neo-card text-center p-5">
-                <p class="font-mono mb-0">NO ACTIVE POSTINGS. AWAITING DATA.</p>
+            <div class="brutal-card text-center p-5 bg-white">
+                <p class="font-mono mb-0 text-muted fw-bold">NO ACTIVE POSTINGS AT THIS TIME.</p>
             </div>
             {% endfor %}
         </div>
@@ -64,7 +67,7 @@ block mainContent %}
             APPLICATION PIPELINE
         </h3>
 
-        <div class="neo-card p-0 overflow-hidden">
+        <div class="brutal-card p-0 overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-borderless mb-0 font-mono">
                     <thead class="border-bottom border-dark border-2 bg-light">
@@ -74,33 +77,25 @@ block mainContent %}
                             <th class="p-3 text-end">STATUS</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for app in my_applications | default([{'company':
-                        'Alpha Sys', 'role': 'Backend', 'status': 'applied'},
-                        {'company': 'Beta Inc', 'role': 'QA', 'status':
-                        'shortlisted'}]) %}
+                    <tbody class="bg-white">
+                        {% for app in my_applications %}
                         <tr class="border-bottom border-dark align-middle">
-                            <td class="p-3">{{ app.company }}</td>
-                            <td class="p-3">{{ app.role }}</td>
+                            <td class="p-3 fw-bold">{{ app.drive.company.company_name }}</td>
+                            <td class="p-3">{{ app.drive.job_title }}</td>
                             <td class="p-3 text-end">
-                                {% if app.status == 'applied' %}
-                                <span class="data-tag border-0 text-white" style="
-                                        background-color: var(--color-border);
-                                    ">APPLIED</span>
-                                {% elif app.status == 'shortlisted' %}
-                                <span class="data-tag border-0 text-dark" style="
-                                        background-color: var(
-                                            --color-secondary
-                                        );
-                                    ">SHORTLISTED</span>
-                                {% elif app.status == 'selected' %}
-                                <span class="data-tag border-0 text-white" style="
-                                        background-color: var(--color-primary);
-                                    ">SELECTED</span>
-                                {% else %}
-                                <span class="data-tag bg-danger text-white border-0">REJECTED</span>
-                                {% endif %}
+                                <span class="data-tag border-0 text-dark 
+                                    {% if app.approval_status in ['selected', 'hired'] %}bg-success text-white
+                                    {% elif app.approval_status == 'rejected' %}bg-danger text-white
+                                    {% elif app.approval_status == 'shortlisted' %}bg-warning
+                                    {% else %}bg-light border border-dark{% endif %}">
+                                    {{ app.approval_status | upper }}
+                                </span>
                             </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="p-4 text-center text-muted">You have not submitted any applications
+                                yet.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

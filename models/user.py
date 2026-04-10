@@ -14,8 +14,10 @@ class User(db.Model):
     email = db.Column(db.String(40), nullable=False, unique=True)
     password_hash = db.Column(db.String(256))
     role = db.Column(db.Enum("admin", "student", "company"))
-    is_active = db.Column(db.Boolean, default=True)
-    is_blacklisted = db.Column(db.Boolean, default=False)
+    status = db.Column(
+        db.Enum("active", "blacklisted"),
+        default="active"
+    )
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-    company = db.relationship("Company", back_populates="user")
+    company = db.relationship("Company", back_populates="user", uselist=False)
     student = db.relationship("Student", back_populates="user")

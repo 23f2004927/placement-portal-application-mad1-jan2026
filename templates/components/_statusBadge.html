@@ -7,21 +7,14 @@
 
 {% set statusLower = badgeStatus | lower %} {% if statusLower in ['approved',
 'active', 'selected'] %}
-<span
-    class="data-tag border-0 text-dark fw-bold"
-    style="background-color: var(--color-secondary)"
-    >{{ badgeStatus | upper }}</span
->
+<span class="data-tag border-0 text-dark fw-bold" style="background-color: var(--color-secondary)">{{ badgeStatus |
+    upper }}</span>
 {% elif statusLower in ['pending', 'shortlisted'] %}
-<span class="data-tag border-0 text-dark fw-bold bg-warning"
-    >{{ badgeStatus | upper }}</span
->
+<span class="data-tag border-0 text-dark fw-bold bg-warning">{{ badgeStatus | upper }}</span>
 {% elif statusLower in ['rejected', 'blacklisted', 'closed'] %}
-<span class="data-tag border-0 text-white fw-bold bg-danger"
-    >{{ badgeStatus | upper }}</span
->
+<span class="data-tag border-0 text-white fw-bold bg-danger">{{ badgeStatus | upper }}</span>
+{% elif statusLower in ['review'] %}
+<span class="data-tag border-0 text-dark fw-bold bg-warning">{{ badgeStatus | upper }}</span>
 {% else %}
-<span class="data-tag border-dark border-2 bg-light fw-bold"
-    >{{ badgeStatus | upper }}</span
->
+<span class="data-tag border-dark border-2 bg-light fw-bold">{{ badgeStatus | upper }}</span>
 {% endif %}

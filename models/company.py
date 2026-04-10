@@ -17,10 +17,12 @@ class Company(db.Model):
     hr_contact = db.Column(db.String(100))
     website = db.Column(db.String(200))
     description = db.Column(db.Text)
+    industry = db.Column(db.String(100))
     approval_status = db.Column(
-        db.Enum("pending", "approved", "rejected", "blacklisted"), default="pending"
+        db.Enum("pending", "approved", "rejected"),
+        default="pending"
     )
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
-    user = db.relationship("User", back_populates="company")
+    user = db.relationship("User", back_populates="company", uselist=False)
     drives = db.relationship("Drive", back_populates="company")

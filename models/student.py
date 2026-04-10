@@ -25,10 +25,11 @@ class Student(db.Model):
     )
     socials = db.Column(db.JSON, nullable=True)
     account_status = db.Column(
-        db.Enum("review", "active", "deactivated",), default="active"
+        db.Enum("active", "review"),
+        default="active"
     )
     resume_filename = db.Column(db.String(200))
-    is_blacklisted = db.Column(db.Boolean, default=False)
+
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     user = db.relationship("User", back_populates="student")

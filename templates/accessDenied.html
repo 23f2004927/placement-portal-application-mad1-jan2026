@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block pageTitle %}Access Restricted{% endblock %}
+{% block breadcrumb %}SYSTEM / ACCESS RESTRICTED{% endblock %}
+
+{% block mainContent %}
+<div class="content-container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="brutal-card w-100 text-center" style="max-width: 600px;">
+
+        <div class="border-bottom border-dark border-2 pb-3 mb-4">
+            <h2 class="font-display fs-2 mb-0" style="color: var(--color-primary);">ACCESS RESTRICTED</h2>
+        </div>
+
+        <div class="font-mono mb-4">
+            <span class="data-tag">USER: {{ user.username }}</span>
+            <span class="data-tag ms-2">ROLE: {{ user.role | upper }}</span>
+        </div>
+
+        <div class="my-4">
+            {% if user.status == "blacklisted" %}
+            {% if user.role == "company" %}
+            <h3 class="font-display fs-4 mb-3">Company Blacklisted</h3>
+            <p>Your company has been permanently restricted from the platform.</p>
+            {% elif user.role == "student" %}
+            <h3 class="font-display fs-4 mb-3">Account Blacklisted</h3>
+            <p>You have been permanently restricted from the platform.</p>
+            {% endif %}
+            {% else %}
+            {% if user.role == "company" and user.company.approval_status == "pending" %}
+            <h3 class="font-display fs-4 mb-3">Pending Approval</h3>
+            <p>Your company profile is currently under review by the administration. You will be granted full access
+                once verified.</p>
+            {% elif user.role == "company" and user.company.approval_status == "rejected" %}
+            <h3 class="font-display fs-4 mb-3">Application Rejected</h3>
+            <p>Your company's application to join the placement portal has been declined.</p>
+            {% elif user.role == "student" and user.student.account_status == "review" %}
+            <h3 class="font-display fs-4 mb-3">Account Under Review</h3>
+            <p>Your student profile is currently being verified.</p>
+            {% else %}
+            <h3 class="font-display fs-4 mb-3">Unauthorized Area</h3>
+            <p>You do not have the necessary permissions to view this directory. {{user.company.approval_status}}</p>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="mt-5 pt-4 border-top border-dark border-2">
+            <a href="{{ url_for('auth.logout') }}" class="brutal-btn secondary text-decoration-none d-inline-block">
+                &larr; RETURN TO SECURE LOGIN
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

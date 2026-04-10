@@ -1,20 +1,16 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/company/createDrive.html
--->
+{% extends "base.html" %}
+{% block pageTitle %}Initiate Drive - Company Console{% endblock %}
+{% block breadcrumb %}COMPANY / DRIVES / NEW{% endblock %}
 
-{% extends "base.html" %} {% block pageTitle %}Initiate Drive - Company Console{%
-endblock %} {% block mainContent %}
+{% block mainContent %}
 <div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
     <h1 class="font-display display-5 mb-0">INITIATE PLACEMENT DRIVE</h1>
-    <a href="{{ url_for('company.dashboard') }}" class="btn btn-neo wireframe py-2 px-4">&larr; BACK TO CONSOLE</a>
+    <a href="{{ url_for('company.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO CONSOLE</a>
 </div>
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="neo-card p-5">
+        <div class="brutal-card p-5">
             <div class="mb-4 pb-3 border-bottom border-dark border-2">
                 <span class="data-tag border-0 text-dark mb-2 d-inline-block"
                     style="background-color: var(--color-secondary)">NEW LISTING</span>
@@ -24,16 +20,42 @@ endblock %} {% block mainContent %}
                 </p>
             </div>
 
-            <form action="#" method="POST">
+            <form action="{{ url_for('company.createDrive') }}" method="POST">
+                <div class="mb-4">
+                    <label class="form-label font-mono fw-bold">DRIVE NAME *</label>
+                    <input type="text" class="form-control form-control-lg font-display text-uppercase"
+                        name="drive_name" required placeholder="e.g. Summer Internship 2026" />
+                </div>
+
                 <div class="mb-4">
                     <label class="form-label font-mono fw-bold">JOB TITLE / ROLE *</label>
                     <input type="text" class="form-control form-control-lg font-display text-uppercase" name="job_title"
                         required placeholder="e.g. Frontend Engineer" />
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label font-mono fw-bold">APPLICATION DEADLINE *</label>
-                    <input type="date" class="form-control font-mono" name="application_deadline" required />
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">JOB TYPE</label>
+                        <select class="form-control font-mono" name="job_type">
+                            <option value="Internship">Internship</option>
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Contract">Contract</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">LOCATION</label>
+                        <input type="text" class="form-control font-mono" name="location" value="Remote" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">COMPENSATION *</label>
+                        <input type="text" class="form-control font-mono" name="compensation" value="Performance Based"
+                            required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">APPLICATION DEADLINE *</label>
+                        <input type="date" class="form-control font-mono" name="application_deadline" required />
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -48,7 +70,7 @@ endblock %} {% block mainContent %}
                         placeholder="Outline responsibilities, tech stack, and expectations..."></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-neo secondary w-100 fs-4 py-3 text-dark">
+                <button type="submit" class="brutal-btn secondary w-100 fs-4 py-3 text-dark">
                     SUBMIT FOR ADMIN APPROVAL &rarr;
                 </button>
             </form>

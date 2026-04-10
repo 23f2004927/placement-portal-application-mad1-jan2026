@@ -55,7 +55,9 @@
     <td class="p-4">{{ student.graduation_year }}</td>
     <td class="p-4 fw-bold">{{ student.cgpa if student.cgpa else 'N/A' }}</td>
     <td class="p-4">
-        {% set badgeStatus = 'ACTIVE' if not student.is_blacklisted else 'BLACKLISTED' %}
+        {% set badgeStatus = 'BLACKLISTED' if student.user.status == 'blacklisted' else
+        'ACTIVE' if student.account_status == 'active' else
+        'REVIEW' %}
         {% include 'components/_statusBadge.html' %}
     </td>
     <td class="p-4 text-end">
@@ -67,8 +69,8 @@
                 data-skills="{{ student.skills | default('No skills listed', true) }}"
                 data-status="{{ student.account_status }}">VIEW</button>
 
-            {% if not student.is_blacklisted %}
-            {% if student.account_status == 'review' or student.account_status == 'deactivated' %}
+            {% if student.user.status != 'blacklisted' %}
+            {% if student.account_status == 'review' %}
             <form action="{{ url_for('admin.student_action', student_id=student.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
                 <input type="hidden" name="action" value="activate">
@@ -77,7 +79,7 @@
             {% elif student.account_status == 'active' %}
             <form action="{{ url_for('admin.student_action', student_id=student.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
-                <input type="hidden" name="action" value="deactivate">
+                <input type="hidden" name="action" value="review">
                 <button type="submit" class="brutal-btn wireframe border-2 py-1 px-3">DEACTIVATE</button>
             </form>
             <button class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white" data-bs-toggle="modal"

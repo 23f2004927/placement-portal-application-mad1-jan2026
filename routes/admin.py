@@ -58,7 +58,9 @@ def company_action(company_id):
         case "reject":
             company.approval_status = "rejected"
         case "blacklist":
-            company.approval_status = "blacklisted"
+            company.user.status = "blacklisted"
+            company.approval_status = "rejected" 
+
             for drive in company.drives:
                 drive.status = "closed"
                 for application in drive.applications:
@@ -109,10 +111,8 @@ def student_action(student_id):
             student.account_status = "active"
         case "review":
             student.account_status = "review"
-        case "deactivate":
-            student.account_status = "deactivated"
         case "blacklist":
-            student.is_blacklisted = True
+            student.user.status = "blacklisted"
             for application in student.applications:
                 application.approval_status = "rejected"
         case _:

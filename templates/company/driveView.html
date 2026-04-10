@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block pageTitle %}Manage Drive - Company Console{% endblock %}
+{% block breadcrumb %}COMPANY / DRIVES / MANAGE{% endblock %}
+
+{% block mainContent %}
+<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
+    <h1 class="font-display display-5 mb-0">MANAGE PLACEMENT DRIVE</h1>
+    <a href="{{ url_for('company.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO CONSOLE</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="brutal-card p-5">
+
+            <div class="mb-5 pb-4 border-bottom border-dark border-2 d-flex justify-content-between align-items-start">
+                <div>
+                    <span class="data-tag text-dark mb-2 d-inline-block border-dark border"
+                        style="background-color: #fff;">{{ drive.job_type | upper }}</span>
+                    <span class="data-tag text-dark mb-2 ms-2 d-inline-block border-dark border"
+                        style="background-color: #fff;">{{ drive.location | upper }}</span>
+
+                    <h2 class="font-display text-uppercase mt-2 mb-0">{{ drive.job_title }}</h2>
+                    <p class="font-mono text-muted mt-1 mb-0">{{ drive.drive_name }}</p>
+                </div>
+                <div>
+                    {% if drive.status == 'approved' %}
+                    <span class="data-tag border-0 text-dark fs-6 px-3 py-2"
+                        style="background-color: var(--color-secondary)">APPROVED</span>
+                    {% elif drive.status == 'pending' %}
+                    <span class="data-tag bg-warning text-dark border-0 fs-6 px-3 py-2">PENDING</span>
+                    {% else %}
+                    <span class="data-tag fs-6 px-3 py-2">{{ drive.status | upper }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <p class="font-mono text-danger fw-bold mb-0">
+                    Important: Updating any details below will reset this drive's status to "Pending" and require
+                    re-approval from the Administrator.
+                </p>
+            </div>
+
+            <form action="{{ url_for('company.manageDrive', drive_id=drive.id) }}" method="POST">
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">COMPENSATION *</label>
+                        <input type="text" class="form-control font-mono" name="compensation" value="{{ drive.ctc }}"
+                            required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">APPLICATION DEADLINE *</label>
+                        <input type="date" class="form-control font-mono" name="application_deadline"
+                            value="{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline else '' }}"
+                            required />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label font-mono fw-bold">ELIGIBILITY CRITERIA *</label>
+                    <input type="text" class="form-control" name="eligibility_criteria"
+                        value="{{ drive.eligibility_criteria }}" required />
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label font-mono fw-bold">FULL JOB DESCRIPTION *</label>
+                    <textarea class="form-control" name="job_description" rows="6"
+                        required>{{ drive.job_description }}</textarea>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3">
+                    <a href="{{ url_for('company.dashboard') }}"
+                        class="brutal-btn wireframe py-3 px-4 text-decoration-none text-dark">
+                        CANCEL
+                    </a>
+                    <button type="submit" class="brutal-btn secondary fs-5 py-3 px-5 text-dark">
+                        UPDATE DETAILS &rarr;
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

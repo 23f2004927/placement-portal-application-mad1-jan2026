@@ -50,12 +50,16 @@
                 data-action-url="{{ url_for('admin.company_action', company_id=comp.id) }}"
                 data-action-value="blacklist">BLACKLIST</button>
 
-            {% elif comp.approval_status in ['rejected', 'blacklisted'] %}
+            {% elif comp.approval_status == 'rejected' %}
+            {% if comp.user.status == 'blacklisted' %}
+            <span class="font-mono text-danger">BLACKLISTED</span>
+            {% else %}
             <form action="{{ url_for('admin.company_action', company_id=comp.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
                 <input type="hidden" name="action" value="approve" />
                 <button type="submit" class="brutal-btn wireframe border-2 py-1 px-3">RESTORE</button>
             </form>
+            {% endif %}
             {% endif %}
 
         </div>

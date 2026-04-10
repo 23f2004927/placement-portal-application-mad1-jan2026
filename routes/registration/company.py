@@ -36,9 +36,9 @@ def registerCompany():
 
     # Check for existing user
     if User.query.filter_by(username=username).first():
+        flash("Username already taken.", "danger")
         return render_template(
-            "auth/registerCompany.html", error="Username already taken."
-        )
+            "auth/registerCompany.html", )
 
     if User.query.filter_by(email=email).first():
         return render_template(
@@ -47,9 +47,9 @@ def registerCompany():
 
     # Check for existing company name
     if Company.query.filter_by(company_name=company_name).first():
+        flash("A company with that name already exists.", "danger")
         return render_template(
             "auth/registerCompany.html",
-            error="A company with that name already exists.",
         )
 
     # Two-record insert
@@ -60,7 +60,7 @@ def registerCompany():
         role="company",
     )
     db.session.add(new_user)
-    db.session.flush()  # gets new_user.id without committing yet
+    db.session.flush()  
 
     new_company = Company(
         user_id=new_user.id,

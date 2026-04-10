@@ -15,6 +15,7 @@ class Drive(db.Model):
         db.ForeignKey("company.id"),
         nullable=False,
     )
+    drive_name = db.Column(db.String(100), nullable=False)
     job_title = db.Column(
         db.String(100),
         nullable=False,

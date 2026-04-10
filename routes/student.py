@@ -21,7 +21,7 @@ def load_student():
     g.student = db.one_or_404(db.select(Student).filter_by(user_id=session["user_id"]))
     if g.student.account_status == "review" and request.endpoint != "student.dashboard":
         return redirect(url_for("student.dashboard"))
-    elif g.student.account_status != "active":
+    elif g.student.account_status != "active" or g.student.user.status == "blacklisted":
         return redirect("/access-denied")
 
 

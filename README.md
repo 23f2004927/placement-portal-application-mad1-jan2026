@@ -13,6 +13,7 @@ Placement Portal Application web application that allows Admin (Institute), Comp
 | 0 | 24-02-2026 | 24-02-2026 | setup  |
 | 1 | 05-04-2026 | 06-04-2026 | db and schema  |
 | 2 | 06-04-2026 | 10-04-2026 | admin dashboard and management  |
+| 3 | 10-04-2026 | 10-04-2026 | company dashboard and management  |
 
 
 

@@ -1,66 +1,99 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/company/dashboard.html
--->
+{% extends "base.html" %}
+{% block pageTitle %}Company Dashboard{% endblock %}
+{% block breadcrumb %}COMPANY / DASHBOARD{% endblock %}
 
-{% extends "base.html" %} {% block pageTitle %}Company Dashboard{% endblock %} {%
-block mainContent %}
+{% block mainContent %}
 <div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-5">
     <div>
         <h1 class="font-display display-5 mb-1">
-            {{ company.company_name | default('COMPANY CONSOLE') }}
+            {{ company.company_name | upper }}
         </h1>
-        <span class="data-tag me-2">HR: {{ company.hr_contact | default('N/A') }}</span>
-        <a href="{{ company.website | default('#') }}" class="data-tag text-dark text-decoration-none hover-shadow">SITE
-            LINK &nearr;</a>
+        <span class="data-tag me-2">HR: {{ company.hr_contact | default('N/A', true) }}</span>
+        {% if company.website %}
+        <a href="{{ company.website }}" target="_blank" class="data-tag text-dark text-decoration-none">SITE LINK
+            &nearr;</a>
+        {% endif %}
     </div>
-    <a href="#" class="btn btn-neo secondary font-display py-2">POST NEW DRIVE</a>
+
 </div>
 
-<div class="neo-card p-0 overflow-hidden">
+<div class="row g-4 mb-5 font-mono">
+    <div class="col-md-3">
+        <div class="brutal-card text-center p-3">
+            <div class="fs-1 fw-bold text-primary">{{ stats.active_drives }}</div>
+            <div class="text-uppercase small">Active Drives</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="brutal-card text-center p-3">
+            <div class="fs-1 fw-bold">{{ stats.total_applications }}</div>
+            <div class="text-uppercase small">Total Applicants</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="brutal-card text-center p-3">
+            <div class="fs-1 fw-bold" style="color: var(--color-secondary); text-shadow: 1px 1px 0 #000;">{{
+                stats.shortlisted }}</div>
+            <div class="text-uppercase small">Shortlisted</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="brutal-card text-center p-3">
+            <div class="fs-1 fw-bold text-success">{{ stats.selected }}</div>
+            <div class="text-uppercase small">Hired</div>
+        </div>
+    </div>
+</div>
+
+<div class="brutal-card p-0 overflow-hidden">
     <div class="p-4 border-bottom border-dark border-2 bg-white d-flex justify-content-between align-items-center">
-        <h3 class="font-display mb-0">ACTIVE LISTINGS</h3>
-        <span class="data-tag border-0" style="background-color: var(--color-secondary)">SYSTEM LIVE</span>
+        <h3 class="font-display mb-0">COMPANY LISTINGS</h3>
     </div>
 
     <div class="table-responsive">
         <table class="table table-borderless mb-0">
-            <thead class="border-bottom border-dark border-2 font-mono bg-light">
+            <thead class="border-bottom border-dark border-2 font-mono" style="background-color: var(--color-bg);">
                 <tr>
-                    <th scope="col" class="p-4">ROLE ID</th>
+                    <th scope="col" class="p-4">ROLE TITLE</th>
                     <th scope="col" class="p-4">DEADLINE</th>
                     <th scope="col" class="p-4">STATUS</th>
                     <th scope="col" class="p-4 text-center">APPS</th>
                     <th scope="col" class="p-4 text-end">ACTIONS</th>
                 </tr>
             </thead>
-            <tbody class="font-mono">
-                {% for drive in drives | default([{'title': 'SDE I', 'deadline':
-                '2026-05-01', 'status': 'approved', 'applicants': 42}, {'title':
-                'Analyst', 'deadline': '2026-04-15', 'status': 'pending',
-                'applicants': 0}]) %}
+            <tbody class="font-mono bg-white">
+                {% for drive in drives %}
                 <tr class="border-bottom border-dark align-middle">
                     <td class="p-4 fw-bold font-body text-uppercase">
-                        {{ drive.title }}
+                        {{ drive.job_title }}
+                        <div class="small text-muted font-mono mt-1">{{ drive.job_type }}</div>
                     </td>
-                    <td class="p-4">{{ drive.deadline }}</td>
+                    <td class="p-4">{{ drive.application_deadline.strftime('%Y-%m-%d') }}</td>
                     <td class="p-4">
                         {% if drive.status == 'approved' %}
                         <span class="data-tag border-0 text-dark"
                             style="background-color: var(--color-secondary)">APPROVED</span>
                         {% elif drive.status == 'pending' %}
-                        <span class="data-tag bg-warning border-0">PENDING</span>
+                        <span class="data-tag bg-warning text-dark border-0">PENDING</span>
+                        {% elif drive.status == 'closed' %}
+                        <span class="data-tag bg-dark text-white border-0">CLOSED</span>
                         {% else %}
-                        <span class="data-tag">{{ drive.status }}</span>
+                        <span class="data-tag">{{ drive.status | upper }}</span>
                         {% endif %}
                     </td>
                     <td class="p-4 text-center fs-5 fw-bold">
-                        {{ drive.applicants }}
+                        {{ drive.applications|length }}
                     </td>
                     <td class="p-4 text-end">
-                        <a href="#" class="btn btn-neo wireframe py-1 px-3 fs-6">REVIEW &rarr;</a>
+                        <a href="{{url_for('company.manageDrive', drive_id=drive.id)}}"
+                            class="brutal-btn wireframe py-1 px-3 fs-6">MANAGE
+                            &rarr;</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="p-5 text-center font-body text-muted">
+                        No placement drives found. Click "Post New Drive" to begin.
                     </td>
                 </tr>
                 {% endfor %}

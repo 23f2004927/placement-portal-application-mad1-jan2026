@@ -1,109 +1,56 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/company/companyProfile.html
--->
+{% extends "base.html" %}
+{% block pageTitle %}Company Profile - Console{% endblock %}
+{% block breadcrumb %}COMPANY / SETTINGS / PROFILE{% endblock %}
 
-{% extends "base.html" %} {% block pageTitle %}Company Profile - Console{%
-endblock %} {% block breadcrumb %}COMPANY / SETTINGS / PROFILE{% endblock %} {%
-block mainContent %}
+{% block mainContent %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="font-display display-6 mb-0">COMPANY IDENTITY</h1>
-    <span class="data-tag bg-white border-dark">PUBLIC FACING</span>
+    <span class="data-tag bg-white text-dark border border-dark">PUBLIC FACING</span>
 </div>
 
 <div class="row g-4">
     <div class="col-lg-8">
-        <div class="neo-card p-5" id="companyProfileCard">
-            <form
-                action=""
-                method="POST"
-                enctype="multipart/form-data"
-                id="companyProfileForm"
-            >
+        <div class="brutal-card p-5" id="companyProfileCard">
+            <form action="{{ url_for('company.profile') }}" method="POST" id="companyProfileForm">
                 {{ form.hidden_tag() if form else '' }}
 
-                <h4
-                    class="font-display border-bottom border-dark border-2 pb-2 mb-4"
-                >
+                <h4 class="font-display border-bottom border-dark border-2 pb-2 mb-4">
                     GENERAL INFO
                 </h4>
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold"
-                            >COMPANY NAME *</label
-                        >
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="companyName"
-                            value="{{ company.companyName }}"
-                            required
-                        />
+                        <label class="form-label font-mono fw-bold">COMPANY NAME *</label>
+                        <input type="text" class="form-control" name="company_name" value="{{ company.company_name }}"
+                            required />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold"
-                            >INDUSTRY SECTOR</label
-                        >
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="industry"
-                            value="{{ company.industry }}"
-                            placeholder="e.g. Fintech"
-                        />
+                        <label class="form-label font-mono fw-bold">INDUSTRY SECTOR</label>
+                        <input type="text" class="form-control" name="industry"
+                            value="{{ company.industry | default('') }}" placeholder="e.g. Fintech" />
                     </div>
-                    <div class="col-12">
-                        <label class="form-label font-mono fw-bold"
-                            >WEBSITE URL</label
-                        >
-                        <input
-                            type="url"
-                            class="form-control font-mono"
-                            name="websiteUrl"
-                            value="{{ company.website }}"
-                        />
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">HR CONTACT *</label>
+                        <input type="text" class="form-control" name="hr_contact"
+                            value="{{ company.hr_contact | default('') }}" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-mono fw-bold">WEBSITE URL</label>
+                        <input type="url" class="form-control" name="website"
+                            value="{{ company.website | default('') }}" placeholder="https://" />
                     </div>
                 </div>
 
-                <h4
-                    class="font-display border-bottom border-dark border-2 pb-2 mb-4 mt-5"
-                >
+                <h4 class="font-display border-bottom border-dark border-2 pb-2 mb-4 mt-5">
                     BRANDING
                 </h4>
-                <div class="mb-4">
-                    <label class="form-label font-mono fw-bold"
-                        >COMPANY LOGO (SQUARE)</label
-                    >
-                    <input
-                        class="form-control"
-                        type="file"
-                        name="companyLogo"
-                        accept="image/png, image/jpeg"
-                    />
-                    <div
-                        class="font-mono text-muted mt-2"
-                        style="font-size: 0.8rem"
-                    >
-                        Max 2MB. Transparent PNG recommended.
-                    </div>
-                </div>
                 <div class="mb-5">
-                    <label class="form-label font-mono fw-bold"
-                        >COMPANY BIO</label
-                    >
-                    <textarea class="form-control" name="companyBio" rows="4">
-{{ company.description }}</textarea
-                    >
+                    <label class="form-label font-mono fw-bold">COMPANY BIO</label>
+                    <textarea class="form-control" name="description" rows="5"
+                        placeholder="Describe your company, work culture, and what you build...">{{ company.description | default('') }}</textarea>
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button
-                        type="submit"
-                        class="btn btn-neo secondary px-5 py-3 fs-5"
-                        id="saveProfileBtn"
-                    >
+                    <button type="submit" class="brutal-btn secondary px-5 py-3 fs-5" id="saveProfileBtn">
                         SAVE IDENTITY
                     </button>
                 </div>
@@ -112,38 +59,25 @@ block mainContent %}
     </div>
 
     <div class="col-lg-4">
-        <div class="font-mono text-muted mb-2 fw-bold">STUDENT PREVIEW</div>
-        <div
-            class="neo-card p-4 text-center"
-            style="background-color: var(--color-bg-light)"
-            id="profilePreviewCard"
-        >
-            <div
-                class="mx-auto mb-3 border border-dark border-2 d-flex justify-content-center align-items-center shadow-sm"
-                style="width: 100px; height: 100px; background-color: white"
-            >
-                {% if company.logoUrl %}
-                <img src="{{ company.logoUrl }}" alt="Logo" class="img-fluid" />
-                {% else %}
-                <span class="font-display fs-2"
-                    >{{ company.companyName[0] | default('C') }}</span
-                >
-                {% endif %}
+        <div class="font-mono text-muted mb-2 fw-bold text-uppercase">Student Preview</div>
+        <div class="brutal-card p-4 text-center" style="background-color: var(--color-bg);">
+            <div class="mx-auto mb-3 border border-dark border-2 d-flex justify-content-center align-items-center"
+                style="width: 100px; height: 100px; background-color: var(--color-primary); color: white;">
+                <span class="font-display display-4 mb-0">{{ company.company_name[0] | default('C') | upper }}</span>
             </div>
-            <h3 class="font-display text-uppercase">
-                {{ company.companyName | default('COMPANY NAME') }}
+            <h3 class="font-display text-uppercase mb-1">
+                {{ company.company_name | default('COMPANY NAME') }}
             </h3>
-            <p class="font-mono text-muted mb-3">
-                {{ company.industry | default('INDUSTRY') }}
+            <p class="font-mono text-muted mb-3 small">
+                {{ company.industry | default('INDUSTRY') | upper }}
             </p>
             <hr class="border-dark border-2 opacity-100" />
-            <p class="font-body text-start" style="font-size: 0.9rem">
-                {{ company.description | default('Company bio will appear here
-                to students browsing jobs...') | truncate(150) }}
+            <p class="font-body text-start mt-3" style="font-size: 0.9rem;">
+                {{ company.description | default('Company bio will appear here to students browsing jobs...') |
+                truncate(150) }}
             </p>
-            <a href="#" class="btn btn-neo wireframe w-100 mt-2 disabled"
-                >VIEW ALL ROLES</a
-            >
+            <button type="button" class="brutal-btn wireframe w-100 mt-2" disabled style="opacity: 0.5;">VIEW ALL
+                ROLES</button>
         </div>
     </div>
 </div>

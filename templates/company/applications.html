@@ -1,145 +1,78 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/company/applications.html
--->
+{% extends "base.html" %}
+{% from 'components/_tableMacro.html' import brutalTable %}
 
-{% extends "base.html" %} {% block pageTitle %}Applicant Pipeline - Company{%
-endblock %} {% block breadcrumb %}COMPANY / PIPELINE{% endblock %} {% block
-mainContent %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="font-display display-6 mb-0">APPLICANT PIPELINE</h1>
+{% block pageTitle %}Applicant Tracking - Company Console{% endblock %}
+{% block breadcrumb %}COMPANY / APPLICATIONS{% endblock %}
 
-    <div
-        class="d-flex border border-dark border-2 bg-white"
-        style="box-shadow: 4px 4px 0px #000"
-        id="viewToggleGroup"
-    >
-        <button
-            class="btn rounded-0 px-4 py-2 font-mono fw-bold text-dark bg-light border-end border-dark border-2"
-            id="btnKanbanView"
-        >
-            KANBAN
-        </button>
-        <button
-            class="btn rounded-0 px-4 py-2 font-mono fw-bold text-dark bg-white"
-            id="btnTableView"
-        >
-            TABLE
-        </button>
-    </div>
+{% block mainContent %}
+<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
+    <h1 class="font-display display-5 mb-0">APPLICANT TRACKING</h1>
+</div>
+
+<div class="mb-4 d-flex flex-wrap gap-3 font-mono align-items-center">
+    <form action="{{ url_for('company.applications') }}" method="GET" class="d-flex gap-2 m-0">
+        <input type="hidden" name="searchQuery" value="{{ request.args.get('searchQuery', '') }}">
+        <input type="hidden" name="status" value="{{ request.args.get('status', 'all') }}">
+
+        <select name="drive_id" class="form-select border-dark border-2 rounded-0 font-mono fw-bold py-1"
+            style="max-width: 300px;" onchange="this.form.submit()">
+            <option value="all">ALL DRIVES</option>
+            {% for d in company_drives %}
+            <option value="{{ d.id }}" {% if request.args.get('drive_id')==(d.id | string) %}selected{% endif %}>
+                {{ d.drive_name | default('Drive', true) }} - {{ d.job_title }}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <div class="vr border-dark border-2"></div>
+
+    <a href="{{ url_for('company.applications', status='all', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
+        class="brutal-btn {% if request.args.get('status', 'all') == 'all' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">ALL</a>
+
+    <a href="{{ url_for('company.applications', status='applied', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
+        class="brutal-btn {% if request.args.get('status') == 'applied' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">APPLIED</a>
+
+    <a href="{{ url_for('company.applications', status='shortlisted', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
+        class="brutal-btn {% if request.args.get('status') == 'shortlisted' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">SHORTLISTED</a>
+
+    <a href="{{ url_for('company.applications', status='selected', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
+        class="brutal-btn {% if request.args.get('status') == 'selected' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">SELECTED</a>
 </div>
 
 {% include 'components/_searchBar.html' %}
 
-<div class="row flex-nowrap overflow-auto pb-4" id="kanbanBoardContainer">
-    <div class="col-12 col-md-6 col-xl-3">
-        <h4
-            class="font-display bg-white border border-dark border-2 p-3 mb-3 d-flex justify-content-between"
-        >
-            APPLIED
-            <span class="data-tag bg-dark text-white border-0"
-                >{{ applicantsApplied|length }}</span
-            >
-        </h4>
-        <div class="d-flex flex-column gap-3" id="kanbanColApplied">
-            {% for app in applicantsApplied %}
-            <div class="neo-card p-3" style="cursor: grab">
-                <div class="d-flex justify-content-between mb-2">
-                    <div class="fw-bold">{{ app.studentName }}</div>
-                    <span class="data-tag border-0 bg-light"
-                        >CGPA: {{ app.cgpa }}</span
-                    >
-                </div>
-                <p class="font-mono text-muted mb-3" style="font-size: 0.8rem">
-                    Applied: {{ app.appliedDate }}
-                </p>
-                <div class="d-flex gap-2">
-                    <a
-                        href="{{ url_for('company.applicantDetail', applicantId=app.id) }}"
-                        class="btn btn-sm btn-neo wireframe flex-grow-1 text-center py-1"
-                        >REVIEW</a
-                    >
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+{% set headers = [
+{'label': 'CANDIDATE', 'class': 'p-4'},
+{'label': 'DRIVE', 'class': 'p-4'},
+{'label': 'ROLE', 'class': 'p-4'},
+{'label': 'CGPA', 'class': 'p-4'},
+{'label': 'STATUS', 'class': 'p-4'},
+{'label': 'ACTIONS', 'class': 'p-4 text-end'}
+] %}
 
-    <div class="col-12 col-md-6 col-xl-3">
-        <h4
-            class="font-display bg-white border border-dark border-2 p-3 mb-3 d-flex justify-content-between"
-            style="
-                border-top-color: var(--color-primary);
-                border-top-width: 4px;
-            "
-        >
-            SHORTLISTED
-            <span class="data-tag bg-dark text-white border-0"
-                >{{ applicantsShortlisted|length }}</span
-            >
-        </h4>
-        <div class="d-flex flex-column gap-3" id="kanbanColShortlisted"></div>
-    </div>
-
-    <div class="col-12 col-md-6 col-xl-3">
-        <h4
-            class="font-display bg-white border border-dark border-2 p-3 mb-3 d-flex justify-content-between"
-            style="
-                border-top-color: var(--color-secondary);
-                border-top-width: 4px;
-            "
-        >
-            SELECTED
-            <span class="data-tag bg-dark text-white border-0"
-                >{{ applicantsSelected|length }}</span
-            >
-        </h4>
-        <div class="d-flex flex-column gap-3" id="kanbanColSelected"></div>
-    </div>
-</div>
-
-<div class="neo-card p-0 d-none" id="dataTableContainer">
-    <div class="table-responsive">
-        <table class="table table-borderless mb-0 font-mono align-middle">
-            <thead class="border-bottom border-dark border-2 bg-light">
-                <tr>
-                    <th class="p-3">APPLICANT</th>
-                    <th class="p-3">DRIVE / ROLE</th>
-                    <th class="p-3">CGPA</th>
-                    <th class="p-3">STATUS</th>
-                    <th class="p-3 text-end">RESUME</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for app in allApplicants %}
-                <tr class="border-bottom border-dark">
-                    <td class="p-3 fw-bold font-body">
-                        <a
-                            href="{{ url_for('company.applicantDetail', applicantId=app.id) }}"
-                            class="text-dark text-decoration-none hover-shadow"
-                            >{{ app.studentName }}</a
-                        >
-                    </td>
-                    <td class="p-3">{{ app.roleTitle }}</td>
-                    <td class="p-3">{{ app.cgpa }}</td>
-                    <td class="p-3">
-                        {% set badgeStatus = app.status %} {% include
-                        'components/_statusBadge.html' %}
-                    </td>
-                    <td class="p-3 text-end">
-                        <a
-                            href="{{ app.resumeUrl }}"
-                            target="_blank"
-                            class="btn btn-sm btn-neo wireframe px-2 py-1"
-                            >PDF &nearr;</a
-                        >
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+{% call(app) brutalTable(headers, applications, "NO APPLICATIONS DETECTED") %}
+<tr class="border-bottom border-dark align-middle bg-white hover-shadow-sm transition-all">
+    <td class="p-4 fw-bold font-body text-uppercase">
+        {{ app.student.full_name }}
+        <div class="small text-muted font-mono mt-1">{{ app.student.department }}</div>
+    </td>
+    <td class="p-4 font-body fw-bold text-uppercase" style="color: var(--color-primary);">
+        {{ app.drive.drive_name | default('N/A', true) }}
+    </td>
+    <td class="p-4 font-body fw-bold text-uppercase">{{ app.drive.job_title }}</td>
+    <td class="p-4">{{ app.student.cgpa }}</td>
+    <td class="p-4">
+        <span
+            class="data-tag border-0 text-dark {% if app.approval_status in ['selected', 'hired'] %}bg-success text-white{% elif app.approval_status == 'rejected' %}bg-danger text-white{% else %}bg-warning{% endif %}">
+            {{ app.approval_status | upper }}
+        </span>
+    </td>
+    <td class="p-4 text-end">
+        <a href="{{ url_for('company.applicationDetail', app_id=app.id) }}" class="brutal-btn wireframe py-1 px-3 fs-6">
+            REVIEW &rarr;
+        </a>
+    </td>
+</tr>
+{% endcall %}
 {% endblock %}

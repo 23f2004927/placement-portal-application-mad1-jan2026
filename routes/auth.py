@@ -6,7 +6,6 @@
 from flask import (
     Blueprint,
     flash,
-    g,
     redirect,
     render_template,
     request,
@@ -59,5 +58,5 @@ def logout():
 @auth.route("/access-denied")
 def noAccess():
     return render_template(
-        "accessDenied.html", username=session.get("username"), role=session.get("role")
+        "accessDenied.html", user=User.query.filter_by(id=session["user_id"]).first()
     )
