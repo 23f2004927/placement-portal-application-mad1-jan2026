@@ -40,11 +40,12 @@ def login():
         passwordQuery = request.form.get("password")
 
         user = User.query.filter_by(username=usernameQuery).first()
-        if user.status == "blacklisted":
-            return redirect(url_for("auth.noAccess"))
+        
         if user is not None and check_password_hash(
             user.password_hash, str(passwordQuery)
         ):
+            if user.status == "blacklisted":
+                return redirect(url_for("auth.noAccess"))
             session["user_id"] = user.id
             session["role"] = user.role
             session["username"] = user.username
