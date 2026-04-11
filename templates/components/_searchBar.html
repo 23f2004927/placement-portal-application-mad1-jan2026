@@ -1,3 +1,10 @@
+<!--
+  Christiano Blairoy Fernandes
+  23f2004927
+  12 April 2026
+  templates/components/_searchBar.html
+-->
+
 <div class="bg-white border border-dark p-0 mb-4" id="globalSearchBar" style="border-width: 1px !important;">
     <form action="{{ url_for(request.endpoint) }}" method="GET" class="d-flex align-items-stretch m-0">
         {{ form.hidden_tag() if form else '' }}

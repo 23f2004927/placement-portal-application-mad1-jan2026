@@ -94,9 +94,13 @@ def students():
     if search_term:
         query = query.filter(Student.full_name.ilike(f"%{search_term}%")| User.email.ilike(f"%{search_term}%")| Student.department.ilike(f"%{search_term}%"))
 
+    status = request.args.get("status")
+    if status:
+        query = query.filter(Student.account_status == status)
+
     students = query.all()
     return render_template(
-        "admin/students.html", students=students, batchFilter=batch, cgpaFilter=cgpa
+        "admin/students.html", students=students, batchFilter=batch, cgpaFilter=cgpa, statusFilter=status
     )
 
 
@@ -145,9 +149,8 @@ def drives():
         query = query.filter(
         Company.company_name.ilike(f"%{search_term}%") |
         Drive.job_title.ilike(f"%{search_term}%") |
-        Drive.job_description.ilike(f"%{search_term}%")|
-        Drive.location.ilike(f"%{search_term}%")|
-        Drive.job_type.ilike(f"%{search_term}%")|
+        Drive.job_description.ilike(f"%{search_term}%") |
+        Drive.location.ilike(f"%{search_term}%") |
         Drive.job_type.ilike(f"%{search_term}%") |
         Drive.eligibility_criteria.ilike(f"%{search_term}%")
     )

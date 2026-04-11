@@ -27,32 +27,31 @@ def registerCompany():
     website = request.form.get("website", "").strip()
     description = request.form.get("description", "").strip()
 
-    # Basic presence checks
+
     if not all([username, email, password, company_name]):
         flash("All fields are required", "error")
         return render_template(
             "auth/registerCompany.html",
         )
 
-    # Check for existing user
+
     if User.query.filter_by(username=username).first():
         flash("Username already taken.", "danger")
         return render_template(
             "auth/registerCompany.html", )
 
     if User.query.filter_by(email=email).first():
-        return render_template(
-            "auth/registerCompany.html", error="Email already registered."
-        )
+        flash("Email already registered.", "danger")
+        return render_template("auth/registerCompany.html")
 
-    # Check for existing company name
+
     if Company.query.filter_by(company_name=company_name).first():
         flash("A company with that name already exists.", "danger")
         return render_template(
             "auth/registerCompany.html",
         )
 
-    # Two-record insert
+
     new_user = User(
         username=username,
         email=email,
