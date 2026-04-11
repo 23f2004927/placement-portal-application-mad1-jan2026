@@ -1,72 +1,68 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/admin/dashboard.html
--->
-
 {% extends "base.html" %}
 
 {% block pageTitle %}Admin Dashboard{% endblock %}
 {% block breadcrumb %}ADMIN / DASHBOARD{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-dark border-2 pb-3">
-    <h1 class="font-display display-5 mb-0">SYSTEM METRICS</h1>
-    <span class="data-tag border-0 text-white px-3 py-2">ROOT_ACCESS</span>
+<div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+    <h1 class="font-display fs-3 mb-0">System Metrics</h1>
+    <span class="badge bg-dark rounded-0 px-2 py-1 font-mono fw-normal">Root Access</span>
 </div>
 
 <div class="row g-4 mb-5">
     <div class="col-sm-6 col-lg-3">
-        <div class="brutal-card p-4">
-            <p class="font-mono text-muted mb-1 border-bottom border-dark pb-2">TOTAL STUDENTS</p>
-            <h2 class="font-display display-3 mb-0">{{ stats.studentsCount | default('0') }}</h2>
+        <div class="bg-white p-4 border border-dark h-100" style="border-width: 1px !important;">
+            <p class="font-mono text-muted mb-2 border-bottom pb-2 small text-uppercase fw-bold">Total Students</p>
+            <h2 class="font-display display-5 mb-0">{{ stats.studentsCount | default('0') }}</h2>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="brutal-card p-4">
-            <p class="font-mono text-muted mb-1 border-bottom border-dark pb-2">TOTAL COMPANIES</p>
-            <h2 class="font-display display-3 mb-0">{{ stats.companiesCount | default('0') }}</h2>
+        <div class="bg-white p-4 border border-dark h-100" style="border-width: 1px !important;">
+            <p class="font-mono text-muted mb-2 border-bottom pb-2 small text-uppercase fw-bold">Total Companies</p>
+            <h2 class="font-display display-5 mb-0">{{ stats.companiesCount | default('0') }}</h2>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="brutal-card p-4" style="background-color: var(--color-primary); color: white">
-            <p class="font-mono mb-1 border-bottom border-dark pb-2" style="color: rgba(255, 255, 255, 0.7)">ACTIVE
-                DRIVES</p>
-            <h2 class="font-display display-3 mb-0">{{ stats.drivesCount | default('0') }}</h2>
+        <div class="bg-dark text-white p-4 border border-dark h-100" style="border-width: 1px !important;">
+            <p class="font-mono text-light mb-2 border-bottom border-secondary pb-2 small text-uppercase fw-bold">Active
+                Drives</p>
+            <h2 class="font-display display-5 mb-0">{{ stats.drivesCount | default('0') }}</h2>
         </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="brutal-card p-4" style="background-color: var(--color-secondary)">
-            <p class="font-mono text-dark mb-1 border-bottom border-dark pb-2">APPLICATIONS</p>
-            <h2 class="font-display display-3 mb-0">{{ stats.applicationsCount | default('0') }}</h2>
+        <div class="bg-light p-4 border border-dark h-100" style="border-width: 1px !important;">
+            <p class="font-mono text-muted mb-2 border-bottom pb-2 small text-uppercase fw-bold">Applications</p>
+            <h2 class="font-display display-5 mb-0">{{ stats.applicationsCount | default('0') }}</h2>
         </div>
     </div>
 </div>
 
-<h3 class="font-display mb-3">COMMAND MODULES</h3>
+<h3 class="font-display fs-5 mb-3 text-muted">Command Modules</h3>
 <div class="row g-4">
     <div class="col-md-4">
         <a href="{{ url_for('admin.companies') }}" class="text-decoration-none">
-            <div class="brutal-card p-4 d-flex justify-content-between align-items-center">
-                <span class="font-mono fw-bold text-dark">COMPANIES</span>
-                <span class="text-dark fs-4">&rarr;</span>
+            <div class="bg-white p-4 d-flex justify-content-between align-items-center border border-dark transition-all hover-shadow-sm"
+                style="border-width: 1px !important;">
+                <span class="font-mono fw-bold text-dark">Company Directory</span>
+                <i class="bi bi-arrow-right text-dark"></i>
             </div>
         </a>
     </div>
     <div class="col-md-4">
         <a href="{{ url_for('admin.students') }}" class="text-decoration-none">
-            <div class="brutal-card p-4 d-flex justify-content-between align-items-center">
-                <span class="font-mono fw-bold text-dark">STUDENTS</span>
-                <span class="text-dark fs-4">&rarr;</span>
+            <div class="bg-white p-4 d-flex justify-content-between align-items-center border border-dark transition-all hover-shadow-sm"
+                style="border-width: 1px !important;">
+                <span class="font-mono fw-bold text-dark">Student Directory</span>
+                <i class="bi bi-arrow-right text-dark"></i>
             </div>
         </a>
     </div>
     <div class="col-md-4">
         <a href="{{ url_for('admin.drives') }}" class="text-decoration-none">
-            <div class="brutal-card p-4 d-flex justify-content-between align-items-center">
-                <span class="font-mono fw-bold text-dark">DRIVES</span>
-                <span class="text-dark fs-4">&rarr;</span>
+            <div class="bg-white p-4 d-flex justify-content-between align-items-center border border-dark transition-all hover-shadow-sm"
+                style="border-width: 1px !important;">
+                <span class="font-mono fw-bold text-dark">Drive Approvals</span>
+                <i class="bi bi-arrow-right text-dark"></i>
             </div>
         </a>
     </div>

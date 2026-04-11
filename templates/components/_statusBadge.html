@@ -1,20 +1,14 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/components/_statusBadge.html
--->
+{% set statusLower = badgeStatus | lower %}
 
-{% set statusLower = badgeStatus | lower %} {% if statusLower in ['approved',
-'active', 'selected'] %}
-<span class="data-tag border-0 text-dark fw-bold" style="background-color: var(--color-secondary)">{{ badgeStatus |
-    upper }}</span>
-{% elif statusLower in ['pending', 'shortlisted'] %}
-<span class="data-tag border-0 text-dark fw-bold bg-warning">{{ badgeStatus | upper }}</span>
+{% if statusLower in ['approved', 'active', 'selected', 'hired'] %}
+<span class="badge bg-success rounded-0 px-2 py-1 font-mono fw-normal">{{ badgeStatus | title }}</span>
+
+{% elif statusLower in ['pending', 'shortlisted', 'review'] %}
+<span class="badge bg-warning text-dark rounded-0 px-2 py-1 font-mono fw-normal">{{ badgeStatus | title }}</span>
+
 {% elif statusLower in ['rejected', 'blacklisted', 'closed'] %}
-<span class="data-tag border-0 text-white fw-bold bg-danger">{{ badgeStatus | upper }}</span>
-{% elif statusLower in ['review'] %}
-<span class="data-tag border-0 text-dark fw-bold bg-warning">{{ badgeStatus | upper }}</span>
+<span class="badge bg-danger rounded-0 px-2 py-1 font-mono fw-normal">{{ badgeStatus | title }}</span>
+
 {% else %}
-<span class="data-tag border-dark border-2 bg-light fw-bold">{{ badgeStatus | upper }}</span>
+<span class="badge bg-secondary rounded-0 px-2 py-1 font-mono fw-normal">{{ badgeStatus | title }}</span>
 {% endif %}

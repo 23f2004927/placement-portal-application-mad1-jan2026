@@ -2,31 +2,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@700&display=swap");
 
 :root {
-    /* Soft Brutalism Palette - Flatter & Industrial */
-    --color-primary: #a855f7;
-    /* Accent Purple */
-    --color-secondary: #bef264;
-    /* Accent Lime */
-    --color-bg: #f4f5f0;
-    /* Cement / Off-White Solid */
+    /* Palette - Professional & High Contrast */
+    --color-primary: #000000;
+    /* Pure Black for primary actions */
+    --color-secondary: #f8f9fa;
+    /* Light Grey for secondary actions */
+    --color-bg: #ffffff;
+    /* Clean White Background */
     --color-card: #ffffff;
-    /* Stark White */
     --color-sidebar: #000000;
-    /* Absolute Black */
-    --color-border: #000000;
-    --color-text: #000000;
-    --color-text-muted: #666666;
-    --color-text-light: #f5f5f5;
-    --color-text-inverse: #f4f5f0;
-    /* Typography Hierarchy */
+    --color-border: #212529;
+    /* Standard Professional Grey-Black */
+    --color-text: #212529;
+    --color-text-muted: #6c757d;
+    --color-text-light: #f8f9fa;
+
+    /* Typography stays the same - they are already excellent choices */
     --font-display: "Space Grotesk", sans-serif;
     --font-body: "Epilogue", sans-serif;
     --font-mono: "IBM Plex Mono", monospace;
 
-    /* Structural Geometry */
-    --border-main: 2px solid #000000;
-    --border-thin: 1px solid #000000;
+    /* REFINED GEOMETRY: Changed border from 2px to 1px for a sharper look */
+    --border-main: 1px solid var(--color-border);
+    --border-thin: 1px solid #dee2e6;
     --radius: 0px;
+
+    --color-sidebar: #0f1113;
+    /* Deep, professional charcoal instead of absolute black */
+    --color-sidebar-border: rgba(255, 255, 255, 0.1);
+    /* Subtle internal borders */
 }
 
 body {
@@ -72,16 +76,20 @@ h6,
 .sidebar-link {
     display: flex;
     align-items: center;
-    color: var(--color-text-light);
+    color: #adb5bd;
+    /* Muted by default */
     text-decoration: none;
-    font-family: var(--font-display);
-    font-size: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
     padding: 0.8rem 1rem;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-    /* Prevents text from breaking into new lines */
-    overflow: hidden;
-    /* Clips text when sidebar is narrow */
+    transition: color 0.2s ease;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    color: #ffffff !important;
+    /* Pure white on hover/active */
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-icon {
@@ -126,7 +134,8 @@ h6,
     /* Adjust this to your preference for "centered" look */
     margin: 0 auto;
     /* Centers the block */
-
+    min-height: fit-content;
+    padding-bottom: 10px;
 }
 
 /* Renamed: brutal-card (Structural, No Shadow) */
@@ -139,29 +148,32 @@ h6,
 
 /* Renamed: brutal-btn (Flat, High Contrast) */
 .brutal-btn {
-    font-family: var(--font-display);
+    font-family: var(--font-mono);
+    /* Switched to Mono for a more technical feel */
     background-color: var(--color-primary);
     color: #ffffff;
     border: var(--border-main);
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1.2rem;
     text-transform: uppercase;
-    font-weight: 700;
-    transition: background 0.2s;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .brutal-btn.secondary {
     background-color: var(--color-secondary);
-    color: var(--color-border);
+    color: var(--color-text);
 }
 
 .brutal-btn.wireframe {
     background-color: transparent;
-    color: var(--color-border);
+    color: var(--color-text);
 }
 
 .brutal-btn:hover {
-    background-color: var(--color-text);
+    background-color: #333333;
     color: #ffffff;
+    border-color: #333333;
 }
 
 /* Data Metadata Tags */
@@ -177,10 +189,17 @@ h6,
 /* Form Controls - Stark Inputs */
 .form-control,
 .form-select {
-    border: var(--border-main);
+    border: 1px solid #ced4da;
     border-radius: 0;
-    background: #ffffff;
     font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: var(--color-primary);
+    background: #ffffff;
+    outline: none;
 }
 
 .form-control:focus {
@@ -199,13 +218,10 @@ h6,
 .custom-select-brutal {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='black' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='grey' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
     background-position: right 0.75rem center;
-    background-size: 12px;
-    padding-right: 2.5rem !important;
-    cursor: pointer;
-    border-radius: 0 !important;
+    background-repeat: no-repeat;
+    padding-right: 2rem !important;
 }
 
 #globalSearchBar form {
@@ -213,11 +229,11 @@ h6,
 }
 
 #globalSearchBar .form-control:focus {
-    background-color: var(--color-secondary);
-
+    background-color: #ffffff;
+    /* Removed neon green */
     color: black;
 }
 
 #globalSearchBar .bg-white:hover {
-    background-color: #f0f0f0 !important;
+    background-color: #f8f9fa !important;
 }

@@ -1,35 +1,31 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/components/_confirmModal.html
--->
-
 <div class="modal fade" id="globalConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content brutal-card p-0">
-            <div class="modal-header border-bottom border-dark border-2 bg-white rounded-0 p-4">
-                <h4 class="modal-title font-display mb-0" id="modalTitle">CONFIRM ACTION</h4>
+        <div class="modal-content rounded-0 border border-dark" style="border-width: 1px !important;">
+
+            <div class="modal-header border-bottom p-4">
+                <h4 class="modal-title font-display fs-5 mb-0" id="modalTitle">Confirm Action</h4>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body font-mono p-4 fs-5" id="modalMessage">
-                Are you sure you want to proceed? This action may be irreversible.
+
+            <div class="modal-body font-body p-4 text-muted">
+                Are you sure you want to proceed? This action may be irreversible once executed.
             </div>
-            <div
-                class="modal-footer border-top border-dark border-2 bg-light rounded-0 p-4 d-flex justify-content-between">
-                <button type="button" class="brutal-btn wireframe" data-bs-dismiss="modal">CANCEL</button>
+
+            <div class="modal-footer border-top bg-light p-3 d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none px-4 py-2"
+                    data-bs-dismiss="modal">CANCEL</button>
                 <form id="confirmModalForm" method="POST" action="" class="m-0">
                     {{ form.hidden_tag() if form else '' }}
-                    <button type="submit" class="brutal-btn" style="background-color: #ef4444; color: white"
+                    <button type="submit" class="btn btn-danger rounded-0 font-mono fw-bold shadow-none px-4 py-2"
                         id="confirmSubmitBtn">
                         EXECUTE
                     </button>
                 </form>
             </div>
+
         </div>
     </div>
 </div>
-
 
 <script>
     document.getElementById('globalConfirmModal')

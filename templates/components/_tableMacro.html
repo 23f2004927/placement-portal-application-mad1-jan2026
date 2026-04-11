@@ -1,19 +1,12 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  10 April 2026
-  templates/components/_tableMacro.html
--->
-
-{% macro brutalTable(headers, items, emptyHeadline="NO DATA DETECTED") %}
-<div class="brutal-card p-0 overflow-hidden">
+{% macro brutalTable(headers, items, emptyHeadline="No Data Found") %}
+<div class="bg-white border border-dark p-0 overflow-hidden" style="border-width: 1px !important;">
     <div class="table-responsive">
         <table class="table table-borderless mb-0 align-middle">
 
-            <thead class="border-bottom border-dark border-2 font-mono bg-light">
+            <thead class="border-bottom font-mono bg-light text-muted small">
                 <tr>
                     {% for header in headers %}
-                    <th scope="col" class="{{ header.class | default('p-4') }}">{{ header.label }}</th>
+                    <th scope="col" class="{{ header.class | default('p-4') }} fw-bold">{{ header.label }}</th>
                     {% endfor %}
                 </tr>
             </thead>

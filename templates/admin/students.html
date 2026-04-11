@@ -1,10 +1,3 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  10 April 2026
-  templates/admin/students.html
--->
-
 {% extends "base.html" %}
 {% from 'components/_tableMacro.html' import brutalTable %}
 
@@ -12,30 +5,33 @@
 {% block breadcrumb %}ADMIN / STUDENTS{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">STUDENT DIRECTORY</h1>
-    <span class="data-tag border-0 text-white px-3 py-2" style="background-color: var(--color-sidebar)">TOTAL: {{
-        students|length }}</span>
-    <a href="{{ url_for('admin.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO DASHBOARD</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <h1 class="font-display fs-3 mb-0">Student Directory</h1>
+        <span class="badge bg-dark rounded-0 font-mono fw-normal px-2 py-1">Total: {{ students|length }}</span>
+    </div>
+    <a href="{{ url_for('admin.dashboard') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to Dashboard</a>
 </div>
 
 {% set filter_items %}
-<div class="border-end border-dark border-2 d-flex align-items-center px-3 bg-white">
+<div class="border-end d-flex align-items-center px-3 bg-white">
     <span class="font-mono fw-bold text-muted small pe-2">BATCH:</span>
-    <input type="number" name="batch" class="form-control border-0 shadow-none font-mono py-2"
+    <input type="number" name="batch" class="form-control rounded-0 border-0 shadow-none font-mono py-2"
         style="width: 80px; outline: none !important;" placeholder="YYYY" value="{{ batchFilter or '' }}"
         onchange="this.form.submit()" />
 </div>
 
-<div class="border-end border-dark border-2 d-flex align-items-center px-3 bg-white">
+<div class="border-end d-flex align-items-center px-3 bg-white">
     <span class="font-mono fw-bold text-muted small pe-2">MIN CGPA:</span>
-    <input type="number" step="0.01" name="cgpa" class="form-control border-0 shadow-none font-mono py-2"
+    <input type="number" step="0.01" name="cgpa" class="form-control rounded-0 border-0 shadow-none font-mono py-2"
         style="width: 80px; outline: none !important;" placeholder="7.5" value="{{ cgpaFilter or '' }}"
         onchange="this.form.submit()" />
 </div>
-<div class="border-end border-dark border-2 d-flex align-items-center px-3 bg-white">
+<div class="border-end d-flex align-items-center px-3 bg-white">
     <span class="font-mono fw-bold text-muted small pe-2">STATUS:</span>
-    <input type="text" name="status" class="form-control border-0 shadow-none font-mono py-2"
+    <input type="text" name="status" class="form-control rounded-0 border-0 shadow-none font-mono py-2"
         style="width: 80px; outline: none !important;" placeholder="active" value="{{ statusFilter or '' }}"
         onchange="this.form.submit()" />
 </div>
@@ -51,17 +47,14 @@
 {'label': 'ACTIONS', 'class': 'p-4 text-end'}
 ] %}
 
-
-
-
 {% call(student) brutalTable(headers, students, "NO STUDENTS FOUND") %}
-<tr class="border-bottom border-dark align-middle">
+<tr class="border-bottom align-middle bg-white hover-shadow-sm">
     <td class="p-4">
         <div class="fw-bold font-body">{{ student.full_name }}</div>
-        <div class="text-muted" style="font-size: 0.85rem">{{ student.department }}</div>
+        <div class="text-muted font-mono" style="font-size: 0.85rem">{{ student.department }}</div>
     </td>
-    <td class="p-4">{{ student.graduation_year }}</td>
-    <td class="p-4 fw-bold">{{ student.cgpa if student.cgpa else 'N/A' }}</td>
+    <td class="p-4 font-mono">{{ student.graduation_year }}</td>
+    <td class="p-4 fw-bold font-mono">{{ student.cgpa if student.cgpa else 'N/A' }}</td>
     <td class="p-4">
         {% set badgeStatus = 'BLACKLISTED' if student.user.status == 'blacklisted' else
         'ACTIVE' if student.account_status == 'active' else
@@ -70,8 +63,8 @@
     </td>
     <td class="p-4 text-end">
         <div class="d-flex justify-content-end gap-2 align-items-center">
-            <button class="brutal-btn wireframe py-1 px-3" data-bs-toggle="modal"
-                data-bs-target="#singleViewStudentModal" data-name="{{ student.full_name }}"
+            <button class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
+                data-bs-toggle="modal" data-bs-target="#singleViewStudentModal" data-name="{{ student.full_name }}"
                 data-dept="{{ student.department }}" data-batch="{{ student.graduation_year }}"
                 data-cgpa="{{ student.cgpa if student.cgpa else 'N/A' }}" data-gender="{{ student.gender }}"
                 data-skills="{{ student.skills | default('No skills listed', true) }}"
@@ -82,21 +75,23 @@
             <form action="{{ url_for('admin.student_action', student_id=student.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
                 <input type="hidden" name="action" value="activate">
-                <button type="submit" class="brutal-btn secondary py-1 px-3">ACTIVATE</button>
+                <button type="submit"
+                    class="btn btn-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1">ACTIVATE</button>
             </form>
             {% elif student.account_status == 'active' %}
             <form action="{{ url_for('admin.student_action', student_id=student.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
                 <input type="hidden" name="action" value="review">
-                <button type="submit" class="brutal-btn wireframe border-2 py-1 px-3">DEACTIVATE</button>
+                <button type="submit"
+                    class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1">DEACTIVATE</button>
             </form>
-            <button class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white" data-bs-toggle="modal"
-                data-bs-target="#globalConfirmModal"
+            <button class="btn btn-danger rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
+                data-bs-toggle="modal" data-bs-target="#globalConfirmModal"
                 data-action-url="{{ url_for('admin.student_action', student_id=student.id) }}"
                 data-action-value="blacklist">BAN</button>
             {% endif %}
             {% else %}
-            <span class="data-tag bg-danger text-white border-0 py-2 px-3">BANNED</span>
+            <span class="badge bg-danger rounded-0 px-3 py-2 font-mono fw-normal">BANNED</span>
             {% endif %}
         </div>
     </td>
@@ -105,11 +100,11 @@
 
 <div class="modal fade" id="singleViewStudentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content brutal-card p-0">
-            <div class="modal-header border-bottom border-dark border-2 p-4">
+        <div class="modal-content rounded-0 border border-dark" style="border-width: 1px !important;">
+            <div class="modal-header border-bottom p-4">
                 <div>
-                    <h3 class="modal-title font-display mb-1 text-uppercase" id="vs-name">-</h3>
-                    <p class="font-mono text-muted fw-bold mb-0" id="vs-dept-batch">-</p>
+                    <h3 class="modal-title font-display fs-4 mb-1 text-uppercase" id="vs-name">-</h3>
+                    <p class="font-mono text-muted mb-0 small" id="vs-dept-batch">-</p>
                 </div>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
             </div>
@@ -117,29 +112,28 @@
             <div class="modal-body p-4 bg-light">
                 <div class="row g-4 font-mono mb-4">
                     <div class="col-md-4">
-                        <label class="text-muted small fw-bold">ACADEMIC CGPA</label>
-                        <div class="p-3 border border-dark border-2 bg-white fw-bold fs-5" id="vs-cgpa">-</div>
+                        <label class="text-muted small fw-bold mb-1">ACADEMIC CGPA</label>
+                        <div class="p-3 border bg-white fw-bold fs-5" id="vs-cgpa">-</div>
                     </div>
                     <div class="col-md-4">
-                        <label class="text-muted small fw-bold">GENDER IDENTIFICATION</label>
-                        <div class="p-3 border border-dark border-2 bg-white fw-bold text-uppercase" id="vs-gender">-
-                        </div>
+                        <label class="text-muted small fw-bold mb-1">GENDER</label>
+                        <div class="p-3 border bg-white fw-bold text-uppercase" id="vs-gender">-</div>
                     </div>
                     <div class="col-md-4">
-                        <label class="text-muted small fw-bold">ACCOUNT STATUS</label>
-                        <div class="p-3 border border-dark border-2 bg-white fw-bold text-uppercase" id="vs-status">-
-                        </div>
+                        <label class="text-muted small fw-bold mb-1">ACCOUNT STATUS</label>
+                        <div class="p-3 border bg-white fw-bold text-uppercase" id="vs-status">-</div>
                     </div>
                 </div>
                 <div>
-                    <h5 class="font-display border-bottom border-dark border-2 pb-2 mb-3">REGISTERED SKILLS</h5>
-                    <div class="p-3 bg-white border border-dark border-2 font-body" style="white-space: pre-wrap;"
+                    <h5 class="font-display fs-5 border-bottom pb-2 mb-3">Registered Skills</h5>
+                    <div class="p-3 bg-white border font-body text-muted small" style="white-space: pre-wrap;"
                         id="vs-skills">-</div>
                 </div>
             </div>
 
-            <div class="modal-footer border-top border-dark border-2 p-4 d-flex justify-content-end">
-                <button type="button" class="brutal-btn wireframe" data-bs-dismiss="modal">CLOSE PANEL</button>
+            <div class="modal-footer border-top p-3 d-flex justify-content-end bg-white">
+                <button type="button" class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none px-4"
+                    data-bs-dismiss="modal">CLOSE PANEL</button>
             </div>
         </div>
     </div>
@@ -147,8 +141,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-
         const viewStudentModal = document.getElementById('singleViewStudentModal');
         if (viewStudentModal) {
             viewStudentModal.addEventListener('show.bs.modal', (event) => {

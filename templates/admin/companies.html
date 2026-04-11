@@ -1,18 +1,15 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  10 April 2026
-  templates/admin/companies.html
--->
-
 {% extends "base.html" %}
 {% from 'components/_tableMacro.html' import brutalTable %}
 
 {% block pageTitle %}Company Manager - Admin Console{% endblock %}
+{% block breadcrumb %}ADMIN / COMPANIES{% endblock %}
+
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">COMPANY DIRECTORY</h1>
-    <a href="{{ url_for('admin.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO DASHBOARD</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Company Directory</h1>
+    <a href="{{ url_for('admin.dashboard') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to Dashboard</a>
 </div>
 
 {% set headers = [
@@ -22,10 +19,11 @@
 {'label': 'MODERATION ACTIONS', 'class': 'p-4 text-end'}
 ] %}
 {% include 'components/_searchBar.html' %}
+
 {% call(comp) brutalTable(headers, companies, "NO PARTNERS FOUND") %}
-<tr class="border-bottom border-dark align-middle">
+<tr class="border-bottom align-middle bg-white hover-shadow-sm">
     <td class="p-4 fw-bold font-body text-uppercase">{{ comp.company_name }}</td>
-    <td class="p-4">{{ comp.hr_contact }}</td>
+    <td class="p-4 text-muted">{{ comp.hr_contact }}</td>
     <td class="p-4">
         {% set badgeStatus = comp.approval_status %}
         {% include 'components/_statusBadge.html' %}
@@ -37,27 +35,29 @@
             <form action="{{ url_for('admin.company_action', company_id=comp.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
                 <input type="hidden" name="action" value="approve" />
-                <button type="submit" class="brutal-btn secondary py-1 px-3">APPROVE</button>
+                <button type="submit"
+                    class="btn btn-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1">APPROVE</button>
             </form>
-            <button type="button" class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white;"
+            <button type="button" class="btn btn-danger rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
                 data-bs-toggle="modal" data-bs-target="#globalConfirmModal"
                 data-action-url="{{ url_for('admin.company_action', company_id=comp.id) }}"
                 data-action-value="reject">REJECT</button>
 
             {% elif comp.approval_status == 'approved' %}
-            <button type="button" class="brutal-btn py-1 px-3" style="background-color: #ef4444; color: white;"
+            <button type="button" class="btn btn-danger rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
                 data-bs-toggle="modal" data-bs-target="#globalConfirmModal"
                 data-action-url="{{ url_for('admin.company_action', company_id=comp.id) }}"
                 data-action-value="blacklist">BLACKLIST</button>
 
             {% elif comp.approval_status == 'rejected' %}
             {% if comp.user.status == 'blacklisted' %}
-            <span class="font-mono text-danger">BLACKLISTED</span>
+            <span class="font-mono text-danger fw-bold small">BLACKLISTED</span>
             {% else %}
             <form action="{{ url_for('admin.company_action', company_id=comp.id) }}" method="POST" class="m-0">
                 {{ form.hidden_tag() if form else '' }}
                 <input type="hidden" name="action" value="approve" />
-                <button type="submit" class="brutal-btn wireframe border-2 py-1 px-3">RESTORE</button>
+                <button type="submit"
+                    class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1">RESTORE</button>
             </form>
             {% endif %}
             {% endif %}
