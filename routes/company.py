@@ -211,6 +211,8 @@ def applicationDetail(app_id):
     application = db.one_or_404(db.select(Application).join(Drive).filter(Application.id==app_id, Drive.company_id==g.company.id))
     if request.method == "POST":
         application.approval_status = request.form.get("approval_status")
+        application.rating = int(request.form.get("rating", 0))
+        application.feedBack = request.form.get("feedback") or "Not Provided"
         db.session.commit()
         flash("Application updated successfully.", "success")
         return redirect(url_for("company.applicationDetail", app_id=application.id))

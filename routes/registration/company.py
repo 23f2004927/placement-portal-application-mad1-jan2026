@@ -19,19 +19,19 @@ def registerCompany():
     if request.method == "GET":
         return render_template("auth/registerCompany.html")
 
-    username = request.form.get("username", "").strip()
+    username = request.form.get("userName", "").strip()
     email = request.form.get("email", "").strip()
     password = request.form.get("password", "").strip()
-    company_name = request.form.get("company_name", "").strip()
-    hr_contact = request.form.get("hr_contact", "").strip()
+    company_name = request.form.get("companyName", "").strip()
+    hr_contact = request.form.get("hrContact", "").strip()
     website = request.form.get("website", "").strip()
     description = request.form.get("description", "").strip()
 
     # Basic presence checks
     if not all([username, email, password, company_name]):
+        flash("All fields are required", "error")
         return render_template(
             "auth/registerCompany.html",
-            error="Username, email, password and company name are required.",
         )
 
     # Check for existing user

@@ -20,4 +20,4 @@ class User(db.Model):
     )
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     company = db.relationship("Company", back_populates="user", uselist=False)
-    student = db.relationship("Student", back_populates="user")
+    student = db.relationship("Student", back_populates="user",uselist=False)

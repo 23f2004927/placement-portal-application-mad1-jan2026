@@ -9,38 +9,21 @@
     <h1 class="font-display display-5 mb-0">APPLICANT TRACKING</h1>
 </div>
 
-<div class="mb-4 d-flex flex-wrap gap-3 font-mono align-items-center">
-    <form action="{{ url_for('company.applications') }}" method="GET" class="d-flex gap-2 m-0">
-        <input type="hidden" name="searchQuery" value="{{ request.args.get('searchQuery', '') }}">
-        <input type="hidden" name="status" value="{{ request.args.get('status', 'all') }}">
-
-        <select name="drive_id" class="form-select border-dark border-2 rounded-0 font-mono fw-bold py-1"
-            style="max-width: 300px;" onchange="this.form.submit()">
-            <option value="all">ALL DRIVES</option>
-            {% for d in company_drives %}
-            <option value="{{ d.id }}" {% if request.args.get('drive_id')==(d.id | string) %}selected{% endif %}>
-                {{ d.drive_name | default('Drive', true) }} - {{ d.job_title }}
-            </option>
-            {% endfor %}
-        </select>
-    </form>
-
-    <div class="vr border-dark border-2"></div>
-
-    <a href="{{ url_for('company.applications', status='all', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
-        class="brutal-btn {% if request.args.get('status', 'all') == 'all' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">ALL</a>
-
-    <a href="{{ url_for('company.applications', status='applied', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
-        class="brutal-btn {% if request.args.get('status') == 'applied' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">APPLIED</a>
-
-    <a href="{{ url_for('company.applications', status='shortlisted', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
-        class="brutal-btn {% if request.args.get('status') == 'shortlisted' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">SHORTLISTED</a>
-
-    <a href="{{ url_for('company.applications', status='selected', drive_id=request.args.get('drive_id', 'all'), searchQuery=request.args.get('searchQuery', '')) }}"
-        class="brutal-btn {% if request.args.get('status') == 'selected' %}secondary{% else %}wireframe bg-white{% endif %} py-1 px-3">SELECTED</a>
+{% set filter_items %}
+<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
+    <select name="drive_id" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+        onchange="this.form.submit()" style="max-width: 300px;">
+        <option value="all">DRIVE: ALL</option>
+        {% for d in company_drives %}
+        <option value="{{ d.id }}" {% if request.args.get('drive_id')==(d.id | string) %}selected{% endif %}>
+            {{ d.drive_name | default('Drive', true) | upper }} - {{ d.job_title | upper }}
+        </option>
+        {% endfor %}
+    </select>
 </div>
+{% endset %}
 
-{% include 'components/_searchBar.html' %}
+{% include 'components/_searchBar.html' with context %}
 
 {% set headers = [
 {'label': 'CANDIDATE', 'class': 'p-4'},

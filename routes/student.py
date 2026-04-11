@@ -26,7 +26,7 @@ def load_student():
     if g.student.account_status == "review" and request.endpoint != "student.dashboard":
         return redirect(url_for("student.dashboard"))
     elif g.student.account_status != "active" or g.student.user.status == "blacklisted":
-        return redirect("/access-denied")
+        return redirect(url_for("auth.noAccess"))
 
 
 @student_bp.route("/dashboard")
@@ -125,29 +125,19 @@ def applications():
     status = request.args.get("status", "all")
     search_query = request.args.get("searchQuery", "").strip()
 
-    query = Application.query.join(Drive).filter(Application.student_id == g.student.id)
+    query = Application.query.join(Drive).filter(Application.student_id == g.student.id).join(Company, Drive.company_id == Company.id)
 
     if company_id != "all":
         query = query.filter(Company.id == company_id)
     if status != "all":
-        match status:
-            case "applied": 
-                query = query.filter(Application.approval_status == status)
-            case "shortlisted":
-                query = query.filter(Application.approval_status == status)
-            case "selected":
-                query = query.filter(Application.approval_status == status)
-            case "rejected":
-                query = query.filter(Application.approval_status == status)
-            case "hired":
-                query = query.filter(Application.approval_status == status)
+        query = query.filter(Application.approval_status == status)
     if job_type != "all":
         query = query.filter(Drive.job_type == job_type)
     if search_query:
         query = query.filter(
             Drive.job_title.ilike(f"%{search_query}%") |
-            Application.drive.location.ilike(f"%{search_query}%") |
-            Application.drive.job_type.ilike(f"%{search_query}%")
+            Drive.location.ilike(f"%{search_query}%") |
+            Drive.job_type.ilike(f"%{search_query}%")
         )
 
     myApplications = query.order_by(Application.applied_at.desc()).all()

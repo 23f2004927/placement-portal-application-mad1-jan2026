@@ -27,18 +27,21 @@ def registerStudent():
     cgpa = request.form.get("cgpa", "").strip()
 
     if not all([username, email, password, full_name, department, graduation_year]):
+        flash("All fields except CGPA are required.", "error")
         return render_template(
-            "auth/registerStudent.html", error="All fields except CGPA are required."
+            "auth/registerStudent.html",
         )
 
     if User.query.filter_by(username=username).first():
+        flash("Username already taken.", "error")
         return render_template(
-            "auth/registerStudent.html", error="Username already taken."
+            "auth/registerStudent.html"
         )
 
     if User.query.filter_by(email=email).first():
+        flash("Email already registered.", "error")
         return render_template(
-            "auth/registerStudent.html", error="Email already registered."
+            "auth/registerStudent.html"
         )
 
     new_user = User(

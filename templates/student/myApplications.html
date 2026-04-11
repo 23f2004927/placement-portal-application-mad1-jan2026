@@ -14,45 +14,33 @@
         <span class="data-tag bg-primary">ACTIVE: {{ myApplications|length }}</span>
     </div>
 </div>
-<div class="d-flex align-items-center justify-content-between gap-3 mb-4 w-100">
-
-    <div class="flex-grow-1">
-        {% include 'components/_searchBar.html' %}
-    </div>
-
-    <div class="d-flex align-items-center gap-2">
-        <form action="{{ url_for('student.applications') }}" method="GET" class="d-flex align-items-center gap-2 m-0">
-            {# Preserve Search State #}
-            <input type="hidden" name="searchQuery" value="{{ request.args.get('searchQuery', '') }}">
-
-            <select name="company_id" class="form-select w-auto border-dark border-2 font-mono fw-bold py-2"
-                onchange="this.form.submit()" style="min-width: fit-content;">
-                <option value="all">ALL COMPANIES</option>
-                {% for comp in applied_companies %}
-                <option value="{{ comp.id }}" {% if request.args.get('company_id')==comp.id|string %}selected{% endif
-                    %}>
-                    {{ comp.company_name | upper }}
-                </option>
-                {% endfor %}
-            </select>
-
-            <select name="status" class="form-select w-auto border-dark border-2 font-mono fw-bold py-2"
-                onchange="this.form.submit()" style="min-width: fit-content;">
-                <option value="all">ALL STATUSES</option>
-                {% for stat in ['applied', 'shortlisted', 'selected', 'rejected', 'hired'] %}
-                <option value="{{ stat }}" {% if request.args.get('status')==stat %}selected{% endif %}>
-                    {{ stat | upper }}
-                </option>
-                {% endfor %}
-            </select>
-
-            <a href="{{ url_for('student.applications') }}"
-                class="brutal-btn wireframe py-2 px-3 text-center text-decoration-none d-block font-mono fw-bold">
-                RESET
-            </a>
-        </form>
-    </div>
+{% set filter_items %}
+<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
+    <select name="company_id" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+        onchange="this.form.submit()">
+        <option value="all">CO: ALL</option>
+        {% for comp in applied_companies %}
+        <option value="{{ comp.id }}" {% if request.args.get('company_id')==comp.id|string %}selected{% endif %}>
+            {{ comp.company_name | upper }}
+        </option>
+        {% endfor %}
+    </select>
 </div>
+
+<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
+    <select name="status" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+        onchange="this.form.submit()">
+        <option value="all">ST: ALL</option>
+        {% for stat in ['applied', 'shortlisted', 'selected', 'rejected', 'hired'] %}
+        <option value="{{ stat }}" {% if request.args.get('status')==stat %}selected{% endif %}>
+            {{ stat | upper }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+{% endset %}
+
+{% include 'components/_searchBar.html' with context %}
 {% set headers = [
 {'label': 'COMPANY & ROLE', 'class': 'p-4'},
 {'label': 'APPLIED ON', 'class': 'p-4'},

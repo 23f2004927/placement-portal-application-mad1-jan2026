@@ -174,8 +174,19 @@ def driveAction(driveId):
             flash("Drive approved successfully.", "success")
         case "reject":
             drive.status = "rejected"
+            flash("Drive rejected successfully.", "error")
         case "closed":
             drive.status = "closed"
+            flash("Drive closed successfully.", "info")
+        case "restore":
+            if drive.company.user.status == "blacklisted":
+                flash("Company is blacklisted.", "error")
+            else:
+                drive.status = "pending"
+                flash("Drive restored successfully.", "info")
+        case _:
+            flash("Invalid action.", "warning")
+            
 
     db.session.commit()
     return redirect(url_for("admin.drives"))

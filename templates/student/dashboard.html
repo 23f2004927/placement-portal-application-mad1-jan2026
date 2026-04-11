@@ -19,42 +19,41 @@
 
 <h3 class="font-display mb-4">ACTIVE POSTINGS</h3>
 
-<div class="mb-4 d-flex flex-wrap gap-3 font-mono align-items-center">
-    <form action="{{ url_for('student.dashboard') }}" method="GET" class="d-flex flex-wrap gap-2 m-0 w-100">
-        <input type="hidden" name="searchQuery" value="{{ request.args.get('searchQuery', '') }}">
-
-        <select name="company_id" class="form-select border-dark border-2 rounded-0 font-mono fw-bold py-2"
-            style="max-width: 250px;" onchange="this.form.submit()">
-            <option value="all">ALL COMPANIES</option>
-            {% for comp in activeCompanies %}
-            <option value="{{ comp.id }}" {% if request.args.get('company_id')==comp.id|string %}selected{% endif %}>
-                {{ comp.company_name }}
-            </option>
-            {% endfor %}
-        </select>
-
-        <select name="job_type" class="form-select border-dark border-2 rounded-0 font-mono fw-bold py-2"
-            style="max-width: 200px;" onchange="this.form.submit()">
-            <option value="all">ALL ROLES</option>
-            <option value="Internship" {% if request.args.get('job_type')=='Internship' %}selected{% endif %}>Internship
-            </option>
-            <option value="Full-Time" {% if request.args.get('job_type')=='Full-Time' %}selected{% endif %}>Full-Time
-            </option>
-            <option value="Contract" {% if request.args.get('job_type')=='Contract' %}selected{% endif %}>Contract
-            </option>
-        </select>
-
-        <select name="deadline_sort" class="form-select border-dark border-2 rounded-0 font-mono fw-bold py-2"
-            style="max-width: 250px;" onchange="this.form.submit()">
-            <option value="asc" {% if request.args.get('deadline_sort')=='asc' %}selected{% endif %}>DEADLINE: CLOSING
-                SOON</option>
-            <option value="desc" {% if request.args.get('deadline_sort')=='desc' %}selected{% endif %}>DEADLINE: LATEST
-            </option>
-        </select>
-    </form>
+{% set filter_items %}
+<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
+    <select name="company_id" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+        onchange="this.form.submit()">
+        <option value="all">CO: ALL</option>
+        {% for comp in activeCompanies %}
+        <option value="{{ comp.id }}" {% if request.args.get('company_id')==comp.id|string %}selected{% endif %}>
+            {{ comp.company_name | upper }}
+        </option>
+        {% endfor %}
+    </select>
 </div>
 
-{% include 'components/_searchBar.html' %}
+<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
+    <select name="job_type" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+        onchange="this.form.submit()">
+        <option value="all">TYPE: ALL</option>
+        <option value="Internship" {% if request.args.get('job_type')=='Internship' %}selected{% endif %}>INTERNSHIP
+        </option>
+        <option value="Full-Time" {% if request.args.get('job_type')=='Full-Time' %}selected{% endif %}>FULL-TIME
+        </option>
+        <option value="Contract" {% if request.args.get('job_type')=='Contract' %}selected{% endif %}>CONTRACT</option>
+    </select>
+</div>
+
+<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
+    <select name="deadline_sort" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+        onchange="this.form.submit()">
+        <option value="asc" {% if request.args.get('deadline_sort')=='asc' %}selected{% endif %}>CLOSING SOON</option>
+        <option value="desc" {% if request.args.get('deadline_sort')=='desc' %}selected{% endif %}>LATEST</option>
+    </select>
+</div>
+{% endset %}
+
+{% include 'components/_searchBar.html' with context %}
 
 {% set headers = [
 {'label': 'COMPANY', 'class': 'p-4'},
