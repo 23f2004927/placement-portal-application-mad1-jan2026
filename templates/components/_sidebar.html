@@ -88,6 +88,10 @@
             <span class="sidebar-icon"><i class="bi bi-mortarboard-fill"></i></span>
             <span class="sidebar-text">Student Manager</span>
         </a>
+        <a href="#" class="text-light font-mono text-decoration-none fs-6 d-flex align-items-center sidebar-link p-0">
+            <span class="sidebar-icon"><i class="bi bi-gear-fill"></i></span>
+            <span class="sidebar-text ms-2">Settings</span>
+        </a>
         {% endif %}
 
 
@@ -107,10 +111,7 @@
             </span>
         </div>
 
-        <a href="#" class="text-light font-mono text-decoration-none fs-6 d-flex align-items-center sidebar-link p-0">
-            <span class="sidebar-icon"><i class="bi bi-gear-fill"></i></span>
-            <span class="sidebar-text ms-2">Settings</span>
-        </a>
+
 
         <a href="{{ url_for('auth.logout') }}"
             class="btn rounded-0 d-flex align-items-center p-2 text-decoration-none text-light font-mono shadow-none">

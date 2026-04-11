@@ -25,7 +25,7 @@ class Student(db.Model):
     )
     socials = db.Column(db.JSON, nullable=True)
     account_status = db.Column(
-        db.Enum("active", "review"),
+        db.Enum("active", "review", "deactivated"),
         default="active"
     )
     resume_filename = db.Column(db.String(200))

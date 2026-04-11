@@ -98,22 +98,25 @@ def createDrive():
         applicationDeadline = datetime.strptime(request.form.get("application_deadline"), "%Y-%m-%d")
         eligibilityCriteria = request.form.get("eligibility_criteria")
         jobDescription = request.form.get("job_description")
-
-        newDrive = Drive(
-            company_id=g.company.id,
-            drive_name=driveName,
-            job_title=jobTitle,
-            job_type=jobType,
+        try:
+            newDrive = Drive(
+                company_id=g.company.id,
+                drive_name=driveName,
+                job_title=jobTitle,
+                job_type=jobType,
             location=location,
             ctc=compensation,
             application_deadline=applicationDeadline,
             eligibility_criteria=eligibilityCriteria,
             job_description=jobDescription,
         )
-        db.session.add(newDrive)
-        db.session.commit()
-        flash("Drive created successfully.", "success")
-        return redirect(url_for("company.dashboard"))
+            db.session.add(newDrive)
+            db.session.commit()
+            flash("Drive created successfully.", "success")
+            return redirect(url_for("company.dashboard"))
+        except ValueError as e:
+            flash(str(e), "error")
+            return redirect(url_for("company.createDrive"))
     return render_template("company/createDrive.html")
 
 

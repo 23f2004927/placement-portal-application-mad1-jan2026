@@ -3,6 +3,8 @@
 # 6 April 2026
 # /app.py
 
+from datetime import datetime
+from models import Drive
 from flask import Flask, render_template
 
 from config import Config
@@ -29,6 +31,18 @@ myApp.register_blueprint(company_bp, url_prefix="/company")
 myApp.register_blueprint(student_bp, url_prefix="/student")
 
 db.init_app(myApp)
+
+@myApp.before_request
+def close_expired_drives():
+    now = datetime.utcnow()
+    expired = Drive.query.filter(
+        Drive.application_deadline < now,
+        Drive.status == "approved"
+    ).all()
+    if expired:
+        for drive in expired:
+            drive.status = "closed"
+        db.session.commit()
 
 
 @myApp.route("/")

@@ -114,6 +114,7 @@ def student_action(student_id):
             student.account_status = "review"
         case "blacklist":
             student.user.status = "blacklisted"
+            student.account_status = "deactivated"
             for application in student.applications:
                 application.approval_status = "rejected"
         case _:

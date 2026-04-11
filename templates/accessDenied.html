@@ -1,54 +1,68 @@
 {% extends "base.html" %}
 
 {% block pageTitle %}Access Restricted{% endblock %}
-{% block breadcrumb %}SYSTEM / ACCESS RESTRICTED{% endblock %}
+{% block breadcrumb %}SYSTEM / RESTRICTED ACCESS{% endblock %}
 
 {% block mainContent %}
-<div class="content-container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
-    <div class="brutal-card w-100 text-center" style="max-width: 600px;">
+<div class="row justify-content-center align-items-center" style="min-height: 65vh;">
+    <div class="col-12 col-md-8 col-lg-6">
 
-        <div class="border-bottom border-dark border-2 pb-3 mb-4">
-            <h2 class="font-display fs-2 mb-0" style="color: var(--color-primary);">ACCESS RESTRICTED</h2>
+        <div class="bg-white p-4 p-md-5 border border-dark text-center" style="border-width: 1px !important;">
+
+            <div class="mb-4 pb-4 border-bottom">
+                <i class="bi bi-shield-lock-fill text-dark mb-3" style="font-size: 3rem;"></i>
+                <h2 class="font-display fs-3 mb-0">Access Restricted</h2>
+            </div>
+
+            <div class="d-flex justify-content-center gap-2 font-mono mb-5 small">
+                <span class="badge bg-light text-dark border border-secondary rounded-0 px-3 py-2 fw-normal">User: {{
+                    user.username }}</span>
+                <span class="badge bg-dark rounded-0 px-3 py-2 fw-normal">Role: {{ user.role | title }}</span>
+            </div>
+
+            <div class="my-4">
+                {% if user.status == "blacklisted" %}
+                {% if user.role == "company" %}
+                <h3 class="font-display fs-4 mb-2 text-danger">Company Blacklisted</h3>
+                <p class="font-mono text-muted small">Your company has been permanently restricted from the platform.
+                </p>
+                {% elif user.role == "student" %}
+                <h3 class="font-display fs-4 mb-2 text-danger">Account Blacklisted</h3>
+                <p class="font-mono text-muted small">You have been permanently restricted from the platform.</p>
+                {% endif %}
+
+                {% else %}
+                {% if user.role == "company" and user.company.approval_status == "pending" %}
+                <h3 class="font-display fs-4 mb-2">Pending Verification</h3>
+                <p class="font-mono text-muted small">Your company profile is currently under review by the
+                    administration. You will be granted full access once verified.</p>
+
+                {% elif user.role == "company" and user.company.approval_status == "rejected" %}
+                <h3 class="font-display fs-4 mb-2 text-danger">Application Rejected</h3>
+                <p class="font-mono text-muted small">Your company's application to join the placement portal has been
+                    declined.</p>
+
+                {% elif user.role == "student" and user.student.account_status == "review" %}
+                <h3 class="font-display fs-4 mb-2">Account Under Review</h3>
+                <p class="font-mono text-muted small">Your student profile is currently being verified by the
+                    administration.</p>
+
+                {% else %}
+                <h3 class="font-display fs-4 mb-2">Unauthorized Area</h3>
+                <p class="font-mono text-muted small">You do not have the necessary system permissions to view this
+                    directory.</p>
+                {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="mt-5 pt-4 border-top">
+                <a href="{{ url_for('auth.logout') }}"
+                    class="btn btn-dark rounded-0 font-mono fw-bold shadow-none px-4 py-2">
+                    &larr; RETURN TO SECURE LOGIN
+                </a>
+            </div>
+
         </div>
-
-        <div class="font-mono mb-4">
-            <span class="data-tag">USER: {{ user.username }}</span>
-            <span class="data-tag ms-2">ROLE: {{ user.role | upper }}</span>
-        </div>
-
-        <div class="my-4">
-            {% if user.status == "blacklisted" %}
-            {% if user.role == "company" %}
-            <h3 class="font-display fs-4 mb-3">Company Blacklisted</h3>
-            <p>Your company has been permanently restricted from the platform.</p>
-            {% elif user.role == "student" %}
-            <h3 class="font-display fs-4 mb-3">Account Blacklisted</h3>
-            <p>You have been permanently restricted from the platform.</p>
-            {% endif %}
-            {% else %}
-            {% if user.role == "company" and user.company.approval_status == "pending" %}
-            <h3 class="font-display fs-4 mb-3">Pending Approval</h3>
-            <p>Your company profile is currently under review by the administration. You will be granted full access
-                once verified.</p>
-            {% elif user.role == "company" and user.company.approval_status == "rejected" %}
-            <h3 class="font-display fs-4 mb-3">Application Rejected</h3>
-            <p>Your company's application to join the placement portal has been declined.</p>
-            {% elif user.role == "student" and user.student.account_status == "review" %}
-            <h3 class="font-display fs-4 mb-3">Account Under Review</h3>
-            <p>Your student profile is currently being verified.</p>
-            {% else %}
-            <h3 class="font-display fs-4 mb-3">Unauthorized Area</h3>
-            <p>You do not have the necessary permissions to view this directory.</p>
-            {% endif %}
-            {% endif %}
-        </div>
-
-        <div class="mt-5 pt-4 border-top border-dark border-2">
-            <a href="{{ url_for('auth.logout') }}" class="brutal-btn secondary text-decoration-none d-inline-block">
-                &larr; RETURN TO SECURE LOGIN
-            </a>
-        </div>
-
     </div>
 </div>
 {% endblock %}

@@ -4,6 +4,8 @@
 # routes/student.py
 
 # routes/student.py
+
+from datetime import datetime,timezone
 from werkzeug.utils import secure_filename
 from models import Application
 from models import Company
@@ -29,6 +31,7 @@ def load_student():
         return redirect(url_for("auth.noAccess"))
 
 
+
 @student_bp.route("/dashboard")
 @login_required
 @role_required("student")
@@ -37,7 +40,11 @@ def dashboard():
     job_type = request.args.get("job_type", "all")
     search_query = request.args.get("searchQuery", "").strip()
     deadline_sort = request.args.get("deadline_sort", "asc")
-    query = Drive.query.filter_by(status="approved")
+    now = datetime.now(timezone.utc)
+
+    query = Drive.query.filter_by(status="approved").filter(
+        Drive.application_deadline > now  # ← filters out expired drives
+    )
     if company_id != "all":
         query = query.filter_by(company_id=company_id)
     if job_type != "all":
@@ -100,6 +107,9 @@ def profile():
 @role_required("student")
 def driveDetail(drive_id):
     drive = db.one_or_404(db.select(Drive).filter_by(id=drive_id))
+    now = datetime.utcnow() 
+    if drive.application_deadline < now or drive.status != "approved":
+        return redirect(url_for("student.dashboard"))
     if not Application.query.filter_by(student_id=g.student.id, drive_id=drive_id).first():
         if request.method == "POST":
             new_application = Application(

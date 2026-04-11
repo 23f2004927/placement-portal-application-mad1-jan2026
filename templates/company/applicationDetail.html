@@ -16,10 +16,23 @@
 
             <div class="mb-5 pb-4 border-bottom d-flex justify-content-between align-items-start">
                 <div>
-                    <h2 class="font-display fw-bold mt-2 mb-1 fs-4 text-uppercase">{{ application.student.full_name }}
-                    </h2>
-                    <p class="font-mono text-muted mt-1 mb-0 small">{{ application.student.department }} &bull; Class of
-                        {{ application.student.graduation_year }}</p>
+                    <div class="d-flex align-items-center gap-3 mt-2 mb-1">
+                        <h2 class="font-display fw-bold mb-0 fs-4 text-uppercase">{{ application.student.full_name }}
+                        </h2>
+                        <span class="badge rounded-0 px-2 py-1 font-mono fw-normal
+                            {% if application.approval_status in ['selected', 'hired'] %}bg-success
+                            {% elif application.approval_status == 'rejected' %}bg-danger
+                            {% elif application.approval_status == 'shortlisted' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ application.approval_status | title }}
+                        </span>
+                    </div>
+                    <p class="font-mono text-muted mt-1 mb-0 small">
+                        {{ application.student.department }} &bull; Class of {{ application.student.graduation_year }}
+                        {% if application.student.gender and application.student.gender != "Prefer Not To Say" %}
+                        &bull; {{ application.student.gender }}
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="text-end font-mono">
                     <span class="text-muted d-block small fw-bold text-uppercase">CGPA</span>
@@ -27,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="row g-4 mb-5 font-mono">
+            <div class="row g-4 mb-4 font-mono">
                 <div class="col-md-6">
                     <span class="text-muted d-block small fw-bold mb-2 text-uppercase">Applied For</span>
                     <span class="badge bg-light text-dark border border-secondary rounded-0 px-3 py-2 fw-normal fs-6">{{
@@ -43,6 +56,48 @@
                     </a>
                     {% else %}
                     <span class="badge bg-danger rounded-0 px-3 py-2 fw-normal fs-6">NO FILE UPLOADED</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5 pb-4 border-bottom font-mono">
+                <div class="col-md-6">
+                    <span class="text-muted d-block small fw-bold mb-2 text-uppercase">Professional Links</span>
+                    {% if application.student.socials and (application.student.socials.get('linkedin') or
+                    application.student.socials.get('github')) %}
+                    <div class="d-flex gap-2">
+                        {% if application.student.socials.get('linkedin') %}
+                        <a href="{{ application.student.socials.get('linkedin') }}" target="_blank"
+                            class="btn btn-light border rounded-0 btn-sm shadow-none font-mono">
+                            <i class="bi bi-linkedin text-primary me-1"></i> LinkedIn
+                        </a>
+                        {% endif %}
+                        {% if application.student.socials.get('github') %}
+                        <a href="{{ application.student.socials.get('github') }}" target="_blank"
+                            class="btn btn-light border rounded-0 btn-sm shadow-none font-mono">
+                            <i class="bi bi-github text-dark me-1"></i> GitHub
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <span class="text-muted small">No links provided.</span>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <span class="text-muted d-block small fw-bold mb-2 text-uppercase">Registered Skills</span>
+                    {% if application.student.skills %}
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for skill in application.student.skills.split(',') %}
+                        {% if skill.strip() %}
+                        <span
+                            class="badge bg-white text-dark border border-secondary rounded-0 px-2 py-1 font-mono fw-normal">{{
+                            skill.strip() }}</span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <span class="text-muted small">No specific skills listed.</span>
                     {% endif %}
                 </div>
             </div>

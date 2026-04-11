@@ -3,12 +3,19 @@
 # 6 April 2026
 # models/drive.py
 
+from sqlalchemy.orm import validates
 from datetime import datetime, timezone
 
 from . import db
 
 
 class Drive(db.Model):
+
+    @validates("application_deadline")
+    def validate_deadline(self, key, value):
+        if value < datetime.utcnow():
+            raise ValueError("Application deadline cannot be in the past.")
+        return value
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(
         db.Integer,
