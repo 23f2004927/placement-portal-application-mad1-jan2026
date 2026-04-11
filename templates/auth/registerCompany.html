@@ -1,60 +1,74 @@
-<!--
-  Christiano Blairoy Fernandes
-  23f2004927
-  9 April 2026
-  templates/auth/registerCompany.html
--->
-
 {% extends "base.html" %}
 
 {% block pageTitle %}Company Registration{% endblock %}
-{% block breadcrumb %}AUTH / REGISTER COMPANY{% endblock %}
+{% block breadcrumb %}PARTNER REGISTRATION{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-center align-items-center py-5">
-    <div class="brutal-card w-100" style="max-width: 800px">
-        <div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-            <h2 class="font-display fs-2 mb-0">COMPANY PARTNER</h2>
-            <span class="data-tag"
-                style="background-color: var(--color-secondary); color: var(--color-border);">PENDING_VERIFICATION</span>
-        </div>
+<div class="row justify-content-center align-items-center py-4" style="min-height: 75vh;">
+    <div class="col-12 col-lg-8">
 
-        <form method="POST" action="{{ url_for('company_reg.registerCompany') }}">
-            {{ form.hidden_tag() if form else '' }}
-            <div class="row g-4 font-mono">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">USERNAME *</label>
-                    <input type="text" class="form-control" name="userName" required />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">EMAIL ADDRESS *</label>
-                    <input type="email" class="form-control" name="email" required />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">PASSWORD *</label>
-                    <input type="password" class="form-control" name="password" required minlength="8" />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">COMPANY NAME *</label>
-                    <input type="text" class="form-control" name="companyName" required />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">HR CONTACT</label>
-                    <input type="text" class="form-control" name="hrContact" />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">WEBSITE URL</label>
-                    <input type="url" class="form-control" name="website" placeholder="https://" />
-                </div>
-                <div class="col-12">
-                    <label class="form-label fw-bold">COMPANY DESCRIPTION</label>
-                    <textarea class="form-control" name="description" rows="3"></textarea>
-                </div>
+        <div class="bg-white p-4 p-md-5 border border-dark" style="border-width: 1px !important;">
+
+            <div class="text-center mb-4 border-bottom pb-4">
+                <span class="badge bg-secondary rounded-0 px-2 py-1 mb-2 font-mono fw-normal">Network Partner</span>
+                <h2 class="font-display fw-bold mb-1 fs-3">COMPANY REGISTRATION</h2>
+                <p class="font-mono text-muted small mb-0">Apply to join the placement portal network.</p>
             </div>
-            <button type="submit" class="brutal-btn secondary w-100 py-3 mt-5">
-                SUBMIT FOR APPROVAL
-            </button>
-        </form>
+
+            <form method="POST" action="{{ url_for('company_reg.registerCompany') }}">
+                {{ form.hidden_tag() if form else '' }}
+
+                <div class="row g-3 font-mono">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Username *</label>
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="userName" required
+                            style="border: 1px solid #ccc;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Email Address *</label>
+                        <input type="email" class="form-control py-2 rounded-0 shadow-none" name="email" required
+                            style="border: 1px solid #ccc;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Password *</label>
+                        <input type="password" class="form-control py-2 rounded-0 shadow-none" name="password" required
+                            minlength="8" style="border: 1px solid #ccc;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Company Name *</label>
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="companyName" required
+                            style="border: 1px solid #ccc;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">HR Contact</label>
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="hrContact"
+                            style="border: 1px solid #ccc;" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Website URL</label>
+                        <input type="url" class="form-control py-2 rounded-0 shadow-none" name="website"
+                            placeholder="https://" style="border: 1px solid #ccc;" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold small text-muted mb-1">Company Description</label>
+                        <textarea class="form-control py-2 rounded-0 shadow-none" name="description" rows="3"
+                            style="border: 1px solid #ccc;"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark w-100 rounded-0 font-mono fw-bold py-2 mt-4 shadow-none">
+                    SUBMIT APPLICATION
+                </button>
+            </form>
+
+            <div class="text-center font-mono mt-4 pt-3 border-top" style="font-size: 0.85rem">
+                <span class="text-muted me-1">Already registered?</span>
+                <a href="{{ url_for('auth.login') }}" class="text-dark text-decoration-none fw-bold hover-underline">
+                    Sign In
+                </a>
+            </div>
+
+        </div>
     </div>
 </div>
 {% endblock %}
