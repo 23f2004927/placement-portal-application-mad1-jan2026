@@ -26,4 +26,4 @@ Placement Portal Application web application that allows Admin (Institute), Comp
 
 
 
-### Updated: 10 April 2026
+### Updated: 12 April 2026

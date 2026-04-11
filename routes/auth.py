@@ -40,6 +40,8 @@ def login():
         passwordQuery = request.form.get("password")
 
         user = User.query.filter_by(username=usernameQuery).first()
+        if user.status == "blacklisted":
+            return redirect(url_for("auth.noAccess"))
         if user is not None and check_password_hash(
             user.password_hash, str(passwordQuery)
         ):
@@ -64,6 +66,7 @@ def logout():
 @auth.route("/access-denied")
 def noAccess():
     if session.get("user_id") is None:
+        flash("User is  blacklisted", "error")
         return redirect(url_for("auth.login"))
     return render_template(
         "accessDenied.html", user=User.query.filter_by(id=session["user_id"]).first()

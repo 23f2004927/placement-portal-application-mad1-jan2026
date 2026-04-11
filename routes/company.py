@@ -127,6 +127,9 @@ def manageDrive(drive_id):
     drive = db.one_or_404(db.select(Drive).filter_by(id=drive_id, company_id=g.company.id))
 
     if request.method == "POST":
+        if drive.status == "closed":
+            flash("Cannot edit a closed drive.", "error")
+            return redirect(url_for("company.drives"))
         drive.ctc = request.form.get("compensation")
         drive.application_deadline = datetime.strptime(request.form.get("application_deadline"), "%Y-%m-%d")
         drive.eligibility_criteria = request.form.get("eligibility_criteria")
@@ -211,11 +214,30 @@ def applications():
 @login_required
 @role_required("company")
 def applicationDetail(app_id):
+    VALID_TRANSITIONS = {
+    "applied": {"shortlisted", "rejected"},
+    "shortlisted": {"selected", "rejected"},
+    "selected": {"hired"},
+    "rejected": set(),
+    "hired": set(),       
+}
     application = db.one_or_404(db.select(Application).join(Drive).filter(Application.id==app_id, Drive.company_id==g.company.id))
     if request.method == "POST":
-        application.approval_status = request.form.get("approval_status")
+
         application.rating = int(request.form.get("rating", 0))
         application.feedBack = request.form.get("feedback") or "Not Provided"
+        current = application.approval_status
+        new_status = request.form.get("approval_status")
+
+        if new_status not in VALID_TRANSITIONS.get(current, set()):
+            flash(f"Cannot move from '{current}' to '{new_status}'.", "error")
+            return redirect(url_for("company.applicationDetail", app_id=application.id))
+        application.approval_status = new_status
+        
+        if not 0 <= application.rating <= 5:
+            flash("Rating must be between 0 and 5.", "error")
+            return redirect(url_for("company.applicationDetail", app_id=application.id))
+
         db.session.commit()
         flash("Application updated successfully.", "success")
         return redirect(url_for("company.applicationDetail", app_id=application.id))
