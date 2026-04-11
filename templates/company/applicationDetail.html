@@ -3,43 +3,46 @@
 {% block breadcrumb %}COMPANY / APPLICATIONS / REVIEW{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">CANDIDATE REVIEW</h1>
-    <a href="{{ url_for('company.applications') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO LIST</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Candidate Review</h1>
+    <a href="{{ url_for('company.applications') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to List</a>
 </div>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-5">
     <div class="col-lg-8">
-        <div class="brutal-card p-5">
+        <div class="bg-white p-4 p-md-5 border border-dark" style="border-width: 1px !important;">
 
-            <div class="mb-5 pb-4 border-bottom border-dark border-2 d-flex justify-content-between align-items-start">
+            <div class="mb-5 pb-4 border-bottom d-flex justify-content-between align-items-start">
                 <div>
-                    <h2 class="font-display text-uppercase mt-2 mb-0">{{ application.student.full_name }}</h2>
-                    <p class="font-mono text-muted mt-1 mb-0">{{ application.student.department }} &bull; Class of {{
-                        application.student.graduation_year }}</p>
+                    <h2 class="font-display fw-bold mt-2 mb-1 fs-4 text-uppercase">{{ application.student.full_name }}
+                    </h2>
+                    <p class="font-mono text-muted mt-1 mb-0 small">{{ application.student.department }} &bull; Class of
+                        {{ application.student.graduation_year }}</p>
                 </div>
                 <div class="text-end font-mono">
-                    <span class="text-muted d-block small fw-bold">CGPA</span>
-                    <span class="fs-3 fw-bold">{{ application.student.cgpa }}</span>
+                    <span class="text-muted d-block small fw-bold text-uppercase">CGPA</span>
+                    <span class="fs-4 fw-bold text-dark">{{ application.student.cgpa }}</span>
                 </div>
             </div>
 
             <div class="row g-4 mb-5 font-mono">
                 <div class="col-md-6">
-                    <span class="text-muted d-block small fw-bold mb-1">APPLIED FOR</span>
-                    <span class="data-tag border-dark border text-dark bg-white fs-6">{{ application.drive.job_title |
-                        upper
-                        }}</span>
+                    <span class="text-muted d-block small fw-bold mb-2 text-uppercase">Applied For</span>
+                    <span class="badge bg-light text-dark border border-secondary rounded-0 px-3 py-2 fw-normal fs-6">{{
+                        application.drive.job_title }}</span>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <span class="text-muted d-block small fw-bold mb-1">RESUME</span>
+                    <span class="text-muted d-block small fw-bold mb-2 text-uppercase">Resume Document</span>
                     {% if application.student.resume_filename %}
                     <a href="{{ url_for('static', filename='uploads/' + application.student.resume_filename) }}"
-                        target="_blank" class="brutal-btn wireframe py-1 px-3 fs-6 d-inline-block">
+                        target="_blank"
+                        class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-4 py-2">
                         VIEW RESUME &nearr;
                     </a>
                     {% else %}
-                    <span class="text-danger fw-bold">NO FILE UPLOADED</span>
+                    <span class="badge bg-danger rounded-0 px-3 py-2 fw-normal fs-6">NO FILE UPLOADED</span>
                     {% endif %}
                 </div>
             </div>
@@ -48,38 +51,37 @@
 
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">UPDATE STATUS *</label>
-                        <select class="form-control font-mono" name="approval_status">
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Update Status *</label>
+                        <select class="form-select rounded-0 shadow-none font-mono py-2 custom-select-brutal"
+                            name="approval_status" style="border-color: #ccc;">
                             <option value="applied" {% if application.approval_status=='applied' %}selected{% endif %}>
-                                Applied
-                            </option>
+                                Applied</option>
                             <option value="shortlisted" {% if application.approval_status=='shortlisted' %}selected{%
-                                endif %}>
-                                Shortlisted</option>
+                                endif %}>Shortlisted</option>
                             <option value="selected" {% if application.approval_status=='selected' %}selected{% endif
-                                %}>
-                                Selected</option>
+                                %}>Selected</option>
                             <option value="hired" {% if application.approval_status=='hired' %}selected{% endif %}>Hired
                             </option>
                             <option value="rejected" {% if application.approval_status=='rejected' %}selected{% endif
-                                %}>
-                                Rejected</option>
+                                %}>Rejected</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">INTERVIEW RATING (0-5)</label>
-                        <input type="number" class="form-control font-mono" name="rating"
-                            value="{{ application.rating }}" min="0" max="5">
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Interview Rating (0-5)</label>
+                        <input type="number" class="form-control rounded-0 shadow-none font-mono py-2" name="rating"
+                            value="{{ application.rating }}" min="0" max="5" style="border-color: #ccc;">
                     </div>
                     <div class="col-12">
-                        <label class="form-label font-mono fw-bold">INTERNAL FEEDBACK</label>
-                        <textarea class="form-control" name="feedback" rows="4"
-                            placeholder="Notes for HR and interviewers...">{{ application.feedBack if application.feedBack != 'Not Provided' else '' }}</textarea>
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Internal Feedback</label>
+                        <textarea class="form-control rounded-0 shadow-none py-2" name="feedback" rows="4"
+                            placeholder="Notes for HR and interviewers..."
+                            style="border-color: #ccc;">{{ application.feedBack if application.feedBack != 'Not Provided' else '' }}</textarea>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end mt-5 pt-4 border-top border-dark border-2">
-                    <button type="submit" class="brutal-btn secondary py-3 px-5 fs-5">SAVE DECISION &rarr;</button>
+                <div class="d-flex justify-content-end mt-5 pt-4 border-top">
+                    <button type="submit" class="btn btn-dark rounded-0 font-mono fw-bold shadow-none px-5 py-2">SAVE
+                        DECISION &rarr;</button>
                 </div>
             </form>
 

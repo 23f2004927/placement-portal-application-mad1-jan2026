@@ -3,40 +3,44 @@
 {% block breadcrumb %}COMPANY / DRIVES / NEW{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">INITIATE PLACEMENT DRIVE</h1>
-    <a href="{{ url_for('company.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO CONSOLE</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Initiate Placement Drive</h1>
+    <a href="{{ url_for('company.dashboard') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to Console</a>
 </div>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-5">
     <div class="col-lg-8">
-        <div class="brutal-card p-5">
-            <div class="mb-4 pb-3 border-bottom border-dark border-2">
-                <span class="data-tag border-0 text-dark mb-2 d-inline-block"
-                    style="background-color: var(--color-secondary)">NEW LISTING</span>
-                <p class="font-mono text-muted mb-0">
-                    Note: All new drives require Administrator approval before
-                    becoming visible to students.
+        <div class="bg-white p-4 p-md-5 border border-dark" style="border-width: 1px !important;">
+
+            <div class="mb-4 pb-3 border-bottom">
+                <span class="badge bg-dark rounded-0 px-2 py-1 font-mono fw-normal mb-2 d-inline-block">New
+                    Listing</span>
+                <p class="font-mono text-muted small mb-0">
+                    Note: All new drives require Administrator approval before becoming visible to students.
                 </p>
             </div>
 
             <form action="{{ url_for('company.createDrive') }}" method="POST">
                 <div class="mb-4">
-                    <label class="form-label font-mono fw-bold">DRIVE NAME *</label>
-                    <input type="text" class="form-control form-control-lg font-display text-uppercase"
-                        name="drive_name" required placeholder="e.g. Summer Internship 2026" />
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Drive Name *</label>
+                    <input type="text" class="form-control rounded-0 shadow-none py-2 font-display fs-5"
+                        name="drive_name" required placeholder="e.g. Summer Internship 2026"
+                        style="border-color: #ccc;" />
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label font-mono fw-bold">JOB TITLE / ROLE *</label>
-                    <input type="text" class="form-control form-control-lg font-display text-uppercase" name="job_title"
-                        required placeholder="e.g. Frontend Engineer" />
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Job Title / Role *</label>
+                    <input type="text" class="form-control rounded-0 shadow-none py-2 font-display fs-5"
+                        name="job_title" required placeholder="e.g. Frontend Engineer" style="border-color: #ccc;" />
                 </div>
 
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">JOB TYPE</label>
-                        <select class="form-control font-mono" name="job_type">
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Job Type</label>
+                        <select class="form-select rounded-0 shadow-none font-mono py-2 custom-select-brutal"
+                            name="job_type" style="border-color: #ccc;">
                             <option value="Internship">Internship</option>
                             <option value="Full-Time">Full-Time</option>
                             <option value="Part-Time">Part-Time</option>
@@ -44,33 +48,36 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">LOCATION</label>
-                        <input type="text" class="form-control font-mono" name="location" value="Remote" required />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Location</label>
+                        <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="location"
+                            value="Remote" required style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">COMPENSATION *</label>
-                        <input type="text" class="form-control font-mono" name="compensation" value="Performance Based"
-                            required />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Compensation *</label>
+                        <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="compensation"
+                            value="Performance Based" required style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">APPLICATION DEADLINE *</label>
-                        <input type="date" class="form-control font-mono" name="application_deadline" required />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Application Deadline *</label>
+                        <input type="date" class="form-control rounded-0 shadow-none font-mono py-2"
+                            name="application_deadline" required style="border-color: #ccc;" />
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label font-mono fw-bold">ELIGIBILITY CRITERIA *</label>
-                    <input type="text" class="form-control" name="eligibility_criteria" required
-                        placeholder="e.g. Minimum 7.5 CGPA, CS/IT only" />
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Eligibility Criteria *</label>
+                    <input type="text" class="form-control rounded-0 shadow-none py-2" name="eligibility_criteria"
+                        required placeholder="e.g. Minimum 7.5 CGPA, CS/IT only" style="border-color: #ccc;" />
                 </div>
 
                 <div class="mb-5">
-                    <label class="form-label font-mono fw-bold">FULL JOB DESCRIPTION *</label>
-                    <textarea class="form-control" name="job_description" rows="6" required
-                        placeholder="Outline responsibilities, tech stack, and expectations..."></textarea>
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Full Job Description *</label>
+                    <textarea class="form-control rounded-0 shadow-none py-2" name="job_description" rows="6" required
+                        placeholder="Outline responsibilities, tech stack, and expectations..."
+                        style="border-color: #ccc;"></textarea>
                 </div>
 
-                <button type="submit" class="brutal-btn secondary w-100 fs-4 py-3 text-dark">
+                <button type="submit" class="btn btn-dark w-100 rounded-0 font-mono fw-bold shadow-none py-3">
                     SUBMIT FOR ADMIN APPROVAL &rarr;
                 </button>
             </form>

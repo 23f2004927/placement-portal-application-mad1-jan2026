@@ -5,18 +5,18 @@
 {% block breadcrumb %}COMPANY / APPLICATIONS{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">APPLICANT TRACKING</h1>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Applicant Tracking</h1>
 </div>
 
 {% set filter_items %}
-<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
-    <select name="drive_id" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+<div class="border-end d-flex align-items-center px-2 bg-white">
+    <select name="drive_id" class="form-select border-0 font-mono shadow-none custom-select-brutal text-muted small"
         onchange="this.form.submit()" style="max-width: 300px;">
-        <option value="all">DRIVE: ALL</option>
+        <option value="all">Drive: All</option>
         {% for d in company_drives %}
         <option value="{{ d.id }}" {% if request.args.get('drive_id')==(d.id | string) %}selected{% endif %}>
-            {{ d.drive_name | default('Drive', true) | upper }} - {{ d.job_title | upper }}
+            {{ d.drive_name | default('Drive', true) }} - {{ d.job_title }}
         </option>
         {% endfor %}
     </select>
@@ -35,24 +35,28 @@
 ] %}
 
 {% call(app) brutalTable(headers, applications, "NO APPLICATIONS DETECTED") %}
-<tr class="border-bottom border-dark align-middle bg-white hover-shadow-sm transition-all">
-    <td class="p-4 fw-bold font-body text-uppercase">
-        {{ app.student.full_name }}
+<tr class="border-bottom align-middle bg-white hover-shadow-sm">
+    <td class="p-4">
+        <div class="fw-bold font-body text-uppercase text-dark">{{ app.student.full_name }}</div>
         <div class="small text-muted font-mono mt-1">{{ app.student.department }}</div>
     </td>
-    <td class="p-4 font-body fw-bold text-uppercase" style="color: var(--color-primary);">
+    <td class="p-4 font-body fw-bold text-uppercase text-muted">
         {{ app.drive.drive_name | default('N/A', true) }}
     </td>
-    <td class="p-4 font-body fw-bold text-uppercase">{{ app.drive.job_title }}</td>
-    <td class="p-4">{{ app.student.cgpa }}</td>
+    <td class="p-4 font-body fw-bold text-uppercase text-dark">{{ app.drive.job_title }}</td>
+    <td class="p-4 font-mono fw-bold">{{ app.student.cgpa }}</td>
     <td class="p-4">
-        <span
-            class="data-tag border-0 text-dark {% if app.approval_status in ['selected', 'hired'] %}bg-success text-white{% elif app.approval_status == 'rejected' %}bg-danger text-white{% else %}bg-warning{% endif %}">
-            {{ app.approval_status | upper }}
+        <span class="badge rounded-0 px-3 py-2 font-mono fw-normal
+            {% if app.approval_status in ['selected', 'hired'] %}bg-success
+            {% elif app.approval_status == 'rejected' %}bg-danger
+            {% elif app.approval_status == 'shortlisted' %}bg-warning text-dark
+            {% else %}bg-light text-dark border{% endif %}">
+            {{ app.approval_status | title }}
         </span>
     </td>
     <td class="p-4 text-end">
-        <a href="{{ url_for('company.applicationDetail', app_id=app.id) }}" class="brutal-btn wireframe py-1 px-3 fs-6">
+        <a href="{{ url_for('company.applicationDetail', app_id=app.id) }}"
+            class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1">
             REVIEW &rarr;
         </a>
     </td>

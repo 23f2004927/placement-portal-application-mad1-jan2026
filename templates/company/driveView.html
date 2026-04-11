@@ -3,41 +3,45 @@
 {% block breadcrumb %}COMPANY / DRIVES / MANAGE{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">MANAGE PLACEMENT DRIVE</h1>
-    <a href="{{ url_for('company.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO CONSOLE</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Manage Placement Drive</h1>
+    <a href="{{ url_for('company.dashboard') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to Console</a>
 </div>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-5">
     <div class="col-lg-8">
-        <div class="brutal-card p-5">
+        <div class="bg-white p-4 p-md-5 border border-dark" style="border-width: 1px !important;">
 
-            <div class="mb-5 pb-4 border-bottom border-dark border-2 d-flex justify-content-between align-items-start">
+            <div class="mb-4 pb-4 border-bottom d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="data-tag text-dark mb-2 d-inline-block border-dark border"
-                        style="background-color: #fff;">{{ drive.job_type | upper }}</span>
-                    <span class="data-tag text-dark mb-2 ms-2 d-inline-block border-dark border"
-                        style="background-color: #fff;">{{ drive.location | upper }}</span>
+                    <span
+                        class="badge bg-light text-dark border border-secondary rounded-0 px-2 py-1 font-mono fw-normal mb-2 d-inline-block">{{
+                        drive.job_type }}</span>
+                    <span
+                        class="badge bg-light text-dark border border-secondary rounded-0 px-2 py-1 font-mono fw-normal mb-2 ms-1 d-inline-block">{{
+                        drive.location }}</span>
 
-                    <h2 class="font-display text-uppercase mt-2 mb-0">{{ drive.job_title }}</h2>
-                    <p class="font-mono text-muted mt-1 mb-0">{{ drive.drive_name }}</p>
+                    <h2 class="font-display fw-bold mt-2 mb-1 fs-4">{{ drive.job_title }}</h2>
+                    <p class="font-mono text-muted mt-1 mb-0 small">{{ drive.drive_name }}</p>
                 </div>
                 <div>
                     {% if drive.status == 'approved' %}
-                    <span class="data-tag border-0 text-dark fs-6 px-3 py-2"
-                        style="background-color: var(--color-secondary)">APPROVED</span>
+                    <span class="badge bg-success rounded-0 px-3 py-2 font-mono fw-normal">APPROVED</span>
                     {% elif drive.status == 'pending' %}
-                    <span class="data-tag bg-warning text-dark border-0 fs-6 px-3 py-2">PENDING</span>
+                    <span class="badge bg-warning text-dark rounded-0 px-3 py-2 font-mono fw-normal">PENDING</span>
                     {% else %}
-                    <span class="data-tag fs-6 px-3 py-2">{{ drive.status | upper }}</span>
+                    <span class="badge bg-secondary rounded-0 px-3 py-2 font-mono fw-normal">{{ drive.status | upper
+                        }}</span>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="mb-4">
-                <p class="font-mono text-danger fw-bold mb-0">
-                    Important: Updating any details below will reset this drive's status to "Pending" and require
-                    re-approval from the Administrator.
+            <div class="mb-4 p-3 bg-light border">
+                <p class="font-mono text-danger fw-bold small mb-0">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i> Important: Updating any details below will
+                    require re-approval.
                 </p>
             </div>
 
@@ -45,36 +49,37 @@
 
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">COMPENSATION *</label>
-                        <input type="text" class="form-control font-mono" name="compensation" value="{{ drive.ctc }}"
-                            required />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Compensation *</label>
+                        <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="compensation"
+                            value="{{ drive.ctc }}" required style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">APPLICATION DEADLINE *</label>
-                        <input type="date" class="form-control font-mono" name="application_deadline"
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Application Deadline *</label>
+                        <input type="date" class="form-control rounded-0 shadow-none font-mono py-2"
+                            name="application_deadline"
                             value="{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline else '' }}"
-                            required />
+                            required style="border-color: #ccc;" />
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label font-mono fw-bold">ELIGIBILITY CRITERIA *</label>
-                    <input type="text" class="form-control" name="eligibility_criteria"
-                        value="{{ drive.eligibility_criteria }}" required />
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Eligibility Criteria *</label>
+                    <input type="text" class="form-control rounded-0 shadow-none py-2" name="eligibility_criteria"
+                        value="{{ drive.eligibility_criteria }}" required style="border-color: #ccc;" />
                 </div>
 
                 <div class="mb-5">
-                    <label class="form-label font-mono fw-bold">FULL JOB DESCRIPTION *</label>
-                    <textarea class="form-control" name="job_description" rows="6"
-                        required>{{ drive.job_description }}</textarea>
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Full Job Description *</label>
+                    <textarea class="form-control rounded-0 shadow-none py-2" name="job_description" rows="6" required
+                        style="border-color: #ccc;">{{ drive.job_description }}</textarea>
                 </div>
 
-                <div class="d-flex justify-content-end gap-3">
+                <div class="d-flex justify-content-end gap-3 pt-3 border-top">
                     <a href="{{ url_for('company.dashboard') }}"
-                        class="brutal-btn wireframe py-3 px-4 text-decoration-none text-dark">
+                        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-4">
                         CANCEL
                     </a>
-                    <button type="submit" class="brutal-btn secondary fs-5 py-3 px-5 text-dark">
+                    <button type="submit" class="btn btn-dark rounded-0 font-mono fw-bold shadow-none py-2 px-4">
                         UPDATE DETAILS &rarr;
                     </button>
                 </div>

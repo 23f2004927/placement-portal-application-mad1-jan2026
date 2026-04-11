@@ -3,47 +3,48 @@
 {% block breadcrumb %}COMPANY / DASHBOARD{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-5">
+<div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-5">
     <div>
-        <h1 class="font-display display-5 mb-1">
-            {{ company.company_name | upper }}
+        <h1 class="font-display fs-3 mb-1">
+            {{ company.company_name }}
         </h1>
-        <span class="data-tag me-2">HR: {{ company.hr_contact | default('N/A', true) }}</span>
-        {% if company.website %}
-        <a href="{{ company.website }}" target="_blank" class="data-tag text-dark text-decoration-none">SITE LINK
-            &nearr;</a>
-        {% endif %}
+        <div class="d-flex gap-2 font-mono text-muted small mt-2">
+            <span class="badge bg-light text-dark border border-secondary rounded-0 px-2 py-1 fw-normal">HR: {{
+                company.hr_contact | default('N/A', true) }}</span>
+            {% if company.website %}
+            <a href="{{ company.website }}" target="_blank"
+                class="badge bg-dark text-white rounded-0 text-decoration-none px-2 py-1 fw-normal">Site Link
+                &nearr;</a>
+            {% endif %}
+        </div>
     </div>
-
 </div>
 
 <div class="row g-4 mb-5 font-mono">
     <div class="col-md-3">
-        <div class="brutal-card text-center p-3">
-            <div class="fs-1 fw-bold text-primary">{{ stats.active_drives }}</div>
-            <div class="text-uppercase small">Active Drives</div>
+        <div class="bg-white p-4 border border-dark text-center h-100" style="border-width: 1px !important;">
+            <div class="display-5 font-display fw-bold text-dark">{{ stats.active_drives }}</div>
+            <div class="text-uppercase small text-muted mt-2 fw-bold">Active Drives</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="brutal-card text-center p-3">
-            <div class="fs-1 fw-bold">{{ stats.total_applications }}</div>
-            <div class="text-uppercase small">Total Applicants</div>
+        <div class="bg-white p-4 border border-dark text-center h-100" style="border-width: 1px !important;">
+            <div class="display-5 font-display fw-bold text-primary">{{ stats.total_applications }}</div>
+            <div class="text-uppercase small text-muted mt-2 fw-bold">Total Applicants</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="brutal-card text-center p-3">
-            <div class="fs-1 fw-bold" style="color: var(--color-secondary); text-shadow: 1px 1px 0 #000;">{{
+        <div class="bg-light p-4 border border-dark text-center h-100" style="border-width: 1px !important;">
+            <div class="display-5 font-display fw-bold text-warning" style="color: #d97706 !important;">{{
                 stats.shortlisted }}</div>
-            <div class="text-uppercase small">Shortlisted</div>
+            <div class="text-uppercase small text-muted mt-2 fw-bold">Shortlisted</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="brutal-card text-center p-3">
-            <div class="fs-1 fw-bold text-success">{{ stats.selected }}</div>
-            <div class="text-uppercase small">Hired</div>
+        <div class="bg-dark text-white p-4 border border-dark text-center h-100" style="border-width: 1px !important;">
+            <div class="display-5 font-display fw-bold text-success">{{ stats.selected }}</div>
+            <div class="text-uppercase small text-light mt-2 fw-bold">Hired</div>
         </div>
     </div>
 </div>
-
-
 {% endblock %}
