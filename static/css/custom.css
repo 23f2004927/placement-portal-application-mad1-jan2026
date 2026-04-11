@@ -237,3 +237,94 @@ h6,
 #globalSearchBar .bg-white:hover {
     background-color: #f8f9fa !important;
 }
+
+
+
+@media (max-width: 991.98px) {
+
+
+    .main-content {
+        margin-left: 0;
+        padding: 5px;
+        padding-bottom: 72px;
+
+    }
+
+    .content-container {
+        min-width: 96%;
+        max-width: 96%;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+
+
+    .table td,
+    .table th {
+        padding: 0.5rem 0.4rem !important;
+    }
+
+
+    td .btn {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0;
+    }
+
+
+    td .d-flex {
+        gap: 0.2rem !important;
+    }
+
+
+    #globalSearchBar .border-end {
+        flex: 0 0 100%;
+        border-right: none !important;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+
+    #globalSearchBar .font-mono.fw-bold.text-muted.small {
+        font-size: 0.68rem;
+    }
+
+
+    .content-container .d-flex.justify-content-between h1,
+    .content-container .d-flex.justify-content-between h2 {
+        font-size: 1.2rem !important;
+    }
+}
+
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: var(--color-sidebar);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 1050;
+}
+
+.bottom-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 1.35rem;
+    width: 48px;
+    height: 48px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.bottom-nav-link:hover,
+.bottom-nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}

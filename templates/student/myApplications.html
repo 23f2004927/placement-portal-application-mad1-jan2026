@@ -52,8 +52,8 @@
 
 {% set headers = [
 {'label': 'COMPANY & ROLE', 'class': 'p-4'},
-{'label': 'APPLIED ON', 'class': 'p-4'},
-{'label': 'TYPE', 'class': 'p-4'},
+{'label': 'APPLIED ON', 'class': 'p-4 d-none d-md-table-cell'},
+{'label': 'TYPE', 'class': 'p-4 d-none d-md-table-cell'},
 {'label': 'OUTCOME', 'class': 'p-4 text-end'}
 ] %}
 
@@ -76,11 +76,11 @@
         </div>
     </td>
 
-    <td class="p-4 font-mono text-muted small">
+    <td class="p-4 font-mono text-muted small d-none d-md-table-cell">
         {{ app.applied_at.strftime('%d %b %Y') }}
     </td>
 
-    <td class="p-4 font-mono small">
+    <td class="p-4 font-mono small d-none d-md-table-cell">
         <span class="badge bg-light text-dark border rounded-0 fw-normal px-2 py-1">{{ app.drive.job_type }}</span>
     </td>
 
@@ -102,11 +102,11 @@
             </form>
             {% set status = app.approval_status %}
 
-            <span class="badge rounded-0 px-3 py-2 font-mono fw-normal
+            <span class="badge rounded-0 px-2 py-1 btn-sm font-mono fw-normal
                     {% if status in ['selected', 'hired'] %}bg-success
                     {% elif status == 'rejected' %}bg-danger
                     {% elif status == 'shortlisted' %}bg-warning text-dark
-                    {% else %}bg-light text-dark border{% endif %}" style="min-width: 100px;">
+                    {% else %}bg-light text-dark border{% endif %}">
                 {{ status | title }}
             </span>
             {% endif %}

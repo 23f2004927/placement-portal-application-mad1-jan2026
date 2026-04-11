@@ -6,22 +6,28 @@
 -->
 
 <div class="bg-white border border-dark p-0 mb-4" id="globalSearchBar" style="border-width: 1px !important;">
-    <form action="{{ url_for(request.endpoint) }}" method="GET" class="d-flex align-items-stretch m-0">
+    <form action="{{ url_for(request.endpoint) }}" method="GET" class="m-0">
         {{ form.hidden_tag() if form else '' }}
 
-        <div class="flex-grow-1 d-flex align-items-center px-3 border-end">
-            <i class="bi bi-search me-2 text-muted"></i>
-            <input type="text" name="searchQuery" class="form-control border-0 shadow-none font-mono py-3"
-                placeholder="Search directory..." value="{{ request.args.get('searchQuery', '') }}" />
+        {# ── Main search row: icon + input + submit ── #}
+        <div class="d-flex align-items-stretch border-bottom border-bottom-md-0">
+            <div class="flex-grow-1 d-flex align-items-center px-3">
+                <i class="bi bi-search me-2 text-muted"></i>
+                <input type="text" name="searchQuery" class="form-control border-0 shadow-none font-mono py-3"
+                    placeholder="Search directory..." value="{{ request.args.get('searchQuery', '') }}" />
+            </div>
+            <button type="submit" class="btn btn-dark rounded-0 px-4 border-0 font-mono fw-bold shadow-none">
+                <span class="d-none d-md-inline">SEARCH</span>
+                <i class="bi bi-search d-md-none"></i>
+            </button>
         </div>
 
+        {# ── Filter row: wraps below on mobile ── #}
         {% if filter_items %}
-        {{ filter_items }}
+        <div class="d-flex flex-wrap align-items-stretch border-top" style="font-size: 0.8rem;">
+            {{ filter_items }}
+        </div>
         {% endif %}
-
-        <button type="submit" class="btn btn-dark rounded-0 px-4 border-0 font-mono fw-bold shadow-none">
-            SEARCH
-        </button>
     </form>
 
     {% if filterChips %}

@@ -21,6 +21,7 @@
         margin-right: 8px;
         border-radius: 0;
         transition: all 0.2s ease;
+        font-size: 0.85rem;
     }
 
     .nav-pills .nav-link.active {
@@ -32,13 +33,25 @@
     .nav-pills .nav-link:hover:not(.active) {
         background-color: #f8f9fa;
     }
+
+    /* Smaller tabs on mobile */
+    @media (max-width: 575.98px) {
+        .nav-pills .nav-link {
+            font-size: 0.7rem;
+            padding: 0.35rem 0.6rem;
+            margin-right: 4px;
+        }
+    }
 </style>
 
 <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
     <h1 class="font-display fs-3 mb-0">Drive Management</h1>
     <a href="{{ url_for('admin.dashboard') }}"
         class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
-        style="font-size: 0.85rem;">&larr; Back to Dashboard</a>
+        style="font-size: 0.85rem;">
+        <span class="d-none d-md-inline">&larr; Back to Dashboard</span>
+        <span class="d-md-none">&larr;</span>
+    </a>
 </div>
 
 <ul class="nav nav-pills mb-4 d-flex" id="driveTabs" role="tablist">
@@ -60,16 +73,16 @@
 </ul>
 
 {% set standardHeaders = [
-{'label': 'COMPANY', 'class': 'p-3'},
-{'label': 'ROLE', 'class': 'p-3'},
-{'label': 'DEADLINE', 'class': 'p-3'},
+{'label': 'DRIVE', 'class': 'p-3'},
+{'label': 'ROLE', 'class': 'p-3 d-none d-md-table-cell'},
+{'label': 'DEADLINE', 'class': 'p-3 d-none d-md-table-cell'},
 {'label': 'ACTIONS', 'class': 'p-3 text-end'}
 ] %}
 
 {% set allHeaders = [
-{'label': 'COMPANY', 'class': 'p-3'},
-{'label': 'ROLE', 'class': 'p-3'},
-{'label': 'STATUS', 'class': 'p-3'},
+{'label': 'DRIVE', 'class': 'p-3'},
+{'label': 'ROLE', 'class': 'p-3 d-none d-md-table-cell'},
+{'label': 'STATUS', 'class': 'p-3 d-none d-md-table-cell'},
 {'label': 'DETAILS', 'class': 'p-3 text-end'}
 ] %}
 
@@ -82,8 +95,8 @@
         {% call(drive) brutalTable(standardHeaders, pendingDrives.items, "QUEUE CLEAR") %}
         <tr class="border-bottom align-middle bg-white hover-shadow-sm">
             <td class="p-3 fw-bold">{{ drive.company.company_name | default('UNKNOWN') }}</td>
-            <td class="p-3 text-uppercase text-muted">{{ drive.job_title }}</td>
-            <td class="p-3 font-mono">{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline
+            <td class="p-3 text-uppercase text-muted d-none d-md-table-cell">{{ drive.job_title }}</td>
+            <td class="p-3 font-mono d-none d-md-table-cell">{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline
                 else 'N/A' }}</td>
             <td class="p-3 text-end d-flex justify-content-end gap-2">
                 <button class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
@@ -124,9 +137,12 @@
     <div class="tab-pane fade {{ 'show active' if activeTab == 'approved' }}" id="approvedPane" role="tabpanel">
         {% call(drive) brutalTable(standardHeaders, approvedDrives.items, "NO APPROVED DRIVES") %}
         <tr class="border-bottom align-middle bg-white hover-shadow-sm">
-            <td class="p-3 fw-bold">{{ drive.company.company_name | default('UNKNOWN') }}</td>
-            <td class="p-3 text-uppercase text-muted">{{ drive.job_title }}</td>
-            <td class="p-3 font-mono">{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline
+            <td class="p-3">
+                <div class="fw-bold">{{ drive.drive_name | default(drive.job_title) }}</div>
+                <div class="text-muted font-mono" style="font-size: 0.75rem;">{{ drive.company.company_name | default('UNKNOWN') }}</div>
+            </td>
+            <td class="p-3 text-uppercase text-muted d-none d-md-table-cell">{{ drive.job_title }}</td>
+            <td class="p-3 font-mono d-none d-md-table-cell">{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline
                 else 'N/A' }}</td>
             <td class="p-3 text-end d-flex justify-content-end gap-2">
                 <button class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
@@ -160,9 +176,12 @@
     <div class="tab-pane fade {{ 'show active' if activeTab == 'all' }}" id="allPane" role="tabpanel">
         {% call(drive) brutalTable(allHeaders, allDrives.items, "SYSTEM EMPTY") %}
         <tr class="border-bottom align-middle bg-white hover-shadow-sm">
-            <td class="p-3 fw-bold">{{ drive.company.company_name | default('UNKNOWN') }}</td>
-            <td class="p-3 text-uppercase text-muted">{{ drive.job_title }}</td>
-            <td class="p-3">{% set badgeStatus = drive.status %}{% include 'components/_statusBadge.html' %}</td>
+            <td class="p-3">
+                <div class="fw-bold">{{ drive.drive_name | default(drive.job_title) }}</div>
+                <div class="text-muted font-mono" style="font-size: 0.75rem;">{{ drive.company.company_name | default('UNKNOWN') }}</div>
+            </td>
+            <td class="p-3 text-uppercase text-muted d-none d-md-table-cell">{{ drive.job_title }}</td>
+            <td class="p-3 d-none d-md-table-cell">{% set badgeStatus = drive.status %}{% include 'components/_statusBadge.html' %}</td>
             <td class="p-3 text-end d-flex justify-content-end gap-2">
                 <button class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1"
                     data-bs-toggle="modal" data-bs-target="#singleViewDriveModal" data-title="{{ drive.job_title }}"

@@ -34,8 +34,8 @@
 
 {% set headers = [
 {'label': 'CANDIDATE', 'class': 'p-4'},
-{'label': 'DRIVE', 'class': 'p-4'},
-{'label': 'ROLE', 'class': 'p-4'},
+{'label': 'DRIVE', 'class': 'p-4 d-none d-md-table-cell'},
+{'label': 'ROLE', 'class': 'p-4 d-none d-md-table-cell'},
 {'label': 'CGPA', 'class': 'p-4'},
 {'label': 'STATUS', 'class': 'p-4'},
 {'label': 'ACTIONS', 'class': 'p-4 text-end'}
@@ -44,13 +44,16 @@
 {% call(app) brutalTable(headers, applications, "NO APPLICATIONS DETECTED") %}
 <tr class="border-bottom align-middle bg-white hover-shadow-sm">
     <td class="p-4">
-        <div class="fw-bold font-body text-uppercase text-dark">{{ app.student.full_name }}</div>
-        <div class="small text-muted font-mono mt-1">{{ app.student.department }}</div>
+        <div class="fw-bold font-body text-uppercase text-dark">
+            <span class="d-md-none">{{ app.student.full_name.split()[0] }}</span>
+            <span class="d-none d-md-inline">{{ app.student.full_name }}</span>
+        </div>
+        <div class="small text-muted font-mono mt-1" style="font-size: 0.75rem;">{{ app.student.department }}</div>
     </td>
-    <td class="p-4 font-body fw-bold text-uppercase text-muted">
+    <td class="p-4 font-body fw-bold text-uppercase text-muted d-none d-md-table-cell">
         {{ app.drive.drive_name | default('N/A', true) }}
     </td>
-    <td class="p-4 font-body fw-bold text-uppercase text-dark">{{ app.drive.job_title }}</td>
+    <td class="p-4 font-body fw-bold text-uppercase text-dark d-none d-md-table-cell">{{ app.drive.job_title }}</td>
     <td class="p-4 font-mono fw-bold">{{ app.student.cgpa }}</td>
     <td class="p-4">
         <span class="badge rounded-0 px-3 py-2 font-mono fw-normal
@@ -63,8 +66,8 @@
     </td>
     <td class="p-4 text-end">
         <a href="{{ url_for('company.applicationDetail', app_id=app.id) }}"
-            class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-1">
-            REVIEW &rarr;
+            class="btn btn-outline-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-2 py-1">
+            REVIEW
         </a>
     </td>
 </tr>

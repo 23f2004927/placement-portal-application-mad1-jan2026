@@ -28,7 +28,8 @@
     <a href="{{ url_for('student.profile') }}"
         class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
         style="font-size: 0.85rem;">
-        Edit Profile
+        <span class="d-none d-md-inline">Edit Profile</span>
+        <span class="d-md-none"><i class="bi bi-person-fill"></i></span>
     </a>
 </div>
 
@@ -72,27 +73,28 @@
 {% include 'components/_searchBar.html' with context %}
 
 {% set headers = [
-{'label': 'COMPANY', 'class': 'p-4'},
-{'label': 'ROLE TITLE', 'class': 'p-4'},
-{'label': 'TYPE / LOCATION', 'class': 'p-4'},
-{'label': 'DEADLINE', 'class': 'p-4'},
+{'label': 'DRIVE', 'class': 'p-4'},
+{'label': 'ROLE TITLE', 'class': 'p-4 d-none d-md-table-cell'},
+{'label': 'TYPE / LOCATION', 'class': 'p-4 d-none d-md-table-cell'},
+{'label': 'DEADLINE', 'class': 'p-4 d-none d-md-table-cell'},
 {'label': 'ACTION', 'class': 'p-4 text-end'}
 ] %}
 
 {% call(drive) brutalTable(headers, available_drives, "NO ACTIVE POSTINGS FOUND") %}
 <tr class="border-bottom align-middle bg-white hover-shadow-sm">
-    <td class="p-4 fw-bold font-display fs-6 text-uppercase text-dark">
-        {{ drive.company.company_name }}
+    <td class="p-4">
+        <div class="fw-bold font-display fs-6 text-uppercase text-dark">{{ drive.drive_name | default(drive.job_title) }}</div>
+        <div class="small text-muted font-mono mt-1">{{ drive.company.company_name }}</div>
     </td>
-    <td class="p-4 font-body">
+    <td class="p-4 font-body d-none d-md-table-cell">
         <div class="fw-bold">{{ drive.job_title }}</div>
         <div class="small text-muted font-mono mt-1">Req: {{ drive.eligibility_criteria | truncate(40) }}</div>
     </td>
-    <td class="p-4 font-mono small text-muted">
+    <td class="p-4 font-mono small text-muted d-none d-md-table-cell">
         <span class="text-dark fw-bold">{{ drive.job_type }}</span><br>
         {{ drive.location }}
     </td>
-    <td class="p-4 font-mono small">
+    <td class="p-4 font-mono small d-none d-md-table-cell">
         {{ drive.application_deadline.strftime('%Y-%m-%d') }}
     </td>
     <td class="p-4 text-end">

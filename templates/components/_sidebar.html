@@ -5,7 +5,7 @@
   templates/components/_sidebar.html
 -->
 
-<aside class="sidebar d-flex flex-column" id="appSidebar">
+<aside class="sidebar d-none d-lg-flex flex-column" id="appSidebar">
     <div class="px-3 py-3 d-flex align-items-center" style="border-width: 1px !important;">
         <a href="{{ url_for('index') }}"
             class="text-white text-decoration-none font-display fs-5 d-flex align-items-center fw-bold">
@@ -95,10 +95,7 @@
             <span class="sidebar-icon"><i class="bi bi-mortarboard-fill"></i></span>
             <span class="sidebar-text">Student Manager</span>
         </a>
-        <a href="#" class="text-light font-mono text-decoration-none fs-6 d-flex align-items-center sidebar-link p-0">
-            <span class="sidebar-icon"><i class="bi bi-gear-fill"></i></span>
-            <span class="sidebar-text ms-2">Settings</span>
-        </a>
+
         {% endif %}
 
 
@@ -129,3 +126,107 @@
     </div>
     {% endif %}
 </aside>
+
+
+{# ─── MOBILE BOTTOM NAVIGATION ───────────────────────────────────────────────
+     Visible only below lg (992px) via d-lg-none.
+     Icons only — titles are tooltip-friendly via the `title` attribute.
+     Mirrors the sidebar link set exactly so navigation is identical on mobile.
+────────────────────────────────────────────────────────────────────────────── #}
+<nav class="bottom-nav d-lg-none" id="mobileBottomNav" aria-label="Mobile navigation">
+
+    {% if not session.get('user_id') %}
+    <a href="{{ url_for('index') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'index' else '' }}"
+        title="Home">
+        <i class="bi bi-house-door-fill"></i>
+    </a>
+    <a href="{{ url_for('auth.login') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'auth.login' else '' }}"
+        title="Login">
+        <i class="bi bi-box-arrow-in-right"></i>
+    </a>
+    {% endif %}
+
+    {# ── STUDENT ── #}
+    {% if session.get('role') == 'student' %}
+    <a href="{{ url_for('student.dashboard') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'student.dashboard' else '' }}"
+        title="Dashboard">
+        <i class="bi bi-grid-fill"></i>
+    </a>
+    <a href="{{ url_for('student.profile') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'student.profile' else '' }}"
+        title="My Profile">
+        <i class="bi bi-person-badge-fill"></i>
+    </a>
+    <a href="{{ url_for('student.applications') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'student.applications' else '' }}"
+        title="Applications">
+        <i class="bi bi-clipboard-check-fill"></i>
+    </a>
+    <a href="{{ url_for('auth.logout') }}" class="bottom-nav-link" title="Sign Out">
+        <i class="bi bi-box-arrow-left"></i>
+    </a>
+    {% endif %}
+
+    {# ── COMPANY ── #}
+    {% if session.get('role') == 'company' %}
+    <a href="{{ url_for('company.dashboard') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'company.dashboard' else '' }}"
+        title="Dashboard">
+        <i class="bi bi-kanban-fill"></i>
+    </a>
+    <a href="{{ url_for('company.profile') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'company.profile' else '' }}"
+        title="Company Profile">
+        <i class="bi bi-building-fill"></i>
+    </a>
+    <a href="{{ url_for('company.createDrive') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'company.createDrive' else '' }}"
+        title="Post a Job">
+        <i class="bi bi-plus-square-fill"></i>
+    </a>
+    <a href="{{ url_for('company.drives') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint in ['company.drives', 'company.manageDrive'] else '' }}"
+        title="Drives">
+        <i class="bi bi-briefcase-fill"></i>
+    </a>
+    <a href="{{ url_for('company.applications') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint in ['company.applications', 'company.applicationDetail'] else '' }}"
+        title="Applications">
+        <i class="bi bi-file-earmark-person-fill"></i>
+    </a>
+    <a href="{{ url_for('auth.logout') }}" class="bottom-nav-link" title="Sign Out">
+        <i class="bi bi-box-arrow-left"></i>
+    </a>
+    {% endif %}
+
+    {# ── ADMIN ── #}
+    {% if session.get('role') == 'admin' %}
+    <a href="{{ url_for('admin.dashboard') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'admin.dashboard' else '' }}"
+        title="Dashboard">
+        <i class="bi bi-speedometer2"></i>
+    </a>
+    <a href="{{ url_for('admin.drives') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'admin.drives' else '' }}"
+        title="Drive Approvals">
+        <i class="bi bi-check-circle-fill"></i>
+    </a>
+    <a href="{{ url_for('admin.companies') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'admin.companies' else '' }}"
+        title="Companies">
+        <i class="bi bi-buildings-fill"></i>
+    </a>
+    <a href="{{ url_for('admin.students') }}"
+        class="bottom-nav-link {{ 'active' if request.endpoint == 'admin.students' else '' }}"
+        title="Students">
+        <i class="bi bi-mortarboard-fill"></i>
+    </a>
+    <a href="{{ url_for('auth.logout') }}" class="bottom-nav-link" title="Sign Out">
+        <i class="bi bi-box-arrow-left"></i>
+    </a>
+    {% endif %}
+
+</nav>

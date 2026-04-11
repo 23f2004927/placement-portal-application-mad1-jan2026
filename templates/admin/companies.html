@@ -16,12 +16,15 @@
     <h1 class="font-display fs-3 mb-0">Company Directory</h1>
     <a href="{{ url_for('admin.dashboard') }}"
         class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
-        style="font-size: 0.85rem;">&larr; Back to Dashboard</a>
+        style="font-size: 0.85rem;">
+        <span class="d-none d-md-inline">&larr; Back to Dashboard</span>
+        <span class="d-md-none">&larr;</span>
+    </a>
 </div>
 
 {% set headers = [
 {'label': 'COMPANY NAME', 'class': 'p-4'},
-{'label': 'CONTACT / HR', 'class': 'p-4'},
+{'label': 'CONTACT / HR', 'class': 'p-4 d-none d-md-table-cell'},
 {'label': 'STATUS', 'class': 'p-4'},
 {'label': 'MODERATION ACTIONS', 'class': 'p-4 text-end'}
 ] %}
@@ -30,7 +33,7 @@
 {% call(comp) brutalTable(headers, companies, "NO PARTNERS FOUND") %}
 <tr class="border-bottom align-middle bg-white hover-shadow-sm">
     <td class="p-4 fw-bold font-body text-uppercase">{{ comp.company_name }}</td>
-    <td class="p-4 text-muted">{{ comp.hr_contact }}</td>
+    <td class="p-4 text-muted d-none d-md-table-cell">{{ comp.hr_contact }}</td>
     <td class="p-4">
         {% set badgeStatus = comp.approval_status %}
         {% include 'components/_statusBadge.html' %}
