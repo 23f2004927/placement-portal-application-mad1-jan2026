@@ -23,16 +23,22 @@
         </div>
 
         {% if session.get('role') == 'student' %}
-        <a href="{{ url_for('student.dashboard') }}" class="sidebar-link active">
-            <span class="sidebar-icon"><i class="bi bi-grid-fill"></i></span><span class="sidebar-text">Dashboard</span>
+        <a href="{{ url_for('student.dashboard') }}"
+            class="sidebar-link {{ 'active' if request.endpoint == 'student.dashboard' else '' }}">
+            <span class="sidebar-icon"><i class="bi bi-grid-fill"></i></span>
+            <span class="sidebar-text">Dashboard</span>
         </a>
-        <a href="{{ url_for('student.browseJobs') }}" class="sidebar-link">
-            <span class="sidebar-icon"><i class="bi bi-briefcase-fill"></i></span><span class="sidebar-text">Job
-                Board</span>
+
+        <a href="{{ url_for('student.profile') }}"
+            class="sidebar-link {{ 'active' if request.endpoint == 'student.profile' else '' }}">
+            <span class="sidebar-icon"><i class="bi bi-person-badge-fill"></i></span>
+            <span class="sidebar-text">My Profile</span>
         </a>
-        <a href="{{ url_for('student.myApplications') }}" class="sidebar-link">
-            <span class="sidebar-icon"><i class="bi bi-file-earmark-text-fill"></i></span><span class="sidebar-text">My
-                Applications</span>
+
+        <a href="{{ url_for('student.applications') }}"
+            class="sidebar-link {{ 'active' if request.endpoint == 'student.applications' else '' }}">
+            <span class="sidebar-icon"><i class="bi bi-clipboard-check-fill"></i></span>
+            <span class="sidebar-text">Applications</span>
         </a>
 
         {% elif session.get('role') == 'company' %}

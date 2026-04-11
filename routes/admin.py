@@ -131,15 +131,28 @@ def student_action(student_id):
 @login_required
 @role_required("admin")
 def drives():
-    query = Drive.query
-    allDrives = query.all()
-    pendingDrives = query.filter_by(status="pending").all()
-    approvedDrives = query.filter_by(status="approved").all()
+    all_page      = request.args.get('all_page', 1, type=int)
+    pending_page  = request.args.get('pending_page', 1, type=int)
+    approved_page = request.args.get('approved_page', 1, type=int)
+    
+
+    active_tab = request.args.get('tab', 'pending')
+    query = Drive.query.join(Drive.company)
+    search_term = request.args.get("searchQuery")
+    if search_term:
+        query = query.filter(
+        Company.company_name.ilike(f"%{search_term}%") |
+        Drive.job_title.ilike(f"%{search_term}%")
+    )
+    allDrives      = query.paginate(page=all_page, per_page=20)
+    pendingDrives  = query.filter(Drive.status =="pending").paginate(page=pending_page, per_page=20)
+    approvedDrives = query.filter(Drive.status=="approved").paginate(page=approved_page, per_page=20)
     return render_template(
         "admin/drives.html",
         allDrives=allDrives,
         pendingDrives=pendingDrives,
         approvedDrives=approvedDrives,
+        activeTab=active_tab,
     )
 
 

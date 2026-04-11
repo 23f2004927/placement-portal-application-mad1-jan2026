@@ -29,3 +29,7 @@ instance/
 #ai doc, helper coms
 ai_usage.txt
 helper_commands.txt
+
+
+# resume uploads 
+static/uploads

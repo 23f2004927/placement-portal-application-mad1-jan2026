@@ -121,7 +121,8 @@ h6,
 
 /* Centering Container for Structural Balance */
 .content-container {
-    max-width: 1100px;
+    min-width: 90%;
+    max-width: 90%;
     /* Adjust this to your preference for "centered" look */
     margin: 0 auto;
     /* Centers the block */

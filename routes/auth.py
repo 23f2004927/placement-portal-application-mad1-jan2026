@@ -22,6 +22,14 @@ auth = Blueprint("auth", __name__)
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
+        if session.get("user_id") is not None:
+            match session["role"]:
+                case "admin":
+                    return redirect(url_for("admin.dashboard"))
+                case "student":
+                    return redirect(url_for("student.dashboard"))
+                case "company":
+                    return redirect(url_for("company.dashboard"))
         return render_template("auth/login.html")
     else:
         usernameQuery = request.form.get("username")

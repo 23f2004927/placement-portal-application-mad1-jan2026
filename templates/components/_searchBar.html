@@ -5,16 +5,19 @@
   templates/components/_searchBar.html
 -->
 
-<div class="brutal-card p-3 mb-4" id="globalSearchBar">
+<div class="brutal-card p-2 mb-4" id="globalSearchBar">
     <form action="{{ url_for(request.endpoint) }}" method="GET" class="d-flex align-items-center gap-3 m-0">
         {{ form.hidden_tag() if form else '' }}
         <div class="input-group">
-            <span class="input-group-text bg-white border-dark border-2 rounded-0 font-mono fw-bold"><i
-                    class="bi bi-search"></i></span>
+
             <input type="text" name="searchQuery" class="form-control" placeholder="SEARCH DIRECTORY..."
                 value="{{ request.args.get('searchQuery', '') }}" />
         </div>
-        <button type="submit" class="brutal-btn py-2 px-4" id="searchSubmitBtn">FILTER</button>
+        <button type="submit" class="brutal-btn p-1 d-flex align-items-center gap-1" id="searchSubmitBtn">
+            <span class="input-group-text bg-white border-dark border-2 p-1 py-0 rounded-0 font-mono fw-bold">
+                <i class="bi bi-search"></i>
+            </span>SEARCH
+        </button>
     </form>
 
     {% if filterChips %}
