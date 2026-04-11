@@ -3,45 +3,52 @@
 {% block breadcrumb %}STUDENT / PROFILE{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">STUDENT IDENTITY</h1>
-    <a href="{{ url_for('student.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO CONSOLE</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Student Profile</h1>
+    <a href="{{ url_for('student.dashboard') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to Dashboard</a>
 </div>
 
-<div class="row g-4">
+<div class="row g-4 mb-5">
+
     <div class="col-lg-8">
-        <div class="brutal-card p-5">
+        <div class="bg-white p-4 p-md-5 border border-dark" style="border-width: 1px !important;">
             <form action="{{ url_for('student.profile') }}" method="POST" enctype="multipart/form-data">
 
-                <h4 class="font-display border-bottom border-dark border-2 pb-2 mb-4">
-                    ACADEMIC DETAILS
+                <h4 class="font-display fs-5 border-bottom pb-2 mb-4 text-muted">
+                    Academic Details
                 </h4>
 
                 <div class="mb-4">
-                    <label class="form-label font-mono fw-bold">FULL NAME *</label>
-                    <input type="text" class="form-control form-control-lg font-display text-uppercase" name="full_name"
-                        value="{{ student.full_name }}" required />
+                    <label class="form-label font-mono fw-bold small text-muted mb-1">Full Name *</label>
+                    <input type="text" class="form-control rounded-0 shadow-none py-2 font-display fs-5"
+                        name="full_name" value="{{ student.full_name }}" required style="border-color: #ccc;" />
                 </div>
 
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">DEPARTMENT</label>
-                        <input type="text" class="form-control font-mono" name="department"
-                            value="{{ student.department | default('') }}" placeholder="e.g. Computer Science" />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Department</label>
+                        <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="department"
+                            value="{{ student.department | default('') }}" placeholder="e.g. Computer Science"
+                            style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">GRADUATION YEAR</label>
-                        <input type="number" class="form-control font-mono" name="graduation_year"
-                            value="{{ student.graduation_year | default('') }}" min="2020" max="2030" />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Graduation Year</label>
+                        <input type="number" class="form-control rounded-0 shadow-none font-mono py-2"
+                            name="graduation_year" value="{{ student.graduation_year | default('') }}" min="2020"
+                            max="2030" style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">CGPA (Out of 10.0)</label>
-                        <input type="number" step="0.01" min="0" max="10" class="form-control font-mono" name="cgpa"
-                            value="{{ student.cgpa | default('') }}" />
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">CGPA (Out of 10.0)</label>
+                        <input type="number" step="0.01" min="0" max="10"
+                            class="form-control rounded-0 shadow-none font-mono py-2" name="cgpa"
+                            value="{{ student.cgpa | default('') }}" style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">GENDER</label>
-                        <select class="form-control font-mono" name="gender">
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">Gender</label>
+                        <select class="form-select rounded-0 shadow-none font-mono py-2 custom-select-brutal"
+                            name="gender" style="border-color: #ccc;">
                             <option value="Prefer Not To Say" {% if student.gender=='Prefer Not To Say' %}selected{%
                                 endif %}>Prefer Not To Say</option>
                             <option value="Male" {% if student.gender=='Male' %}selected{% endif %}>Male</option>
@@ -51,38 +58,41 @@
                     </div>
                 </div>
 
-                <h4 class="font-display border-bottom border-dark border-2 pb-2 mb-4 mt-5">
-                    PROFESSIONAL PORTFOLIO
+                <h4 class="font-display fs-5 border-bottom pb-2 mb-4 mt-5 text-muted">
+                    Professional Portfolio
                 </h4>
 
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">LINKEDIN URL</label>
-                        <input type="url" class="form-control font-mono" name="linkedin"
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">LinkedIn URL</label>
+                        <input type="url" class="form-control rounded-0 shadow-none font-mono py-2" name="linkedin"
                             value="{{ student.socials.get('linkedin', '') if student.socials else '' }}"
-                            placeholder="https://linkedin.com/in/..." />
+                            placeholder="https://linkedin.com/in/..." style="border-color: #ccc;" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label font-mono fw-bold">GITHUB URL</label>
-                        <input type="url" class="form-control font-mono" name="github"
+                        <label class="form-label font-mono fw-bold small text-muted mb-1">GitHub URL</label>
+                        <input type="url" class="form-control rounded-0 shadow-none font-mono py-2" name="github"
                             value="{{ student.socials.get('github', '') if student.socials else '' }}"
-                            placeholder="https://github.com/..." />
+                            placeholder="https://github.com/..." style="border-color: #ccc;" />
                     </div>
                 </div>
 
-                <div class="mb-4 border border-dark p-4 bg-light">
-                    <label class="form-label font-mono fw-bold">KEY SKILLS (Comma Separated)</label>
-                    <textarea class="form-control font-mono border-dark" name="skills" rows="2"
-                        placeholder="Python, React, Data Analysis...">{{ student.skills | default('') }}</textarea>
+                <div class="mb-4 border p-4 bg-light">
+                    <label class="form-label font-mono fw-bold small text-dark mb-1">Key Skills (Comma
+                        Separated)</label>
+                    <textarea class="form-control rounded-0 shadow-none font-mono py-2" name="skills" rows="2"
+                        placeholder="Python, React, Data Analysis..."
+                        style="border-color: #ccc;">{{ student.skills | default('') }}</textarea>
 
                     {% if student.skills %}
                     <div class="mt-3">
-                        <div class="small text-muted font-mono mb-2 text-uppercase">Current Tags:</div>
+                        <div class="small text-muted font-mono mb-2">Current Tags:</div>
                         <div class="d-flex flex-wrap gap-2">
                             {% for skill in student.skills.split(',') %}
                             {% if skill.strip() %}
-                            <span class="data-tag bg-white border border-dark text-dark">{{ skill.strip() | upper
-                                }}</span>
+                            <span
+                                class="badge bg-white text-dark border border-secondary rounded-0 px-2 py-1 font-mono fw-normal">{{
+                                skill.strip() }}</span>
                             {% endif %}
                             {% endfor %}
                         </div>
@@ -90,17 +100,18 @@
                     {% endif %}
                 </div>
 
-                <div class="mb-5 p-4 border border-dark border-2 bg-light">
-                    <label class="form-label font-mono fw-bold">UPLOAD RESUME (PDF ONLY) *</label>
-                    <input type="file" class="form-control font-mono border-dark" name="resume" accept=".pdf" />
+                <div class="mb-5 p-4 border bg-white">
+                    <label class="form-label font-mono fw-bold small text-dark mb-1">Upload Resume (PDF ONLY) *</label>
+                    <input type="file" class="form-control rounded-0 shadow-none font-mono py-2" name="resume"
+                        accept=".pdf" style="border-color: #ccc;" />
                     <div class="small text-muted font-mono mt-2">
                         Max file size 5MB. Uploading a new file will replace your current resume.
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="brutal-btn secondary px-5 py-3 fs-5 text-dark">
-                        SAVE IDENTITY &rarr;
+                <div class="d-flex justify-content-end border-top pt-4">
+                    <button type="submit" class="btn btn-dark rounded-0 font-mono fw-bold shadow-none px-5 py-2">
+                        SAVE PROFILE
                     </button>
                 </div>
             </form>
@@ -108,25 +119,33 @@
     </div>
 
     <div class="col-lg-4">
-        <div class="font-mono text-muted mb-2 fw-bold text-uppercase">Current Documents</div>
-        <div class="brutal-card p-4 text-center" style="background-color: var(--color-bg);">
-            <div class="mx-auto mb-3 border border-dark border-2 d-flex justify-content-center align-items-center bg-white"
-                style="width: 80px; height: 80px;">
-                <i class="bi bi-file-earmark-pdf fs-1 text-danger"></i>
+        <div class="font-mono text-muted mb-2 fw-bold small text-uppercase">Document Status</div>
+        <div class="bg-white p-4 text-center border border-dark" style="border-width: 1px !important;">
+
+            <div class="mx-auto mb-3 border bg-light d-flex justify-content-center align-items-center"
+                style="width: 70px; height: 70px; border-radius: 50%;">
+                <i class="bi bi-file-earmark-pdf fs-2 text-danger"></i>
             </div>
-            <h3 class="font-display text-uppercase mb-2">RESUME.PDF</h3>
+
+            <h3 class="font-display fs-5 mb-2">Resume Document</h3>
 
             {% if student.resume_filename %}
-            <span class="data-tag bg-success text-white border-0 mb-3 d-inline-block">ON FILE</span>
+            <div class="mb-3">
+                <span class="badge bg-success rounded-0 px-2 py-1 font-mono fw-normal">Verified & On File</span>
+            </div>
             <a href="{{ url_for('static', filename='uploads/' + student.resume_filename) }}" target="_blank"
-                class="brutal-btn wireframe w-100 mt-2 bg-white">
+                class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none w-100 py-2 mt-2">
                 VIEW DOCUMENT &nearr;
             </a>
             {% else %}
-            <span class="data-tag bg-danger text-white border-0 mb-3 d-inline-block">MISSING</span>
-            <p class="font-mono small text-muted">You must upload a resume before you can apply to drives.</p>
+            <div class="mb-3">
+                <span class="badge bg-danger rounded-0 px-2 py-1 font-mono fw-normal">Missing Document</span>
+            </div>
+            <p class="font-mono small text-muted">You must upload a valid resume PDF before you can apply to any
+                placement drives.</p>
             {% endif %}
         </div>
     </div>
+
 </div>
 {% endblock %}

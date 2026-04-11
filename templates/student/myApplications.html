@@ -5,35 +5,36 @@
 {% block breadcrumb %}STUDENT / TRACKING / APPLICATIONS{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-4">
+<div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
     <div>
-        <h1 class="font-display display-5 mb-1">APPLICATION TRACKER</h1>
-        <p class="font-mono text-muted mb-0">Monitor your recruitment progress and feedback.</p>
+        <h1 class="font-display fs-3 mb-1">Application Tracker</h1>
+        <p class="font-mono text-muted mb-0 small">Monitor your recruitment progress and feedback.</p>
     </div>
     <div class="font-mono text-end">
-        <span class="data-tag bg-primary">ACTIVE: {{ myApplications|length }}</span>
+        <span class="badge bg-dark rounded-0 px-3 py-2 fw-normal">Total Active: {{ myApplications|length }}</span>
     </div>
 </div>
+
 {% set filter_items %}
-<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
-    <select name="company_id" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+<div class="border-end d-flex align-items-center px-2 bg-white">
+    <select name="company_id" class="form-select border-0 font-mono shadow-none custom-select-brutal text-muted small"
         onchange="this.form.submit()">
-        <option value="all">CO: ALL</option>
+        <option value="all">Company: All</option>
         {% for comp in applied_companies %}
         <option value="{{ comp.id }}" {% if request.args.get('company_id')==comp.id|string %}selected{% endif %}>
-            {{ comp.company_name | upper }}
+            {{ comp.company_name }}
         </option>
         {% endfor %}
     </select>
 </div>
 
-<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
-    <select name="status" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+<div class="border-end d-flex align-items-center px-2 bg-white">
+    <select name="status" class="form-select border-0 font-mono shadow-none custom-select-brutal text-muted small"
         onchange="this.form.submit()">
-        <option value="all">ST: ALL</option>
+        <option value="all">Status: All</option>
         {% for stat in ['applied', 'shortlisted', 'selected', 'rejected', 'hired'] %}
         <option value="{{ stat }}" {% if request.args.get('status')==stat %}selected{% endif %}>
-            {{ stat | upper }}
+            {{ stat | title }}
         </option>
         {% endfor %}
     </select>
@@ -41,6 +42,7 @@
 {% endset %}
 
 {% include 'components/_searchBar.html' with context %}
+
 {% set headers = [
 {'label': 'COMPANY & ROLE', 'class': 'p-4'},
 {'label': 'APPLIED ON', 'class': 'p-4'},
@@ -49,50 +51,60 @@
 ] %}
 
 {% call(app) brutalTable(headers, myApplications, "NO APPLICATIONS FOUND") %}
-<tr class="border-bottom border-dark align-middle bg-white hover-shadow-sm transition-all">
+<tr class="border-bottom align-middle bg-white hover-shadow-sm">
     <td class="p-4">
-        <div class="fw-bold font-display fs-5 text-uppercase" style="color: var(--color-primary);">
+        <div class="fw-bold font-display fs-6 text-uppercase text-dark">
             {{ app.drive.company.company_name }}
         </div>
 
         {# Blacklist Architecture: Check User Status through the Company relationship #}
         {% if app.drive.company.user.status == 'blacklisted' %}
-        <div class="font-mono text-danger fw-bold mb-1" style="font-size: 0.7rem;">
-            <i class="bi bi-exclamation-triangle-fill"></i> PARTNERSHIP REVOKED
+        <div class="font-mono text-danger fw-bold mb-1 mt-1" style="font-size: 0.7rem;">
+            <i class="bi bi-exclamation-triangle-fill"></i> Partnership Revoked
         </div>
         {% endif %}
 
-        <div class="font-body fw-bold text-muted small text-uppercase">
+        <div class="font-body text-muted small mt-1">
             {{ app.drive.job_title }}
         </div>
     </td>
 
-    <td class="p-4 font-mono">
+    <td class="p-4 font-mono text-muted small">
         {{ app.applied_at.strftime('%d %b %Y') }}
     </td>
 
-    <td class="p-4 font-mono">
-        <span class="border border-dark px-2 py-1 small">{{ app.drive.job_type | upper }}</span>
+    <td class="p-4 font-mono small">
+        <span class="badge bg-light text-dark border rounded-0 fw-normal px-2 py-1">{{ app.drive.job_type }}</span>
     </td>
 
     <td class="p-4 text-end">
-        {# Status Override Logic #}
-        {% if app.drive.company.user.status == 'blacklisted' %}
-        <span class="data-tag border-2 px-3 py-2 fs-6 fw-bold bg-dark text-white border-dark"
-            style="min-width: 120px; display: inline-block; text-align: center;">
-            VOID
-        </span>
-        {% else %}
-        {% set status = app.approval_status %}
-        <span class="data-tag border-2 px-3 py-2 fs-6 fw-bold border-dark
-                {% if status in ['selected', 'hired'] %}bg-success text-white
-                {% elif status == 'rejected' %}bg-danger text-white
-                {% elif status == 'shortlisted' %}bg-warning text-dark
-                {% else %}bg-light text-dark{% endif %}"
-            style="min-width: 120px; display: inline-block; text-align: center;">
-            {{ status | upper }}
-        </span>
-        {% endif %}
+        <div class="d-flex justify-content-end align-items-center gap-2">
+
+            {# Status Override Logic #}
+            {% if app.drive.company.user.status == 'blacklisted' %}
+            <span class="badge bg-secondary rounded-0 px-3 py-2 font-mono fw-normal" style="min-width: 100px;">
+                VOID
+            </span>
+            {% else %}
+            <form action="{{url_for('student.driveDetail', drive_id=app.drive.id)}}" method="GET" class="m-0">
+                <button type="submit"
+                    class="btn btn-outline-secondary rounded-0 font-mono fw-normal btn-sm shadow-none px-3 py-1"
+                    style="opacity: 0.6;">
+                    VIEW
+                </button>
+            </form>
+            {% set status = app.approval_status %}
+
+            <span class="badge rounded-0 px-3 py-2 font-mono fw-normal
+                    {% if status in ['selected', 'hired'] %}bg-success
+                    {% elif status == 'rejected' %}bg-danger
+                    {% elif status == 'shortlisted' %}bg-warning text-dark
+                    {% else %}bg-light text-dark border{% endif %}" style="min-width: 100px;">
+                {{ status | title }}
+            </span>
+            {% endif %}
+
+        </div>
     </td>
 </tr>
 {% endcall %}

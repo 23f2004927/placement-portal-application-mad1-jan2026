@@ -1,63 +1,70 @@
 {% extends "base.html" %}
 {% block pageTitle %}Drive Details - Student Console{% endblock %}
-{% block breadcrumb %}STUDENT / POSTINGS / {{ drive.job_title | upper }}{% endblock %}
+{% block breadcrumb %}STUDENT / POSTINGS / DETAILS{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-center border-bottom border-dark border-2 pb-3 mb-4">
-    <h1 class="font-display display-5 mb-0">PLACEMENT POSTING</h1>
-    <a href="{{ url_for('student.dashboard') }}" class="brutal-btn wireframe py-2 px-4">&larr; BACK TO BROWSE</a>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+    <h1 class="font-display fs-3 mb-0">Placement Posting</h1>
+    <a href="{{ url_for('student.dashboard') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">&larr; Back to Browse</a>
 </div>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-5">
     <div class="col-lg-8">
-        <div class="brutal-card p-5">
 
-            <div class="mb-5 pb-4 border-bottom border-dark border-2">
+        <div class="bg-white p-4 p-md-5 border border-dark" style="border-width: 1px !important;">
+
+            <div class="mb-5 pb-4 border-bottom">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                        <h2 class="font-display text-uppercase mb-1">{{ drive.job_title }}</h2>
-                        <h4 class="font-mono text-muted mb-0" style="color: var(--color-primary) !important;">
+                        <h2 class="font-display fw-bold mb-1">{{ drive.job_title }}</h2>
+                        <h4 class="font-mono text-dark mb-0 fs-5">
                             {{ drive.company.company_name }}
                         </h4>
                     </div>
-                    <span class="data-tag bg-white border border-dark text-dark fs-6 py-2 px-3">
-                        DEADLINE: {{ drive.application_deadline.strftime('%b %d, %Y') }}
+                    <span
+                        class="badge bg-light text-dark border border-secondary rounded-0 font-mono fw-normal px-3 py-2">
+                        Deadline: {{ drive.application_deadline.strftime('%b %d, %Y') }}
                     </span>
                 </div>
 
-                <div class="d-flex gap-2 font-mono mt-3">
-                    <span class="data-tag bg-light border border-dark text-dark">{{ drive.job_type | upper }}</span>
-                    <span class="data-tag bg-light border border-dark text-dark">{{ drive.location | upper }}</span>
-                    <span class="data-tag bg-light border border-dark text-dark">CTC: {{ drive.ctc | upper }}</span>
+                <div class="d-flex flex-wrap gap-2 font-mono mt-4 small">
+                    <span class="badge bg-dark rounded-0 fw-normal px-2 py-1">{{ drive.job_type }}</span>
+                    <span class="badge bg-light text-dark border rounded-0 fw-normal px-2 py-1"><i
+                            class="bi bi-geo-alt-fill me-1"></i>{{ drive.location }}</span>
+                    <span class="badge bg-light text-dark border rounded-0 fw-normal px-2 py-1"><i
+                            class="bi bi-cash me-1"></i>CTC: {{ drive.ctc }}</span>
                 </div>
             </div>
 
             <div class="mb-4">
-                <h5 class="font-mono fw-bold text-uppercase border-bottom border-dark d-inline-block pb-1 mb-3">
-                    Eligibility Criteria</h5>
-                <p class="font-body fs-5">{{ drive.eligibility_criteria }}</p>
+                <h5 class="font-display fs-5 border-bottom pb-2 mb-3 text-muted">Eligibility Criteria</h5>
+                <p class="font-body text-dark">{{ drive.eligibility_criteria }}</p>
             </div>
 
             <div class="mb-5">
-                <h5 class="font-mono fw-bold text-uppercase border-bottom border-dark d-inline-block pb-1 mb-3">Full Job
-                    Description</h5>
-                <p class="font-body text-break" style="white-space: pre-wrap;">{{ drive.job_description }}</p>
+                <h5 class="font-display fs-5 border-bottom pb-2 mb-3 text-muted">Full Job Description</h5>
+                <p class="font-body text-dark text-break" style="white-space: pre-wrap; line-height: 1.6;">{{
+                    drive.job_description }}</p>
             </div>
 
-            <div class="mt-5 pt-4 border-top border-dark border-2 d-flex justify-content-between align-items-center">
-                <div class="font-mono text-muted small w-50">
-                    By applying, you agree to share your current profile details and resume with {{
-                    drive.company.company_name }}.
+            <div
+                class="mt-5 pt-4 border-top d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4">
+                <div class="font-mono text-muted small" style="max-width: 400px;">
+                    By applying, you agree to securely share your current profile details and resume document with
+                    <strong>{{ drive.company.company_name }}</strong>.
                 </div>
 
                 <form action="{{ url_for('student.driveDetail', drive_id=drive.id) }}" method="POST" class="m-0">
                     {% if hasApplied %}
-                    <button type="button" class="brutal-btn wireframe py-3 px-4 fs-5 disabled" disabled
-                        style="opacity: 0.6; cursor: not-allowed;">
-                        APPLICATION SUBMITTED
+                    <button type="button"
+                        class="btn btn-outline-secondary rounded-0 font-mono fw-bold shadow-none px-4 py-2 disabled"
+                        disabled style="opacity: 0.8; cursor: not-allowed; color: green !important;">
+                        <i class="bi bi-check-circle-fill me-2"></i>APPLICATION SUBMITTED
                     </button>
                     {% else %}
-                    <button type="submit" class="brutal-btn wireframe py-3 px-5 fs-5 text-dark">
+                    <button type="submit" class="btn btn-dark rounded-0 font-mono fw-bold shadow-none px-5 py-2">
                         CONFIRM & APPLY &rarr;
                     </button>
                     {% endif %}

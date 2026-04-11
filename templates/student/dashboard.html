@@ -5,50 +5,59 @@
 {% block breadcrumb %}STUDENT / BROWSE POSTINGS{% endblock %}
 
 {% block mainContent %}
-<div class="d-flex justify-content-between align-items-end border-bottom border-dark border-2 pb-3 mb-4">
+<div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
     <div>
-        <h1 class="font-display display-5 mb-1">
-            {{ student.full_name | default('GUEST STUDENT') | upper }}
+        <h1 class="font-display fs-3 mb-1">
+            {{ student.full_name | default('GUEST STUDENT') }}
         </h1>
-        <span class="data-tag me-2">DEPT: {{ student.department | default('N/A') }}</span>
-        <span class="data-tag me-2">BATCH: {{ student.graduation_year | default('N/A') }}</span>
-        <span class="data-tag">CGPA: {{ student.cgpa | default('N/A') }}</span>
+        <div class="d-flex gap-2 font-mono text-muted small mt-2">
+            <span class="badge bg-light text-dark border rounded-0 fw-normal px-2 py-1">Dept: {{ student.department |
+                default('N/A') }}</span>
+            <span class="badge bg-light text-dark border rounded-0 fw-normal px-2 py-1">Batch: {{
+                student.graduation_year | default('N/A') }}</span>
+            <span class="badge bg-dark rounded-0 fw-normal px-2 py-1">CGPA: {{ student.cgpa | default('N/A') }}</span>
+        </div>
     </div>
-    <a href="{{ url_for('student.profile') }}" class="brutal-btn wireframe font-mono py-2">EDIT PROFILE</a>
+    <a href="{{ url_for('student.profile') }}"
+        class="btn btn-outline-dark rounded-0 font-mono fw-bold shadow-none py-2 px-3 text-uppercase"
+        style="font-size: 0.85rem;">
+        Edit Profile
+    </a>
 </div>
 
-<h3 class="font-display mb-4">ACTIVE POSTINGS</h3>
+<h3 class="font-display fs-5 text-muted mb-3">Active Postings</h3>
 
 {% set filter_items %}
-<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
-    <select name="company_id" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+<div class="border-end d-flex align-items-center px-2 bg-white">
+    <select name="company_id" class="form-select border-0 font-mono shadow-none custom-select-brutal text-muted small"
         onchange="this.form.submit()">
-        <option value="all">CO: ALL</option>
+        <option value="all">Company: All</option>
         {% for comp in activeCompanies %}
         <option value="{{ comp.id }}" {% if request.args.get('company_id')==comp.id|string %}selected{% endif %}>
-            {{ comp.company_name | upper }}
+            {{ comp.company_name }}
         </option>
         {% endfor %}
     </select>
 </div>
 
-<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
-    <select name="job_type" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+<div class="border-end d-flex align-items-center px-2 bg-white">
+    <select name="job_type" class="form-select border-0 font-mono shadow-none custom-select-brutal text-muted small"
         onchange="this.form.submit()">
-        <option value="all">TYPE: ALL</option>
-        <option value="Internship" {% if request.args.get('job_type')=='Internship' %}selected{% endif %}>INTERNSHIP
+        <option value="all">Type: All</option>
+        <option value="Internship" {% if request.args.get('job_type')=='Internship' %}selected{% endif %}>Internship
         </option>
-        <option value="Full-Time" {% if request.args.get('job_type')=='Full-Time' %}selected{% endif %}>FULL-TIME
+        <option value="Full-Time" {% if request.args.get('job_type')=='Full-Time' %}selected{% endif %}>Full-Time
         </option>
-        <option value="Contract" {% if request.args.get('job_type')=='Contract' %}selected{% endif %}>CONTRACT</option>
+        <option value="Contract" {% if request.args.get('job_type')=='Contract' %}selected{% endif %}>Contract</option>
     </select>
 </div>
 
-<div class="border-end border-dark border-2 d-flex align-items-center px-2 bg-white">
-    <select name="deadline_sort" class="form-select border-0 font-mono fw-bold custom-select-brutal"
+<div class="border-end d-flex align-items-center px-2 bg-white">
+    <select name="deadline_sort"
+        class="form-select border-0 font-mono shadow-none custom-select-brutal text-muted small"
         onchange="this.form.submit()">
-        <option value="asc" {% if request.args.get('deadline_sort')=='asc' %}selected{% endif %}>CLOSING SOON</option>
-        <option value="desc" {% if request.args.get('deadline_sort')=='desc' %}selected{% endif %}>LATEST</option>
+        <option value="asc" {% if request.args.get('deadline_sort')=='asc' %}selected{% endif %}>Closing Soon</option>
+        <option value="desc" {% if request.args.get('deadline_sort')=='desc' %}selected{% endif %}>Latest</option>
     </select>
 </div>
 {% endset %}
@@ -64,30 +73,32 @@
 ] %}
 
 {% call(drive) brutalTable(headers, available_drives, "NO ACTIVE POSTINGS FOUND") %}
-<tr class="border-bottom border-dark align-middle bg-white hover-shadow-sm transition-all">
-    <td class="p-4 fw-bold font-display fs-5 text-uppercase" style="color: var(--color-primary);">
+<tr class="border-bottom align-middle bg-white hover-shadow-sm">
+    <td class="p-4 fw-bold font-display fs-6 text-uppercase text-dark">
         {{ drive.company.company_name }}
     </td>
-    <td class="p-4 font-body fw-bold text-uppercase">
-        {{ drive.job_title }}
+    <td class="p-4 font-body">
+        <div class="fw-bold">{{ drive.job_title }}</div>
         <div class="small text-muted font-mono mt-1">Req: {{ drive.eligibility_criteria | truncate(40) }}</div>
     </td>
-    <td class="p-4 font-mono">
-        {{ drive.job_type | upper }}<br>
-        <span class="small text-muted">{{ drive.location | upper }}</span>
+    <td class="p-4 font-mono small text-muted">
+        <span class="text-dark fw-bold">{{ drive.job_type }}</span><br>
+        {{ drive.location }}
     </td>
-    <td class="p-4 font-mono">
+    <td class="p-4 font-mono small">
         {{ drive.application_deadline.strftime('%Y-%m-%d') }}
     </td>
     <td class="p-4 text-end">
         <form action="{{url_for('student.driveDetail', drive_id=drive.id)}}" method="GET" class="m-0">
             <input type="hidden" name="drive_id" value="{{ drive.id }}" />
             {% if drive.id in applied_drive_ids %}
-            <button type="submit" class="brutal-btn wireframe py-2 px-4 " style="opacity: 0.5;">
+            <button type="submit"
+                class="btn btn-outline-secondary rounded-0 font-mono fw-bold btn-sm shadow-none px-3 py-2 "
+                style="opacity: 0.6;">
                 VIEW
             </button>
             {% else %}
-            <button type="submit" class="brutal-btn secondary py-2 px-4 text-dark shadow-sm">
+            <button type="submit" class="btn btn-dark rounded-0 font-mono fw-bold btn-sm shadow-none px-4 py-2">
                 APPLY &rarr;
             </button>
             {% endif %}
