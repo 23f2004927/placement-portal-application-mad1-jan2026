@@ -3,6 +3,7 @@
 # 9 April 2026
 # routes/admin.py
 
+from models import User
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from models import Application, Company, Drive, Student, db
@@ -81,7 +82,7 @@ def company_action(company_id):
 @login_required
 @role_required("admin")
 def students():
-    query = Student.query
+    query = Student.query.join(User)
     batch = request.args.get("batch")
     cgpa = request.args.get("cgpa")
     search_term = request.args.get("searchQuery")
@@ -91,7 +92,7 @@ def students():
     if cgpa:
         query = query.filter(Student.cgpa >= float(cgpa))
     if search_term:
-        query = query.filter(Student.full_name.ilike(f"%{search_term}%"))
+        query = query.filter(Student.full_name.ilike(f"%{search_term}%")| User.email.ilike(f"%{search_term}%")| Student.department.ilike(f"%{search_term}%"))
 
     students = query.all()
     return render_template(
@@ -142,7 +143,12 @@ def drives():
     if search_term:
         query = query.filter(
         Company.company_name.ilike(f"%{search_term}%") |
-        Drive.job_title.ilike(f"%{search_term}%")
+        Drive.job_title.ilike(f"%{search_term}%") |
+        Drive.job_description.ilike(f"%{search_term}%")|
+        Drive.location.ilike(f"%{search_term}%")|
+        Drive.job_type.ilike(f"%{search_term}%")|
+        Drive.job_type.ilike(f"%{search_term}%") |
+        Drive.eligibility_criteria.ilike(f"%{search_term}%")
     )
     allDrives      = query.paginate(page=all_page, per_page=20)
     pendingDrives  = query.filter(Drive.status =="pending").paginate(page=pending_page, per_page=20)
