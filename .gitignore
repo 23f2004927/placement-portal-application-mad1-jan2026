@@ -33,3 +33,4 @@ helper_commands.txt
 
 # resume uploads 
 static/uploads
+*.pdf
