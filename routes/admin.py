@@ -3,10 +3,9 @@
 # 9 April 2026
 # routes/admin.py
 
-from models import User
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from models import Application, Company, Drive, Student, db
+from models import Application, Company, Drive, Student, User, db
 from utils import login_required, role_required
 
 admin_bp = Blueprint("admin", __name__)
@@ -60,7 +59,7 @@ def company_action(company_id):
             company.approval_status = "rejected"
         case "blacklist":
             company.user.status = "blacklisted"
-            company.approval_status = "rejected" 
+            company.approval_status = "rejected"
 
             for drive in company.drives:
                 drive.status = "closed"
@@ -88,11 +87,15 @@ def students():
     search_term = request.args.get("searchQuery")
 
     if batch:
-        query = query.filter_by(graduation_year=batch)
+        query = query.filter(Student.graduation_year == batch)
     if cgpa:
         query = query.filter(Student.cgpa >= float(cgpa))
     if search_term:
-        query = query.filter(Student.full_name.ilike(f"%{search_term}%")| User.email.ilike(f"%{search_term}%")| Student.department.ilike(f"%{search_term}%"))
+        query = query.filter(
+            Student.full_name.ilike(f"%{search_term}%")
+            | User.email.ilike(f"%{search_term}%")
+            | Student.department.ilike(f"%{search_term}%")
+        )
 
     status = request.args.get("status")
     if status:
@@ -100,7 +103,11 @@ def students():
 
     students = query.all()
     return render_template(
-        "admin/students.html", students=students, batchFilter=batch, cgpaFilter=cgpa, statusFilter=status
+        "admin/students.html",
+        students=students,
+        batchFilter=batch,
+        cgpaFilter=cgpa,
+        statusFilter=status,
     )
 
 
@@ -137,26 +144,29 @@ def student_action(student_id):
 @login_required
 @role_required("admin")
 def drives():
-    all_page      = request.args.get('all_page', 1, type=int)
-    pending_page  = request.args.get('pending_page', 1, type=int)
-    approved_page = request.args.get('approved_page', 1, type=int)
-    
+    all_page = request.args.get("all_page", 1, type=int)
+    pending_page = request.args.get("pending_page", 1, type=int)
+    approved_page = request.args.get("approved_page", 1, type=int)
 
-    active_tab = request.args.get('tab', 'pending')
+    active_tab = request.args.get("tab", "pending")
     query = Drive.query.join(Drive.company)
     search_term = request.args.get("searchQuery")
     if search_term:
         query = query.filter(
-        Company.company_name.ilike(f"%{search_term}%") |
-        Drive.job_title.ilike(f"%{search_term}%") |
-        Drive.job_description.ilike(f"%{search_term}%") |
-        Drive.location.ilike(f"%{search_term}%") |
-        Drive.job_type.ilike(f"%{search_term}%") |
-        Drive.eligibility_criteria.ilike(f"%{search_term}%")
+            Company.company_name.ilike(f"%{search_term}%")
+            | Drive.job_title.ilike(f"%{search_term}%")
+            | Drive.job_description.ilike(f"%{search_term}%")
+            | Drive.location.ilike(f"%{search_term}%")
+            | Drive.job_type.ilike(f"%{search_term}%")
+            | Drive.eligibility_criteria.ilike(f"%{search_term}%")
+        )
+    allDrives = query.paginate(page=all_page, per_page=20)
+    pendingDrives = query.filter(Drive.status == "pending").paginate(
+        page=pending_page, per_page=20
     )
-    allDrives      = query.paginate(page=all_page, per_page=20)
-    pendingDrives  = query.filter(Drive.status =="pending").paginate(page=pending_page, per_page=20)
-    approvedDrives = query.filter(Drive.status=="approved").paginate(page=approved_page, per_page=20)
+    approvedDrives = query.filter(Drive.status == "approved").paginate(
+        page=approved_page, per_page=20
+    )
     return render_template(
         "admin/drives.html",
         allDrives=allDrives,
@@ -196,10 +206,6 @@ def driveAction(driveId):
                 flash("Drive restored successfully.", "info")
         case _:
             flash("Invalid action.", "warning")
-            
 
     db.session.commit()
     return redirect(url_for("admin.drives"))
-
-
-
