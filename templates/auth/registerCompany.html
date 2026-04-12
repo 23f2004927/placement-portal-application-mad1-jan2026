@@ -6,6 +6,7 @@
 -->
 
 {% extends "base.html" %}
+{% from 'components/_formErrors.html' import field_errors %}
 
 {% block pageTitle %}Company Registration{% endblock %}
 {% block breadcrumb %}PARTNER REGISTRATION{% endblock %}
@@ -28,38 +29,57 @@
                 <div class="row g-3 font-mono">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Username *</label>
-                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="userName" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none {% if form and form.username.errors %}is-invalid{% endif %}"
+                            name="username" value="{{ (form.username.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.username if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Email Address *</label>
-                        <input type="email" class="form-control py-2 rounded-0 shadow-none" name="email" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="email" class="form-control py-2 rounded-0 shadow-none {% if form and form.email.errors %}is-invalid{% endif %}"
+                            name="email" value="{{ (form.email.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.email if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Password *</label>
-                        <input type="password" class="form-control py-2 rounded-0 shadow-none" name="password" required
-                            minlength="8" style="border: 1px solid #ccc;" />
+                        <input type="password" class="form-control py-2 rounded-0 shadow-none {% if form and form.password.errors %}is-invalid{% endif %}"
+                            name="password" required minlength="6" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.password if form else none) }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Confirm Password *</label>
+                        <input type="password" class="form-control py-2 rounded-0 shadow-none {% if form and form.confirm_password.errors %}is-invalid{% endif %}"
+                            name="confirm_password" required minlength="6" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.confirm_password if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Company Name *</label>
-                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="companyName" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none {% if form and form.company_name.errors %}is-invalid{% endif %}"
+                            name="company_name" value="{{ (form.company_name.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.company_name if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">HR Contact</label>
-                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="hrContact"
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none {% if form and form.hr_contact.errors %}is-invalid{% endif %}"
+                            name="hr_contact" value="{{ (form.hr_contact.data or "") if form else '' }}"
                             style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.hr_contact if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Website URL</label>
-                        <input type="url" class="form-control py-2 rounded-0 shadow-none" name="website"
+                        <input type="url" class="form-control py-2 rounded-0 shadow-none {% if form and form.website.errors %}is-invalid{% endif %}"
+                            name="website" value="{{ (form.website.data or "") if form else '' }}"
                             placeholder="https://" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.website if form else none) }}
                     </div>
                     <div class="col-12">
                         <label class="form-label fw-bold small text-muted mb-1">Company Description</label>
-                        <textarea class="form-control py-2 rounded-0 shadow-none" name="description" rows="3"
-                            style="border: 1px solid #ccc;"></textarea>
+                        <textarea class="form-control py-2 rounded-0 shadow-none {% if form and form.description.errors %}is-invalid{% endif %}"
+                            name="description" rows="3"
+                            style="border: 1px solid #ccc;">{{ (form.description.data or "") if form else '' }}</textarea>
+                        {{ field_errors(form.description if form else none) }}
                     </div>
                 </div>
 

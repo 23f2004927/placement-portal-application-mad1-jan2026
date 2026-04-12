@@ -6,6 +6,7 @@
 -->
 
 {% extends "base.html" %}
+{% from 'components/_formErrors.html' import field_errors %}
 {% block pageTitle %}Initiate Drive - Company Console{% endblock %}
 {% block breadcrumb %}COMPANY / DRIVES / NEW{% endblock %}
 
@@ -30,17 +31,21 @@
             </div>
 
             <form action="{{ url_for('company.createDrive') }}" method="POST">
+                {{ form.hidden_tag() if form else '' }}
                 <div class="mb-4">
                     <label class="form-label font-mono fw-bold small text-muted mb-1">Drive Name *</label>
                     <input type="text" class="form-control rounded-0 shadow-none py-2 font-display fs-5"
                         name="drive_name" required placeholder="e.g. Summer Internship 2026"
-                        style="border-color: #ccc;" />
+                        value="{{ (form.drive_name.data or '') if form else '' }}" style="border-color: #ccc;" />
+                    {{ field_errors(form.drive_name if form else none) }}
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label font-mono fw-bold small text-muted mb-1">Job Title / Role *</label>
                     <input type="text" class="form-control rounded-0 shadow-none py-2 font-display fs-5"
-                        name="job_title" required placeholder="e.g. Frontend Engineer" style="border-color: #ccc;" />
+                        name="job_title" required placeholder="e.g. Frontend Engineer"
+                        value="{{ (form.job_title.data or '') if form else '' }}" style="border-color: #ccc;" />
+                    {{ field_errors(form.job_title if form else none) }}
                 </div>
 
                 <div class="row g-4 mb-4">
@@ -57,31 +62,39 @@
                     <div class="col-md-6">
                         <label class="form-label font-mono fw-bold small text-muted mb-1">Location</label>
                         <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="location"
-                            value="Remote" required style="border-color: #ccc;" />
+                            value="{{ (form.location.data) if form else 'Remote' }}" required
+                            style="border-color: #ccc;" />
+                        {{ field_errors(form.location if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-mono fw-bold small text-muted mb-1">Compensation *</label>
                         <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="compensation"
-                            value="Performance Based" required style="border-color: #ccc;" />
+                            value="{{ (form.compensation.data) if form else 'Performance Based' }}" required
+                            style="border-color: #ccc;" />
+                        {{ field_errors(form.compensation if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-mono fw-bold small text-muted mb-1">Application Deadline *</label>
                         <input type="date" class="form-control rounded-0 shadow-none font-mono py-2"
                             name="application_deadline" required style="border-color: #ccc;" />
+                        {{ field_errors(form.application_deadline if form else none) }}
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label font-mono fw-bold small text-muted mb-1">Eligibility Criteria *</label>
                     <input type="text" class="form-control rounded-0 shadow-none py-2" name="eligibility_criteria"
-                        required placeholder="e.g. Minimum 7.5 CGPA, CS/IT only" style="border-color: #ccc;" />
+                        value="{{ (form.eligibility_criteria.data) if form else '' }}" required
+                        placeholder="e.g. Minimum 7.5 CGPA, CS/IT only" style="border-color: #ccc;" />
+                    {{ field_errors(form.eligibility_criteria if form else none) }}
                 </div>
 
                 <div class="mb-5">
                     <label class="form-label font-mono fw-bold small text-muted mb-1">Full Job Description *</label>
                     <textarea class="form-control rounded-0 shadow-none py-2" name="job_description" rows="6" required
                         placeholder="Outline responsibilities, tech stack, and expectations..."
-                        style="border-color: #ccc;"></textarea>
+                        style="border-color: #ccc;">{{ (form.job_description.data or "") if form else '' }}</textarea>
+                    {{ field_errors(form.job_description if form else none) }}
                 </div>
 
                 <button type="submit" class="btn btn-dark w-100 rounded-0 font-mono fw-bold shadow-none py-3">
