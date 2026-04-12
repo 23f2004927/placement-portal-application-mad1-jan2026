@@ -15,6 +15,7 @@ from werkzeug.utils import redirect
 
 from models import Company, db, Drive
 from utils import login_required, role_required
+from forms import CompanyProfileForm, DriveForm
 
 company_bp = Blueprint("company", __name__)
 
@@ -68,56 +69,51 @@ def dashboard():
 @login_required
 @role_required("company")
 def profile():
-    if request.method == "POST":
-        g.company.company_name = request.form.get("company_name")
-        g.company.industry = request.form.get("industry")
-        g.company.hr_contact = request.form.get("hr_contact")
-        g.company.website = request.form.get("website")
-        g.company.description = request.form.get("description")
+    form = CompanyProfileForm(obj=g.company)
+
+    if form.validate_on_submit():
+        g.company.company_name = form.company_name.data
+        g.company.industry     = form.industry.data
+        g.company.hr_contact   = form.hr_contact.data
+        g.company.website      = form.website.data
+        g.company.description  = form.description.data
         db.session.commit()
         flash("Company profile updated successfully.", "success")
         return redirect(url_for('company.profile'))
 
-    else:
-        return render_template(
-        "company/companyProfile.html", 
-        company=g.company
-    )
+    return render_template("company/companyProfile.html", company=g.company, form=form)
 
 
 @company_bp.route("/drive/new", methods=["GET", "POST"])
 @login_required
 @role_required("company")
 def createDrive():
-    if request.method == "POST":
-        driveName = request.form.get("drive_name")
-        jobTitle = request.form.get("job_title")
-        jobType = request.form.get("job_type")
-        location = request.form.get("location")
-        compensation = request.form.get("compensation")
-        applicationDeadline = datetime.strptime(request.form.get("application_deadline"), "%Y-%m-%d")
-        eligibilityCriteria = request.form.get("eligibility_criteria")
-        jobDescription = request.form.get("job_description")
+    form = DriveForm()
+
+    if form.validate_on_submit():
         try:
             newDrive = Drive(
                 company_id=g.company.id,
-                drive_name=driveName,
-                job_title=jobTitle,
-                job_type=jobType,
-            location=location,
-            ctc=compensation,
-            application_deadline=applicationDeadline,
-            eligibility_criteria=eligibilityCriteria,
-            job_description=jobDescription,
-        )
+                drive_name=form.drive_name.data,
+                job_title=form.job_title.data,
+                job_type=form.job_type.data,
+                location=form.location.data,
+                ctc=form.compensation.data,
+                application_deadline=datetime.combine(
+                    form.application_deadline.data, datetime.min.time()
+                ),
+                eligibility_criteria=form.eligibility_criteria.data,
+                job_description=form.job_description.data,
+            )
             db.session.add(newDrive)
             db.session.commit()
             flash("Drive created successfully.", "success")
             return redirect(url_for("company.dashboard"))
         except ValueError as e:
             flash(str(e), "error")
-            return redirect(url_for("company.createDrive"))
-    return render_template("company/createDrive.html")
+
+    # Render form on GET or if validation failed
+    return render_template("company/createDrive.html", form=form)
 
 
 @company_bp.route("/drive/<int:drive_id>", methods=["GET", "POST"])
@@ -125,20 +121,24 @@ def createDrive():
 @role_required("company")
 def manageDrive(drive_id):
     drive = db.one_or_404(db.select(Drive).filter_by(id=drive_id, company_id=g.company.id))
+    form = DriveForm(obj=drive)
 
-    if request.method == "POST":
+    if form.validate_on_submit():
         if drive.status == "closed":
             flash("Cannot edit a closed drive.", "error")
             return redirect(url_for("company.drives"))
-        drive.ctc = request.form.get("compensation")
-        drive.application_deadline = datetime.strptime(request.form.get("application_deadline"), "%Y-%m-%d")
-        drive.eligibility_criteria = request.form.get("eligibility_criteria")
-        drive.job_description = request.form.get("job_description")
-        drive.status = "pending"
+        drive.ctc                  = form.compensation.data
+        drive.application_deadline = datetime.combine(
+            form.application_deadline.data, datetime.min.time()
+        )
+        drive.eligibility_criteria = form.eligibility_criteria.data
+        drive.job_description      = form.job_description.data
+        drive.status               = "pending"
         db.session.commit()
-        flash("Drive Updated successfully. Pending Approval.", "success")
+        flash("Drive updated successfully. Pending re-approval.", "success")
         return redirect(url_for("company.manageDrive", drive_id=drive.id))
-    return render_template("company/driveView.html", drive=drive)
+
+    return render_template("company/driveView.html", drive=drive, form=form)
 
 
 @company_bp.route("/drives")

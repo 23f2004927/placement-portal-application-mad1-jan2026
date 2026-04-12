@@ -1,0 +1,15 @@
+{#
+  _formErrors.html
+  Usage: {% from 'components/_formErrors.html' import field_errors %}
+         {{ field_errors(form.username) }}
+  Renders validation error messages under any WTForms field.
+#}
+{% macro field_errors(field) %}
+{% if field and field.errors %}
+  {% for error in field.errors %}
+  <small class="d-block text-danger font-mono mt-1" style="font-size:0.75rem;">
+    <i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}
+  </small>
+  {% endfor %}
+{% endif %}
+{% endmacro %}

@@ -10,10 +10,11 @@ from werkzeug.utils import secure_filename
 from models import Application
 from models import Company
 from models import Drive
-from flask import Blueprint, g, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 import os
 from models import Student, db
 from utils import login_required, role_required
+from forms import StudentProfileForm
 
 student_bp = Blueprint("student", __name__)
 
@@ -74,32 +75,37 @@ def dashboard():
 @login_required
 @role_required("student")
 def profile():
-    if request.method == "POST":
-        g.student.full_name = request.form.get("full_name")
-        g.student.department = request.form.get("department")
-        g.student.graduation_year = request.form.get("graduation_year")
-        g.student.cgpa = request.form.get("cgpa")
-        g.student.gender = request.form.get("gender")
-        g.student.skills = request.form.get("skills")
+    form = StudentProfileForm(obj=g.student)  # pre-populate form with current student data
 
-        g.student.socials = {
-            "linkedin": request.form.get("linkedin"),
-            "github": request.form.get("github"),
+    if form.validate_on_submit():             # True only on POST with valid data
+        g.student.full_name      = form.full_name.data
+        g.student.department     = form.department.data
+        g.student.graduation_year = form.graduation_year.data
+        g.student.cgpa           = form.cgpa.data
+        g.student.gender         = form.gender.data
+        g.student.skills         = form.skills.data
+        g.student.socials        = {
+            "linkedin": form.linkedin.data or "",
+            "github":   form.github.data or "",
         }
-        resumefile = request.files.get("resume")
 
-        if resumefile:
-            
-            safeFileName = secure_filename(f"{g.student.full_name}_{g.student.id}_{resumefile.filename}")
+        resumefile = request.files.get("resume")
+        if resumefile and resumefile.filename:
+            safeFileName = secure_filename(
+                f"{g.student.full_name}_{g.student.id}_{resumefile.filename}"
+            )
             save_dir = os.path.join("static", "uploads")
             os.makedirs(save_dir, exist_ok=True)
             resumefile.save(os.path.join(save_dir, safeFileName))
             g.student.resume_filename = safeFileName
 
-        
         db.session.commit()
+        flash("Profile updated successfully.", "success")
         return redirect(url_for("student.profile"))
-    return render_template("student/profile.html", student=g.student)
+
+    # On GET or failed validation: render the form
+    # form.errors will be non-empty if validation failed — template can display them
+    return render_template("student/profile.html", student=g.student, form=form)
 
 
 @student_bp.route("/drive/<int:drive_id>" , methods=["GET", "POST"])

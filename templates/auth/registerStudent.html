@@ -6,6 +6,7 @@
 -->
 
 {% extends "base.html" %}
+{% from 'components/_formErrors.html' import field_errors %}
 
 {% block pageTitle %}Student Registration{% endblock %}
 {% block breadcrumb %}STUDENT REGISTRATION{% endblock %}
@@ -28,38 +29,57 @@
                 <div class="row g-3 font-mono">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Username *</label>
-                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="userName" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none {% if form and form.username.errors %}is-invalid{% endif %}"
+                            name="username" value="{{ (form.username.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.username if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Email Address *</label>
-                        <input type="email" class="form-control py-2 rounded-0 shadow-none" name="email" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="email" class="form-control py-2 rounded-0 shadow-none {% if form and form.email.errors %}is-invalid{% endif %}"
+                            name="email" value="{{ (form.email.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.email if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Password *</label>
-                        <input type="password" class="form-control py-2 rounded-0 shadow-none" name="password" required
-                            minlength="8" style="border: 1px solid #ccc;" />
+                        <input type="password" class="form-control py-2 rounded-0 shadow-none {% if form and form.password.errors %}is-invalid{% endif %}"
+                            name="password" required minlength="6" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.password if form else none) }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted mb-1">Confirm Password *</label>
+                        <input type="password" class="form-control py-2 rounded-0 shadow-none {% if form and form.confirm_password.errors %}is-invalid{% endif %}"
+                            name="confirm_password" required minlength="6" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.confirm_password if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted mb-1">Full Name *</label>
-                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="fullName" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none {% if form and form.full_name.errors %}is-invalid{% endif %}"
+                            name="full_name" value="{{ (form.full_name.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.full_name if form else none) }}
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small text-muted mb-1">Department *</label>
-                        <input type="text" class="form-control py-2 rounded-0 shadow-none" name="department" required
-                            style="border: 1px solid #ccc;" />
+                        <input type="text" class="form-control py-2 rounded-0 shadow-none {% if form and form.department.errors %}is-invalid{% endif %}"
+                            name="department" value="{{ (form.department.data or "") if form else '' }}"
+                            required style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.department if form else none) }}
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small text-muted mb-1">Grad Year *</label>
-                        <input type="number" class="form-control py-2 rounded-0 shadow-none" name="graduationYear"
-                            required min="2020" max="2030" style="border: 1px solid #ccc;" />
+                        <input type="number" class="form-control py-2 rounded-0 shadow-none {% if form and form.graduation_year.errors %}is-invalid{% endif %}"
+                            name="graduation_year" value="{{ (form.graduation_year.data or "") if form else '' }}"
+                            required min="2016" max="2030" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.graduation_year if form else none) }}
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small text-muted mb-1">Current CGPA</label>
-                        <input type="number" step="0.01" class="form-control py-2 rounded-0 shadow-none" name="cgpa"
+                        <input type="number" step="0.01" class="form-control py-2 rounded-0 shadow-none {% if form and form.cgpa.errors %}is-invalid{% endif %}"
+                            name="cgpa" value="{{ (form.cgpa.data or "") if form else '' }}"
                             min="0" max="10" style="border: 1px solid #ccc;" />
+                        {{ field_errors(form.cgpa if form else none) }}
                     </div>
                 </div>
 

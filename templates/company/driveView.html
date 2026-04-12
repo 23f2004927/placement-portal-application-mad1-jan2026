@@ -6,6 +6,7 @@
 -->
 
 {% extends "base.html" %}
+{% from 'components/_formErrors.html' import field_errors %}
 {% block pageTitle %}Manage Drive - Company Console{% endblock %}
 {% block breadcrumb %}COMPANY / DRIVES / MANAGE{% endblock %}
 
@@ -53,12 +54,14 @@
             </div>
 
             <form action="{{ url_for('company.manageDrive', drive_id=drive.id) }}" method="POST">
+                {{ form.hidden_tag() if form else '' }}
 
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label class="form-label font-mono fw-bold small text-muted mb-1">Compensation *</label>
                         <input type="text" class="form-control rounded-0 shadow-none font-mono py-2" name="compensation"
                             value="{{ drive.ctc }}" required style="border-color: #ccc;" />
+                        {{ field_errors(form.compensation if form else none) }}
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-mono fw-bold small text-muted mb-1">Application Deadline *</label>
@@ -66,6 +69,7 @@
                             name="application_deadline"
                             value="{{ drive.application_deadline.strftime('%Y-%m-%d') if drive.application_deadline else '' }}"
                             required style="border-color: #ccc;" />
+                        {{ field_errors(form.application_deadline if form else none) }}
                     </div>
                 </div>
 
@@ -73,12 +77,14 @@
                     <label class="form-label font-mono fw-bold small text-muted mb-1">Eligibility Criteria *</label>
                     <input type="text" class="form-control rounded-0 shadow-none py-2" name="eligibility_criteria"
                         value="{{ drive.eligibility_criteria }}" required style="border-color: #ccc;" />
+                    {{ field_errors(form.eligibility_criteria if form else none) }}
                 </div>
 
                 <div class="mb-5">
                     <label class="form-label font-mono fw-bold small text-muted mb-1">Full Job Description *</label>
                     <textarea class="form-control rounded-0 shadow-none py-2" name="job_description" rows="6" required
                         style="border-color: #ccc;">{{ drive.job_description }}</textarea>
+                    {{ field_errors(form.job_description if form else none) }}
                 </div>
 
                 <div class="d-flex justify-content-end gap-3 pt-3 border-top">
