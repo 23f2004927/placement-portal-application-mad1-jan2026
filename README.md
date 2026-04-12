@@ -18,6 +18,11 @@ Placement Portal Application web application that allows Admin (Institute), Comp
 | 5 | 10-04-2026 | 11-04-2026 | student dashboard and management  |
 | 6 | 11-04-2026 | 11-04-2026 | Job tracking , duplicate prevention, account status checks  |
 
+| Optional Milestone | Start Date| End Date | Core Type |
+|----------|----------|----------|----------|
+| 0 | 12-04-2026 | 12-04-2026 | Milestone-PPA Responsive-UI |
+| 1 | 12-04-2026 | 12-04-2026 | Milestone-PPA Validation  |
+
 
 | Dev files  |  Date |  
 |----------|----------|
